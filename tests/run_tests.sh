@@ -80,15 +80,17 @@ run_cmd_test \
 # Add more tests below…
 # run_cmd_test "Name" "cmd" "expected/file" "Fail message"
 
+UNITTEST_DIR="./devices"
 
 # ============================================
-#   2. Build unit tests (via Makefile)
+# 1. Build unit tests (via Makefile)
 # ============================================
 section "Building Unit Tests with Makefile"
 
-make unittest > /dev/null 2>&1
+cd "$UNITTEST_DIR" || fail "Change directory" "Could not enter $UNITTEST_DIR"
+make all > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    fail "Building unittest" "Makefile reported a build failure."
+    fail "Building devices unittest" "Makefile reported a build failure."
 else
     pass "Build successful"
 fi
@@ -99,10 +101,11 @@ fi
 # ============================================
 section "Running Unity Unit Tests"
 
-if [ ! -f "./unittest" ]; then
-    fail "Run Unity Tests" "Executable ./unittest does not exist."
+
+if [ ! -f "./SM1278_unittest" ]; then
+    fail "Run Unity Tests" "Executable ./SM1278_unittest does not exist."
 else
-    ./unittest
+    ./SM1278_unittest
     UT_STATUS=$?
 
     if [ $UT_STATUS -ne 0 ]; then
@@ -111,6 +114,9 @@ else
         pass "Unity Tests"
     fi
 fi
+
+# Return to original directory
+cd - > /dev/null
 
 
 # ============================================
