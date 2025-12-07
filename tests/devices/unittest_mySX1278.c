@@ -1,8 +1,7 @@
 #include "unity.h"
 #include "../../src/devices/LoRa/sx1278/mySX1278.h"
 #include <string.h>
-#include <stdlib.h>
-
+#include <unistd.h>
 int spi_handle;
 
 void setUp(void)
