@@ -1,13 +1,13 @@
-# LoRa SX1278 Module Specification
+# Setup Instructions
 
 ## Table of Contents
 
-- [Raspberry Pi Connection](#raspberry-pi-connection)
+- [Raspberry Pi Zero 2 W Setup Instructions](#raspberry-pi-zero-2-w-setup-instructions)
   - [Enabling SPI Interface](#enabling-spi-interface)
-  - [Installing Necessary Libraries](#installing-necessary-libraries)
+  - [Install Necessary Libraries](#install-necessary-libraries)
   - [Reduced Setup Instructions](#reduced-setup-instructions)
 
-## Raspberry Pi Connection
+## Raspberry Pi Zero 2 W Setup Instructions
 
 When mapping to raspberry pi zero 2 W using physical pin numbers
 

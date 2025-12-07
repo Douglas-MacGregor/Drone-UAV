@@ -2,8 +2,8 @@
 CC = gcc
 CFLAGS = -g -Wall
 LDFLAGS = -lpigpio -lrt -lpthread
-DEPENDENCIES = sx1278/mySX1278.o sx1278/utils.o
-DEPENDENCIES_HEADERS = sx1278/mySX1278.h sx1278/utils.h
+DEPENDENCIES = sx1278/mySX1278.o ../utils.o
+DEPENDENCIES_HEADERS = sx1278/mySX1278.h ../utils.h
 
 all: tx rx
 

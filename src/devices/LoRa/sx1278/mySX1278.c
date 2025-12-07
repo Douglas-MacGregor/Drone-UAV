@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <stdint.h>
 #include "mySX1278.h"
-#include "utils.h"
+#include "../../utils.h"
 #include <stdlib.h>
 
 int init_sx1278()
