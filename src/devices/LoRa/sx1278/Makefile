@@ -8,3 +8,6 @@ mySX1278.o: mySX1278.c mySX1278.h utils.h
 
 utils.o: utils.c utils.h
 	$(CC) -c utils.c $(CFLAGS)
+
+clean:
+	rm -f *.o
