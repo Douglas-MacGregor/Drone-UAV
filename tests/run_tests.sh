@@ -80,11 +80,11 @@ run_cmd_test \
 # Add more tests below…
 # run_cmd_test "Name" "cmd" "expected/file" "Fail message"
 
-UNITTEST_DIR="./devices"
 
 # ============================================
 # 1. Build unit tests (via Makefile)
 # ============================================
+UNITTEST_DIR="./devices"
 section "Building Unit Tests with Makefile"
 
 cd "$UNITTEST_DIR" || fail "Change directory" "Could not enter $UNITTEST_DIR"
