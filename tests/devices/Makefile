@@ -10,7 +10,7 @@ SM1278_unittest_OBJS = \
 	unity.o \
 	unittest_mySX1278.o \
 	$(MY_SX1278_DIR)/mySX1278.o \
-	$(MY_SX1278_DIR)/utils.o
+	$ ../../src/devices/utils.o
 
 TARGET = $(SM1278_unittest)
 
