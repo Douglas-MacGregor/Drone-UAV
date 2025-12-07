@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "../sx1278/mySX1278.h"
+#include "./sx1278/mySX1278.h"
 #include "utils.h"
 #include <stdio.h>
 
