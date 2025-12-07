@@ -1,0 +1,9 @@
+ii  libpigpio-dev                        1.79-1+rpt1                      arm64        Client tools for Raspberry Pi GPIO control
+ii  libpigpio1                           1.79-1+rpt1                      arm64        Library for Raspberry Pi GPIO control
+ii  libpigpiod-if-dev                    1.79-1+rpt1                      arm64        Development headers for client libraries for Raspberry Pi GPIO control
+ii  libpigpiod-if1                       1.79-1+rpt1                      arm64        Client library for Raspberry Pi GPIO control (deprecated)
+ii  libpigpiod-if2-1                     1.79-1+rpt1                      arm64        Client library for Raspberry Pi GPIO control
+ii  pigpio                               1.79-1+rpt1                      arm64        Raspberry Pi GPIO control transitional package.
+ii  pigpio-tools                         1.79-1+rpt1                      arm64        Client tools for Raspberry Pi GPIO control
+ii  pigpiod                              1.79-1+rpt1                      arm64        Client tools for Raspberry Pi GPIO control
+ii  python3-pigpio                       1.79-1+rpt1                      all          Python module which talks to the pigpio daemon (Python 3)

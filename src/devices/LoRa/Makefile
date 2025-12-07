@@ -1,4 +1,4 @@
-
+.PHONY: clean
 CC = gcc
 CFLAGS = -g -Wall
 LDFLAGS = -lpigpio -lrt -lpthread
@@ -18,3 +18,7 @@ tx.o: ${DEPENDENCIES_HEADERS} tx.c
 
 rx.o: ${DEPENDENCIES_HEADERS} rx.c
 	$(CC) -c rx.c $(CFLAGS)
+
+clean:
+	rm -f *.o tx rx
+	$(MAKE) -C ./sx1278 clean

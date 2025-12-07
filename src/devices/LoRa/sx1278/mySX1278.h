@@ -74,7 +74,7 @@ void reset_sx1278(int spi_handle);
 void close_sx1278(int spi_handle);
 int read_sx1278(int spi_handle, SX1278Data *data);
 int write_sx1278(int spi_handle, SX1278Data *data);
-int poll_reg(int spi_handle, uint8_t reg_addressu, int8_t mask, uint8_t expected_value, int max_attempts, int delay_us);
+int poll_reg(int spi_handle, uint8_t reg_address, uint8_t mask, uint8_t expected_value, int max_attempts, int delay_us);
 
 // SX1278 mode setting functions
 int activate_lora(int spi_handle);

@@ -1,6 +1,6 @@
 #include <stdlib.h>
-#include "mySX1278.h"
-#include "utils.h"
+#include "./sx1278/mySX1278.h"
+#include "./sx1278/utils.h"
 #include <stdio.h>
 
 int main()
