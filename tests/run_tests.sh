@@ -115,9 +115,11 @@ else
     fi
 fi
 
-make clean > /dev/null 2>&1
 
-# Return to original directory
+
+
+
+make clean > /dev/null 2>&1
 cd - > /dev/null
 
 
