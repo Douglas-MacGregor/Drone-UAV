@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "../lora_interface.h"
 
 typedef struct SX1278Data
 {
@@ -89,3 +90,18 @@ int set_stdby_mode(int spi_handle);
 int rx_set_base_address(int spi_handle, uint8_t address);
 int tx_set_base_address(int spi_handle, uint8_t address);
 int spi_set_fifo_addr_ptr(int spi_handle, uint8_t address);
+
+typedef struct
+{
+    LoRaInterface *vtable; // pointer to interface
+    int spi_handle;        // SPI handle for communication
+} sx1278_Device;
+
+LoRaInterface sx1278_vtable = {
+    .close = NULL,
+    .send = NULL,
+    .receive = NULL,
+    .set_frequency = NULL,
+    .set_power = NULL,
+    .set_spreading_factor = NULL,
+    .set_syncword = NULL};
