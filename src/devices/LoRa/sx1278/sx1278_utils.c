@@ -1,11 +1,14 @@
 #include <stdio.h>
-#include <pigpio.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdint.h>
-#include "mySX1278.h"
+#include <stdbool.h>
+#include "sx1278_utils.h"
 #include "../../utils.h"
 #include <stdlib.h>
+#include <pigpio.h>
+
+// lower level functions for SX1278 operation
 
 int init_sx1278()
 {
@@ -89,12 +92,26 @@ int activate_lora(int spi_handle)
     int n = set_sleep_mode(spi_handle);
     if (n < 0)
     {
+        fprintf(stdout, "Failed to set sleep mode\n");
         return n;
     }
     SX1278Data data;
     data.address = REG_OPMODE;
+    data.write = 0;
+    uint8_t mode; // Set LoRa bit
+    data.data_receive = &mode;
+    data.receive_length = 1;
+    n = read_sx1278(spi_handle, &data);
+    if (n < 0)
+    {
+        return n;
+    }
+    if ((mode & (0b111)) != 0)
+    {
+        fprintf(stdout, "Warning: SX1278 not in sleep mode before activating LoRa\n");
+    }
+    mode |= 0b10000000; // Set LoRa bit
     data.write = 1;
-    uint8_t mode = (OPMODE_DEFAULT & ~(0b111)) | 0b10000000; // Set LoRa bit
     data.data_transmit = &mode;
     data.transmit_length = 1;
     n = write_sx1278(spi_handle, &data);
@@ -102,7 +119,7 @@ int activate_lora(int spi_handle)
     {
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 1000);
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x80, mode, 1000, 1000);
     return n;
 }
 
@@ -111,6 +128,7 @@ int deactivate_lora(int spi_handle)
     int n = set_sleep_mode(spi_handle);
     if (n < 0)
     {
+        fprintf(stdout, "Failed to set sleep mode\n");
         return n;
     }
     SX1278Data data;
@@ -124,7 +142,11 @@ int deactivate_lora(int spi_handle)
     {
         return n;
     }
-    mode = mode & ~(0b10000000); // Clear LoRa bit
+    if ((mode & (0b111)) != 0)
+    {
+        fprintf(stdout, "Warning: SX1278 not in sleep mode before activating LoRa\n");
+    }
+    mode &= ~(0b10000000); // Clear LoRa bit
     data.write = 1;
     data.data_transmit = &mode;
     data.transmit_length = 1;
@@ -133,7 +155,7 @@ int deactivate_lora(int spi_handle)
     {
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 1000);
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x80, mode, 1000, 1000);
     return n;
 }
 
@@ -190,6 +212,7 @@ int set_sleep_mode(int spi_handle)
     int n = read_sx1278(spi_handle, &data);
     if (n < 0)
     {
+        fprintf(stdout, "Failed to read current mode\n");
         return n;
     }
     uint8_t mode = current_mode & ~(0b111);
@@ -200,15 +223,18 @@ int set_sleep_mode(int spi_handle)
     n = write_sx1278(spi_handle, &data);
     if (n < 0)
     {
+        fprintf(stdout, "Failed to write sleep mode\n");
         return n;
     }
+    usleep(1000); // Give the device 1ms to start processing the mode change
     data.write = 0;
     n = read_sx1278(spi_handle, &data);
     if (n < 0)
     {
+        fprintf(stdout, "Failed to read back mode\n");
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 1000);
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x07, mode, 100, 1000);
     return n;
 }
 
@@ -216,17 +242,43 @@ int set_stdby_mode(int spi_handle)
 {
     SX1278Data data;
     data.address = REG_OPMODE;
-    data.write = 1;
-    uint8_t mode = OPMODE_DEFAULT & ~(0b111);
-    mode |= OPMODE_STDBY; // Standby mode
-    data.data_transmit = &mode;
-    data.transmit_length = 1;
-    int n = write_sx1278(spi_handle, &data);
+    data.write = 0;
+    uint8_t current_mode;
+    data.data_receive = &current_mode;
+    data.receive_length = 1;
+    int n = read_sx1278(spi_handle, &data);
     if (n < 0)
     {
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 1000);
+
+    // If we're in SLEEP mode, we need extra time for the transition
+    uint8_t current_mode_bits = current_mode & 0x07;
+    bool from_sleep = (current_mode_bits == OPMODE_SLEEP);
+
+    uint8_t mode = (current_mode & ~(0b111));
+    mode |= OPMODE_STDBY; // Standby mode
+    data.address = REG_OPMODE;
+    data.data_transmit = &mode;
+    data.transmit_length = 1;
+    data.write = 1;
+    n = write_sx1278(spi_handle, &data);
+    if (n < 0)
+    {
+        return n;
+    }
+
+    // Give extra time for SLEEP → STANDBY transition
+    if (from_sleep)
+    {
+        usleep(5000); // 5ms for sleep to standby transition
+    }
+    else
+    {
+        usleep(1000); // 1ms for other transitions
+    }
+
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x07, mode, 1000, 1000);
     return n;
 }
 
@@ -300,12 +352,36 @@ int poll_reg(int spi_handle, uint8_t reg_address, uint8_t mask, uint8_t expected
             return -1; // Read error
         }
 
-        if ((reg_value & mask) == expected_value)
+        if ((reg_value & mask) == (expected_value & mask))
         {
             return 0; // Success
         }
+
         usleep(delay_us);
         attempt++;
     }
-    return -1; // Timeout
+
+    return -2; // Timeout
+}
+
+void print_reg_values(int spi_handle)
+{
+    SX1278Data data;
+    data.write = 0;
+    data.receive_length = 1;
+    uint8_t reg_value;
+    data.data_receive = &reg_value;
+    for (uint8_t addr = 0x00; addr <= 0x04; addr++)
+    {
+        data.address = addr;
+        int n = read_sx1278(spi_handle, &data);
+        if (n < 0)
+        {
+            fprintf(stdout, "Failed to read register 0x%02X\n", addr);
+        }
+        else
+        {
+            fprintf(stdout, "Reg 0x%02X: 0x%02X\n", addr, reg_value);
+        }
+    }
 }
