@@ -91,6 +91,7 @@ int activate_lora(int spi_handle)
     int n = set_sleep_mode(spi_handle);
     if (n < 0)
     {
+        fprintf(stdout, "Failed to set sleep mode\n");
         return n;
     }
     SX1278Data data;
@@ -126,6 +127,7 @@ int deactivate_lora(int spi_handle)
     int n = set_sleep_mode(spi_handle);
     if (n < 0)
     {
+        fprintf(stdout, "Failed to set sleep mode\n");
         return n;
     }
     SX1278Data data;
