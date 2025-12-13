@@ -39,6 +39,12 @@ int main()
     }
     while (1)
     {
+        data.address = REG_FIFO_ADDR_PTR;
+        data.write = 1;
+        data.data_transmit = &fifo_ptr;
+        data.transmit_length = 1;
+        write_sx1278(spi_handle, &data);
+
         data.address = REG_FIFO;
         data.write = 1;
         char text[] = "Hello";
@@ -51,7 +57,7 @@ int main()
         }
         data.address = REG_PAYLOAD_LENGTH;
         data.write = 1;
-        uint8_t payload_length = 11;
+        uint8_t payload_length = 5;
         data.data_transmit = &payload_length;
         data.transmit_length = 1;
         if (write_sx1278(spi_handle, &data) > 0)
