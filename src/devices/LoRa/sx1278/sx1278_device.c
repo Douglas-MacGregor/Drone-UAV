@@ -222,6 +222,7 @@ int sx1278_init(void *self)
         return n;
     }
     n = set_stdby_mode(spi_handle);
+    if (n < 0)
     {
         fprintf(stderr, "Failed to set standby mode\n");
         return n;

@@ -230,5 +230,6 @@ int main(void)
     RUN_TEST(test_Lora_sx1278_device_creation_standby_sleep);
     RUN_TEST(test_Lora_sx1278_device_syncword);
     RUN_TEST(test_lora_sx1278_device_reset);
+    RUN_TEST(test_lora_sx1278_device_rx_tx);
     return UNITY_END();
 }
