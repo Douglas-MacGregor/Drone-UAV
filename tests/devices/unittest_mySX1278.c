@@ -48,7 +48,11 @@ void test_lora_mode_sx1278(void)
 {
     spi_handle = init_sx1278();
     reset_sx1278(spi_handle);
-    deactivate_lora(spi_handle);
+    int m = deactivate_lora(spi_handle);
+    if (m < 0)
+    {
+        fprintf(stderr, "Failed to deactivate LoRa mode\n");
+    }
     reset_sx1278(spi_handle);
     set_stdby_mode(spi_handle);
     SX1278Data data;
@@ -78,7 +82,11 @@ void test_set_modes_sx1278(void)
 {
     spi_handle = init_sx1278();
     reset_sx1278(spi_handle);
-    deactivate_lora(spi_handle);
+    int m = deactivate_lora(spi_handle);
+    if (m < 0)
+    {
+        fprintf(stderr, "Failed to deactivate LoRa mode\n");
+    }
     reset_sx1278(spi_handle);
     set_stdby_mode(spi_handle);
     SX1278Data data;
