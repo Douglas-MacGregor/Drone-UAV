@@ -11,11 +11,9 @@ int spi_handle;
 
 void setUp(void)
 {
-    printf("\n----- Starting Test -----\n");
     spi_handle = init_sx1278();
-    print_reg_values(spi_handle);
-    close_sx1278(spi_handle);
-    usleep(100000);
+    reset_sx1278(spi_handle);
+    deactivate_lora(spi_handle);
 }
 
 void tearDown(void)
