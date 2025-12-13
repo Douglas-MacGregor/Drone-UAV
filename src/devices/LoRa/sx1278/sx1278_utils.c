@@ -104,6 +104,10 @@ int activate_lora(int spi_handle)
     {
         return n;
     }
+    if ((mode & (0b111)) != 0)
+    {
+        fprintf(stdout, "Warning: SX1278 not in sleep mode before activating LoRa\n");
+    }
     mode |= 0b10000000; // Set LoRa bit
     data.write = 1;
     data.data_transmit = &mode;
@@ -134,6 +138,10 @@ int deactivate_lora(int spi_handle)
     if (n < 0)
     {
         return n;
+    }
+    if ((mode & (0b111)) != 0)
+    {
+        fprintf(stdout, "Warning: SX1278 not in sleep mode before activating LoRa\n");
     }
     mode &= ~(0b10000000); // Clear LoRa bit
     data.write = 1;
