@@ -95,8 +95,17 @@ int activate_lora(int spi_handle)
     }
     SX1278Data data;
     data.address = REG_OPMODE;
+    data.write = 0;
+    uint8_t mode; // Set LoRa bit
+    data.data_receive = &mode;
+    data.receive_length = 1;
+    n = read_sx1278(spi_handle, &data);
+    if (n < 0)
+    {
+        return n;
+    }
+    mode |= 0b10000000; // Set LoRa bit
     data.write = 1;
-    uint8_t mode = (OPMODE_DEFAULT & ~(0b111)) | 0b10000000; // Set LoRa bit
     data.data_transmit = &mode;
     data.transmit_length = 1;
     n = write_sx1278(spi_handle, &data);
@@ -104,7 +113,7 @@ int activate_lora(int spi_handle)
     {
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 1000);
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x80, mode, 100, 1000);
     return n;
 }
 
@@ -126,7 +135,7 @@ int deactivate_lora(int spi_handle)
     {
         return n;
     }
-    mode = OPMODE_DEFAULT & ~(0b10000000); // Clear LoRa bit
+    mode &= ~(0b10000000); // Clear LoRa bit
     data.write = 1;
     data.data_transmit = &mode;
     data.transmit_length = 1;
@@ -135,7 +144,7 @@ int deactivate_lora(int spi_handle)
     {
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 1000);
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x80, mode, 100, 1000);
     return n;
 }
 
@@ -210,7 +219,7 @@ int set_sleep_mode(int spi_handle)
     {
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 1000);
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x07, mode, 100, 1000);
     return n;
 }
 
@@ -218,17 +227,26 @@ int set_stdby_mode(int spi_handle)
 {
     SX1278Data data;
     data.address = REG_OPMODE;
-    data.write = 1;
-    uint8_t mode = OPMODE_DEFAULT & ~(0b111);
-    mode |= OPMODE_STDBY; // Standby mode
-    data.data_transmit = &mode;
-    data.transmit_length = 1;
-    int n = write_sx1278(spi_handle, &data);
+    data.write = 0;
+    uint8_t current_mode;
+    data.data_receive = &current_mode;
+    data.receive_length = 1;
+    int n = read_sx1278(spi_handle, &data);
     if (n < 0)
     {
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 1000);
+    uint8_t mode = current_mode & ~(0b111);
+    mode |= OPMODE_STDBY; // Standby mode
+    data.data_transmit = &mode;
+    data.transmit_length = 1;
+    data.write = 1;
+    n = write_sx1278(spi_handle, &data);
+    if (n < 0)
+    {
+        return n;
+    }
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x07, mode, 100, 1000);
     return n;
 }
 
