@@ -15,6 +15,7 @@ void setUp(void)
     reset_sx1278(spi_handle);
     close_sx1278(spi_handle);
     usleep(10000);
+    printf("Setup complete\n");
 }
 
 void tearDown(void)
