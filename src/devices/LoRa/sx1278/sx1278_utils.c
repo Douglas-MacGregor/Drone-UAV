@@ -225,6 +225,7 @@ int set_sleep_mode(int spi_handle)
         fprintf(stdout, "Failed to write sleep mode\n");
         return n;
     }
+    usleep(1000); // Give the device 1ms to start processing the mode change
     data.write = 0;
     n = read_sx1278(spi_handle, &data);
     if (n < 0)
@@ -260,6 +261,7 @@ int set_stdby_mode(int spi_handle)
     {
         return n;
     }
+    usleep(1000); // Give the device 1ms to start processing the mode change
     n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x07, mode, 1000, 1000);
     return n;
 }
