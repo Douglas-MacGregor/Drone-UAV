@@ -105,7 +105,7 @@ section "Running Unity Unit Tests"
 if [ ! -f "./SM1278_unittest" ]; then
     fail "Run Unity Tests" "Executable ./SM1278_unittest does not exist."
 else
-    ./SM1278_unittest
+    ./SX1278_unittest
     UT_STATUS=$?
 
     if [ $UT_STATUS -ne 0 ]; then
