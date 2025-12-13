@@ -64,10 +64,10 @@ int sx1278_send(void *self, const uint8_t *tx_data, int len)
     set_stdby_mode(spi_handle);
     SX1278Data data;
     data.address = REG_FIFO_TX_BASE_ADDR;
-    data.write = 0;
+    data.write = 1;
     uint8_t address = 0x80;
     data.data_transmit = &address;
-    data.receive_length = 1;
+    data.transmit_length = 1;
     if (write_sx1278(spi_handle, &data) < 0)
     {
         fprintf(stdout, "unable to set FIFO TX Base Address: 0x%02X\n", address);
@@ -119,6 +119,13 @@ int sx1278_send(void *self, const uint8_t *tx_data, int len)
         read_sx1278(spi_handle, &data);
     }
     set_stdby_mode(spi_handle);
+    // Clear TX_DONE flag
+    data.address = REG_IRQ_FLAGS;
+    data.write = 1;
+    uint8_t clear_tx_done = IRQ_FLAG_TX_DONE;
+    data.data_transmit = &clear_tx_done;
+    data.transmit_length = 1;
+    write_sx1278(spi_handle, &data);
     return 0;
 }
 
@@ -136,11 +143,13 @@ int sx1278_receive(void *self, uint8_t *buffer, int max_len)
     if (write_sx1278(spi_handle, &data) < 0)
     {
         fprintf(stderr, "Failed to set Address Pointer to 0x00\n");
+        return -1;
     }
     data.address = REG_FIFO_RX_BASE_ADDR;
     if (read_sx1278(spi_handle, &data) < 0)
     {
         fprintf(stderr, "Failed to set FIFO RX Base Address: 0x%02X\n", address);
+        return -1;
     }
     data.address = REG_IRQ_FLAGS;
     data.write = 0;
@@ -170,6 +179,7 @@ int sx1278_receive(void *self, uint8_t *buffer, int max_len)
     if (read_sx1278(spi_handle, &data) < 0)
     {
         fprintf(stderr, "Unable to read number of bytes\n");
+        return -1;
     }
     data.address = REG_FIFO;
     data.write = 0;
@@ -179,8 +189,9 @@ int sx1278_receive(void *self, uint8_t *buffer, int max_len)
     if (read_sx1278(spi_handle, &data) < 0)
     {
         fprintf(stderr, "Failed to read received data\n");
+        return -1;
     }
-    return 0;
+    return (num_bytes < max_len) ? num_bytes : max_len;
 }
 
 int sx1278_sleep(void *self)
