@@ -187,6 +187,12 @@ int sx1278_sleep(void *self)
 {
     sx1278_Device *device = (sx1278_Device *)self;
     int spi_handle = device->spi_handle;
+    int m = set_stdby_mode(spi_handle);
+    if (m < 0)
+    {
+        fprintf(stderr, "Failed to set standby mode\n");
+        return m;
+    }
     int n = set_sleep_mode(spi_handle);
     if (n < 0)
     {
@@ -235,6 +241,12 @@ int sx1278_init(void *self)
 int sx1278_close(void *self)
 {
     // sx1278_Device *device = (sx1278_Device *)self;
+    int n = set_sleep_mode(((sx1278_Device *)self)->spi_handle);
+    if (n < 0)
+    {
+        fprintf(stdout, "Failed to set sleep mode\n");
+        return n;
+    }
     fprintf(stdout, "Closing SX1278\n");
     return 0;
 }

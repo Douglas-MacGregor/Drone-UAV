@@ -161,12 +161,7 @@ void test_Lora_sx1278_device_creation_standby_sleep(void)
     int read_result = read_sx1278(device.spi_handle, &data);
     TEST_ASSERT_EQUAL_INT(2, read_result);
     TEST_ASSERT_EQUAL_UINT8(OPMODE_DEFAULT, mode);
-    int m = device.vtable->standby(&device);
-    if (m < 0)
-    {
-        fprintf(stderr, "Failed to set standby mode\n");
-        fprintf(stderr, "m=%d\n", m);
-    }
+    device.vtable->standby(&device);
     mode = 0;
     data.address = REG_OPMODE;
     data.write = 0;
