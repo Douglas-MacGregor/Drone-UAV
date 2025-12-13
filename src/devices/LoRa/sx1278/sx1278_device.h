@@ -23,6 +23,7 @@ int sx1278_sleep(void *self);
 int sx1278_standby(void *self);
 int sx1278_init(void *self);
 int sx1278_close(void *self);
+int sx1278_reset(void *self);
 
 sx1278_Device create_sx1278_device(int spi_handle);
 #endif // SX1278_DEVICE_H
