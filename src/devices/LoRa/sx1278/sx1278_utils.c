@@ -211,6 +211,7 @@ int set_sleep_mode(int spi_handle)
     int n = read_sx1278(spi_handle, &data);
     if (n < 0)
     {
+        fprintf(stdout, "Failed to read current mode\n");
         return n;
     }
     uint8_t mode = current_mode & ~(0b111);
@@ -221,12 +222,14 @@ int set_sleep_mode(int spi_handle)
     n = write_sx1278(spi_handle, &data);
     if (n < 0)
     {
+        fprintf(stdout, "Failed to write sleep mode\n");
         return n;
     }
     data.write = 0;
     n = read_sx1278(spi_handle, &data);
     if (n < 0)
     {
+        fprintf(stdout, "Failed to read back mode\n");
         return n;
     }
     n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x07, mode, 100, 1000);
