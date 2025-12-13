@@ -15,3 +15,7 @@ This repository contains code and resources for a Drone Unmanned Aerial Vehicle 
 ## Setup Instructions
 
 Refer to [docs/Setup.md](docs/Setup.md) for detailed setup instructions, including enabling the SPI interface and installing necessary libraries.
+
+## Using Git
+
+Refer to [docs/GitUsage.md](docs/GitUsage.md) for guidelines on using Git effectively within this project, including branching strategies and commit message conventions.
