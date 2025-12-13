@@ -11,10 +11,14 @@ int spi_handle;
 
 void setUp(void)
 {
+    print("\n----- Starting Test -----\n");
+    print_reg_values(spi_handle);
 }
 
 void tearDown(void)
 {
+    print_reg_values(spi_handle);
+    print("----- Test Complete -----\n");
 }
 
 void test_read_write_sx1278(void)

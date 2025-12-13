@@ -329,3 +329,25 @@ int poll_reg(int spi_handle, uint8_t reg_address, uint8_t mask, uint8_t expected
     }
     return -2; // Timeout
 }
+
+void print_reg_values(int spi_handle)
+{
+    SX1278Data data;
+    data.write = 0;
+    data.receive_length = 1;
+    uint8_t reg_value;
+    data.data_receive = &reg_value;
+    for (uint8_t addr = 0x00; addr <= 0x04; addr++)
+    {
+        data.address = addr;
+        int n = read_sx1278(spi_handle, &data);
+        if (n < 0)
+        {
+            fprintf(stdout, "Failed to read register 0x%02X\n", addr);
+        }
+        else
+        {
+            fprintf(stdout, "Reg 0x%02X: 0x%02X\n", addr, reg_value);
+        }
+    }
+}

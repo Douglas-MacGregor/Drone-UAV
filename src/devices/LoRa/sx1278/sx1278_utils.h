@@ -93,4 +93,6 @@ int rx_set_base_address(int spi_handle, uint8_t address);
 int tx_set_base_address(int spi_handle, uint8_t address);
 int spi_set_fifo_addr_ptr(int spi_handle, uint8_t address);
 
+void print_reg_values(int spi_handle);
+
 #endif // SX1278_UTILS_H
