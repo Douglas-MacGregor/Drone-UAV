@@ -259,33 +259,22 @@ void test_lora_sx1278_device_rx(void)
     sx1278_Device device = create_sx1278_device(spi_handle);
     TEST_ASSERT_EQUAL_INT(spi_handle, device.spi_handle);
 
-    printf("Starting RX test - make sure background transmitter is running\n");
-
     // Test receive function with background transmitter
     uint8_t buffer[10];
     memset(buffer, 0, 10);
 
     // Add a simple timeout mechanism by wrapping in a separate process or using alarm
-    printf("Attempting to receive data...\n");
 
     // This should receive data from your background transmitter
     int bytes_received = device.vtable->receive(&device, buffer, 10);
 
-    if (bytes_received > 0)
-    {
-        printf("Success! Received %d bytes: ", bytes_received);
-        for (int i = 0; i < bytes_received; i++)
-        {
-            printf("0x%02X ", buffer[i]);
-        }
-        printf("\n");
-        TEST_ASSERT_GREATER_THAN(0, bytes_received);
-    }
-    else
+    if (bytes_received < 0)
     {
         printf("No data received or error occurred\n");
         TEST_FAIL_MESSAGE("Failed to receive data from background transmitter");
     }
+    TEST_ASSERT_GREATER_THAN(0, bytes_received);
+    TEST_ASSERT_EQUAL_MEMORY((uint8_t *)"Hello", buffer, bytes_received);
 
     device.vtable->close(&device);
     close_spi(spi_handle);
