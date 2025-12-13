@@ -2,6 +2,8 @@
 #include "./sx1278/sx1278_utils.h"
 #include "../utils.h"
 #include <stdio.h>
+#include <unistd.h>
+#include <stdint.h>
 
 int main()
 {
@@ -76,12 +78,12 @@ int main()
         set_stdby_mode(spi_handle);
         data.address = REG_IRQ_FLAGS;
         data.write = 1;
-        uint8_t clear = 0xFF;
-        date.data_transmit = &clear;
+        clear = 0xFF;
+        data.data_transmit = &clear;
         data.transmit_length = 1;
         write_sx1278(spi_handle, &data);
         fprintf(stdout, "Transmission complete\n");
-        sleep(3);
+        usleep(300000);
     }
     close_sx1278(spi_handle);
     return 0;
