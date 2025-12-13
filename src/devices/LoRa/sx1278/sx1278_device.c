@@ -18,8 +18,8 @@ LoRaInterface sx1278_lora_interface = {
     .set_spreading_factor = sx1278_set_spreading_factor,
     .set_syncword = sx1278_set_syncword,
     .sleep = sx1278_sleep,
-    .standby = sx1278_sleep,
-    .reset = sx1278_standby};
+    .standby = sx1278_standby,
+    .reset = sx1278_reset};
 
 int sx1278_set_frequency(void *self, uint32_t freq)
 {
