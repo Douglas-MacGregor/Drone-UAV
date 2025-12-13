@@ -5,6 +5,8 @@
 
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
+
 int spi_handle;
 
 void setUp(void)

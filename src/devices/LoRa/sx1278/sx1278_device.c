@@ -7,6 +7,19 @@
 
 // functions to implement LoRaInterface
 
+LoRaInterface sx1278_vtable = {
+    .init = sx1278_init,
+    .close = sx1278_close,
+    .send = sx1278_send,
+    .receive = sx1278_receive,
+    .set_frequency = sx1278_set_frequency,
+    .set_power = sx1278_set_power,
+    .set_spreading_factor = sx1278_set_spreading_factor,
+    .set_syncword = sx1278_set_syncword,
+    .sleep = sx1278_sleep,
+    .standby = sx1278_sleep,
+    .reset = sx1278_standby};
+
 int sx1278_set_frequency(void *self, uint32_t freq)
 {
     // TODO: Implementation here
@@ -235,7 +248,7 @@ int sx1278_reset(void *self)
 sx1278_Device create_sx1278_device(int spi_handle)
 {
     sx1278_Device device;
-    device.vtable = &sx1278_vtable;
+    device.vtable = &sx1278_lora_interface;
     device.spi_handle = spi_handle;
     device.vtable->init(&device);
     return device;

@@ -10,7 +10,7 @@ typedef struct
     int spi_handle;        // SPI handle for communication
 } sx1278_Device;
 
-extern LoRaInterface sx1278_Device;
+extern LoRaInterface sx1278_lora_interface;
 
 // functions to implement LoRaInterface
 int sx1278_set_frequency(void *self, uint32_t freq);

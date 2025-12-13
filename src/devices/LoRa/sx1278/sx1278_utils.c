@@ -311,16 +311,3 @@ int poll_reg(int spi_handle, uint8_t reg_address, uint8_t mask, uint8_t expected
     }
     return -1; // Timeout
 }
-
-LoRaInterface sx1278_vtable = {
-    .init = sx1278_init,
-    .close = sx1278_close,
-    .send = sx1278_send,
-    .receive = sx1278_receive,
-    .set_frequency = sx1278_set_frequency,
-    .set_power = sx1278_set_power,
-    .set_spreading_factor = sx1278_set_spreading_factor,
-    .set_syncword = sx1278_set_syncword,
-    .sleep = sx1278_sleep,
-    .standby = sx1278_sleep,
-    .reset = sx1278_standby};
