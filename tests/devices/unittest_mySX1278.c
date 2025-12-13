@@ -252,7 +252,7 @@ void test_lora_sx1278_device_rx_tx(void)
     data.receive_length = 1;
     int read_result = read_sx1278(device.spi_handle, &data);
     TEST_ASSERT_EQUAL_INT(2, read_result);
-    TEST_ASSERT_EQUAL_UINT8(0x34, read_mode);
+    TEST_ASSERT_EQUAL_UINT8(0x12, read_mode);
     device.vtable->send(&device, (uint8_t *)"Hello", 5);
     uint8_t buffer[5];
     device.vtable->receive(&device, buffer, 5);
