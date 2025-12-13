@@ -333,7 +333,7 @@ int poll_reg(int spi_handle, uint8_t reg_address, uint8_t mask, uint8_t expected
             return -1; // Read error
         }
 
-        if ((reg_value & mask) == expected_value)
+        if ((reg_value & mask) == (expected_value & mask))
         {
             return 0; // Success
         }
