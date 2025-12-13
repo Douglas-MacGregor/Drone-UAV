@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "mySX1278.h"
+#include "sx1278/sx1278_utils.h"
 #include "../utils.h"
 #include <stdio.h>
 #include <unistd.h>
