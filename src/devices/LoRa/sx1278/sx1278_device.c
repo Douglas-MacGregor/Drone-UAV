@@ -131,6 +131,7 @@ int sx1278_send(void *self, const uint8_t *tx_data, int len)
 
 int sx1278_receive(void *self, uint8_t *buffer, int max_len)
 {
+    // REFACTOR!!
     sx1278_Device *device = (sx1278_Device *)self;
     int spi_handle = device->spi_handle;
     set_stdby_mode(spi_handle);
