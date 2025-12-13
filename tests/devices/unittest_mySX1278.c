@@ -11,14 +11,14 @@ int spi_handle;
 
 void setUp(void)
 {
-    print("\n----- Starting Test -----\n");
+    printf("\n----- Starting Test -----\n");
     print_reg_values(spi_handle);
 }
 
 void tearDown(void)
 {
     print_reg_values(spi_handle);
-    print("----- Test Complete -----\n");
+    printf("----- Test Complete -----\n");
 }
 
 void test_read_write_sx1278(void)
@@ -91,7 +91,7 @@ void test_set_modes_sx1278(void)
     if (m < 0)
     {
         fprintf(stderr, "Failed to deactivate LoRa mode\n");
-        printf(stderr, "m=%d\n", m);
+        fprintf(stderr, "m=%d\n", m);
     }
     reset_sx1278(spi_handle);
     set_stdby_mode(spi_handle);
