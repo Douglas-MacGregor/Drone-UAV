@@ -7,7 +7,8 @@
 
 int main()
 {
-    int spi_handle = init_sx1278();
+    int spi_handle = init_spi();
+    reset_sx1278(spi_handle);
     if (spi_handle < 0)
     {
         return -1;
@@ -91,6 +92,6 @@ int main()
         fprintf(stdout, "Transmission complete\n");
         usleep(300000);
     }
-    close_sx1278(spi_handle);
+    close_spi(spi_handle);
     return 0;
 }
