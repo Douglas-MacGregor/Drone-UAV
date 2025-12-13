@@ -104,7 +104,7 @@ int activate_lora(int spi_handle)
     {
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 10000);
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 1000);
     return n;
 }
 
@@ -126,7 +126,7 @@ int deactivate_lora(int spi_handle)
     {
         return n;
     }
-    mode = mode & ~(0b10000000); // Clear LoRa bit
+    mode = OPMODE_DEFAULT & ~(0b10000000); // Clear LoRa bit
     data.write = 1;
     data.data_transmit = &mode;
     data.transmit_length = 1;
@@ -135,7 +135,7 @@ int deactivate_lora(int spi_handle)
     {
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 10000);
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 1000);
     return n;
 }
 
@@ -210,7 +210,7 @@ int set_sleep_mode(int spi_handle)
     {
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 10000);
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 1000);
     return n;
 }
 
@@ -228,7 +228,7 @@ int set_stdby_mode(int spi_handle)
     {
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 10000);
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 1000);
     return n;
 }
 
