@@ -1,5 +1,6 @@
 #include <pigpio.h>
 #include "utils.h"
+#include <stdio.h>
 
 int init_spi()
 {
