@@ -146,9 +146,13 @@ int sx1278_receive(void *self, uint8_t *buffer, int max_len)
         return -1;
     }
     data.address = REG_FIFO_RX_BASE_ADDR;
+    data.write = 0;
+    uint8_t rx_base_addr;
+    data.data_receive = &rx_base_addr;
+    data.receive_length = 1;
     if (read_sx1278(spi_handle, &data) < 0)
     {
-        fprintf(stderr, "Failed to set FIFO RX Base Address: 0x%02X\n", address);
+        fprintf(stderr, "Failed to read FIFO RX Base Address\n");
         return -1;
     }
     data.address = REG_IRQ_FLAGS;
@@ -164,10 +168,23 @@ int sx1278_receive(void *self, uint8_t *buffer, int max_len)
     data.receive_length = 1;
     set_rx_continuous_mode(spi_handle);
     read_sx1278(spi_handle, &data);
+
+    // Add timeout to prevent infinite loop (10 seconds max)
+    int timeout_count = 0;
+    int max_timeout = 10000; // 10 seconds in milliseconds
+
     while ((irq_flags & IRQ_FLAG_RX_DONE) == 0)
     {
         read_sx1278(spi_handle, &data);
-        usleep(1000);
+        usleep(1000); // 1ms
+        timeout_count++;
+
+        if (timeout_count >= max_timeout)
+        {
+            fprintf(stderr, "RX timeout - no data received within 10 seconds\n");
+            set_stdby_mode(spi_handle);
+            return -1;
+        }
     }
     set_stdby_mode(spi_handle);
     fprintf(stdout, "Data received!\n");
