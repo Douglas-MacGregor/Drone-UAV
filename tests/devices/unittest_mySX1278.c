@@ -162,7 +162,7 @@ void test_Lora_sx1278_device_syncword(void)
     int read_result = read_sx1278(device.spi_handle, &data);
     TEST_ASSERT_EQUAL_INT(2, read_result);
     TEST_ASSERT_EQUAL_UINT8(OPMODE_DEFAULT, mode);
-    u_int8_t syncword = 0x77;
+    uint8_t syncword = 0x77;
     device.vtable->set_syncword(&device, syncword);
     uint8_t read_syncword = 0;
     data.address = REG_SYNC_WORD;
