@@ -166,7 +166,11 @@ void test_Lora_sx1278_device_creation_standby_sleep(void)
     TEST_ASSERT_EQUAL_UINT8((OPMODE_DEFAULT & ~(0b111)) | OPMODE_SLEEP, mode);
     int standby_result = device.vtable->standby(&device);
     TEST_ASSERT_EQUAL_INT(0, standby_result);
-    mode = -8;
+    mode = 0; // Reset mode to 0 instead of -8 for better debugging
+    data.address = REG_OPMODE;
+    data.write = 0;
+    data.data_receive = &mode;
+    data.receive_length = 1;
     read_result = read_sx1278(device.spi_handle, &data);
     TEST_ASSERT_EQUAL_INT(2, read_result);
     fprintf(stderr, "mode=0x%02X\n", mode);
