@@ -8,7 +8,7 @@
 
 // functions to implement LoRaInterface
 
-LoRaInterface sx1278_vtable = {
+LoRaInterface sx1278_lora_interface = {
     .init = sx1278_init,
     .close = sx1278_close,
     .send = sx1278_send,
@@ -231,7 +231,7 @@ int sx1278_init(void *self)
 
 int sx1278_close(void *self)
 {
-    sx1278_Device *device = (sx1278_Device *)self;
+    // sx1278_Device *device = (sx1278_Device *)self;
     fprintf(stdout, "Closing SX1278\n");
     return 0;
 }
