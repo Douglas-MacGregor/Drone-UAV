@@ -249,7 +249,8 @@ int set_stdby_mode(int spi_handle)
     {
         return n;
     }
-    uint8_t mode = current_mode & ~(0b111);
+    uint8_t mode = (current_mode & ~(0b111));
+    data.address = REG_OPMODE;
     mode |= OPMODE_STDBY; // Standby mode
     data.data_transmit = &mode;
     data.transmit_length = 1;
