@@ -35,45 +35,54 @@ int main()
     {
         fprintf(stdout, "FIFO Address Pointer set to TX Base Address\n");
     }
-    data.address = REG_FIFO;
-    data.write = 1;
-    char text[] = "Hello LoRa!";
-    uint8_t *bytes = (uint8_t *)text;
-    data.data_transmit = bytes;
-    data.transmit_length = 11;
-    if (write_sx1278(spi_handle, &data) > 0)
+    while (1)
     {
-        fprintf(stdout, "Data written to FIFO\n");
-    }
-    data.address = REG_PAYLOAD_LENGTH;
-    data.write = 1;
-    uint8_t payload_length = 11;
-    data.data_transmit = &payload_length;
-    data.transmit_length = 1;
-    if (write_sx1278(spi_handle, &data) > 0)
-    {
-        fprintf(stdout, "Payload length set to %d\n", payload_length);
-    }
-    fprintf(stdout, "Transmitting...\n");
-    data.address = REG_IRQ_FLAGS;
-    data.write = 1;
-    uint8_t irq_flags = 0;
-    uint8_t clear = 0xFF;
-    data.data_transmit = &clear;
-    data.transmit_length = 1;
-    write_sx1278(spi_handle, &data);
-    data.write = 0;
-    data.data_receive = &irq_flags;
-    data.receive_length = 1;
-    set_tx_mode(spi_handle);
-    read_sx1278(spi_handle, &data);
-    while ((irq_flags & IRQ_FLAG_TX_DONE) == 0)
-    {
+        data.address = REG_FIFO;
+        data.write = 1;
+        char text[] = "Hello";
+        uint8_t *bytes = (uint8_t *)text;
+        data.data_transmit = bytes;
+        data.transmit_length = 5;
+        if (write_sx1278(spi_handle, &data) > 0)
+        {
+            fprintf(stdout, "Data written to FIFO\n");
+        }
+        data.address = REG_PAYLOAD_LENGTH;
+        data.write = 1;
+        uint8_t payload_length = 11;
+        data.data_transmit = &payload_length;
+        data.transmit_length = 1;
+        if (write_sx1278(spi_handle, &data) > 0)
+        {
+            fprintf(stdout, "Payload length set to %d\n", payload_length);
+        }
+        fprintf(stdout, "Transmitting...\n");
+        data.address = REG_IRQ_FLAGS;
+        data.write = 1;
+        uint8_t irq_flags = 0;
+        uint8_t clear = 0xFF;
+        data.data_transmit = &clear;
+        data.transmit_length = 1;
+        write_sx1278(spi_handle, &data);
+        data.write = 0;
+        data.data_receive = &irq_flags;
+        data.receive_length = 1;
+        set_tx_mode(spi_handle);
         read_sx1278(spi_handle, &data);
+        while ((irq_flags & IRQ_FLAG_TX_DONE) == 0)
+        {
+            read_sx1278(spi_handle, &data);
+        }
+        set_stdby_mode(spi_handle);
+        data.address = REG_IRQ_FLAGS;
+        data.write = 1;
+        uint8_t clear = 0xFF;
+        date.data_transmit = &clear;
+        data.transmit_length = 1;
+        write_sx1278(spi_handle, &data);
+        fprintf(stdout, "Transmission complete\n");
+        sleep(3);
     }
-    set_stdby_mode(spi_handle);
-
-    fprintf(stdout, "Transmission complete\n");
     close_sx1278(spi_handle);
     return 0;
 }

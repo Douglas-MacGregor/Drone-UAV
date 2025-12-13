@@ -243,6 +243,16 @@ void test_lora_sx1278_device_rx_tx(void)
     spi_handle = init_spi();
     sx1278_Device device = create_sx1278_device(spi_handle);
     TEST_ASSERT_EQUAL_INT(spi_handle, device.spi_handle);
+
+    SX1278Data data;
+    data.address = REG_SYNC_WORD;
+    data.write = 0;
+    uint8_t read_mode = 0;
+    data.data_receive = &read_mode;
+    data.receive_length = 1;
+    int read_result = read_sx1278(device.spi_handle, &data);
+    TEST_ASSERT_EQUAL_INT(2, read_result);
+    TEST_ASSERT_EQUAL_UINT8(0x34, read_mode);
     device.vtable->send(&device, (uint8_t *)"Hello", 5);
     uint8_t buffer[5];
     device.vtable->receive(&device, buffer, 5);
