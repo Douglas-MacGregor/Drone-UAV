@@ -14,6 +14,7 @@ void setUp(void)
     spi_handle = init_sx1278();
     reset_sx1278(spi_handle);
     deactivate_lora(spi_handle);
+    reset_sx1278(spi_handle);
     close_sx1278(spi_handle);
     usleep(10000);
 }
@@ -25,10 +26,6 @@ void tearDown(void)
 void test_read_write_sx1278(void)
 {
     spi_handle = init_sx1278();
-    reset_sx1278(spi_handle);
-    deactivate_lora(spi_handle);
-    reset_sx1278(spi_handle);
-    set_stdby_mode(spi_handle);
     SX1278Data data;
     data.address = 0x04;
     data.write = 1;
@@ -169,8 +166,10 @@ void test_Lora_sx1278_device_creation_standby_sleep(void)
     TEST_ASSERT_EQUAL_UINT8((OPMODE_DEFAULT & ~(0b111)) | OPMODE_SLEEP, mode);
     int standby_result = device.vtable->standby(&device);
     TEST_ASSERT_EQUAL_INT(0, standby_result);
+    mode = -8;
     read_result = read_sx1278(device.spi_handle, &data);
     TEST_ASSERT_EQUAL_INT(2, read_result);
+    fprintf(stderr, "mode=0x%02X\n", mode);
     TEST_ASSERT_EQUAL_UINT8((OPMODE_DEFAULT & ~(0b111)) | OPMODE_STDBY, mode);
     device.vtable->close(&device);
     close_spi(spi_handle);
