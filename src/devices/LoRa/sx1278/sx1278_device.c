@@ -207,6 +207,7 @@ int sx1278_standby(void *self)
         fprintf(stderr, "n=%d\n", n);
         return n;
     }
+    printf("Set standby mode\n");
     return 0;
 }
 

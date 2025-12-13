@@ -229,7 +229,6 @@ int set_stdby_mode(int spi_handle)
         return n;
     }
     n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0xFF, mode, 100, 1000);
-    printf("Set standby mode\n");
     return n;
 }
 
