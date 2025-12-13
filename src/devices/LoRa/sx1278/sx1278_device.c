@@ -242,6 +242,7 @@ int sx1278_reset(void *self)
 {
     sx1278_Device *device = (sx1278_Device *)self;
     activate_lora(device->spi_handle);
+    usleep(10000);
     reset_sx1278(device->spi_handle);
     usleep(10000);
     set_stdby_mode(device->spi_handle);
