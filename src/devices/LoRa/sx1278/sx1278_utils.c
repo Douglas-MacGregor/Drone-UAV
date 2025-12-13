@@ -259,7 +259,7 @@ int set_stdby_mode(int spi_handle)
     {
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x07, mode, 100, 1000);
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x07, mode, 1000, 1000);
     return n;
 }
 
