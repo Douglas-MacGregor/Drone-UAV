@@ -2,6 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include "sx1278_utils.h"
 #include "../../utils.h"
 #include <stdlib.h>
@@ -250,6 +251,11 @@ int set_stdby_mode(int spi_handle)
     {
         return n;
     }
+
+    // If we're in SLEEP mode, we need extra time for the transition
+    uint8_t current_mode_bits = current_mode & 0x07;
+    bool from_sleep = (current_mode_bits == OPMODE_SLEEP);
+
     uint8_t mode = (current_mode & ~(0b111));
     mode |= OPMODE_STDBY; // Standby mode
     data.address = REG_OPMODE;
@@ -261,7 +267,17 @@ int set_stdby_mode(int spi_handle)
     {
         return n;
     }
-    usleep(1000); // Give the device 1ms to start processing the mode change
+
+    // Give extra time for SLEEP → STANDBY transition
+    if (from_sleep)
+    {
+        usleep(5000); // 5ms for sleep to standby transition
+    }
+    else
+    {
+        usleep(1000); // 1ms for other transitions
+    }
+
     n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x07, mode, 1000, 1000);
     return n;
 }
@@ -338,11 +354,23 @@ int poll_reg(int spi_handle, uint8_t reg_address, uint8_t mask, uint8_t expected
 
         if ((reg_value & mask) == (expected_value & mask))
         {
+            fprintf(stderr, "poll_reg: Success after %d attempts, reg=0x%02X, expected=0x%02X, mask=0x%02X\n",
+                    attempt, reg_value, expected_value, mask);
             return 0; // Success
         }
+
+        // Debug output every 100 attempts
+        if (attempt % 100 == 0)
+        {
+            fprintf(stderr, "poll_reg: Attempt %d, reg=0x%02X, expected=0x%02X, mask=0x%02X\n",
+                    attempt, reg_value, expected_value, mask);
+        }
+
         usleep(delay_us);
         attempt++;
     }
+    fprintf(stderr, "poll_reg: TIMEOUT after %d attempts, final reg=0x%02X, expected=0x%02X, mask=0x%02X\n",
+            max_attempts, reg_value, expected_value, mask);
     return -2; // Timeout
 }
 
