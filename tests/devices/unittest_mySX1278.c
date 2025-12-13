@@ -52,6 +52,7 @@ void test_lora_mode_sx1278(void)
     if (m < 0)
     {
         fprintf(stderr, "Failed to deactivate LoRa mode\n");
+        fprintf(stderr, "m=%d\n", m);
     }
     reset_sx1278(spi_handle);
     set_stdby_mode(spi_handle);
@@ -86,6 +87,7 @@ void test_set_modes_sx1278(void)
     if (m < 0)
     {
         fprintf(stderr, "Failed to deactivate LoRa mode\n");
+        printf(stderr, "m=%d\n", m);
     }
     reset_sx1278(spi_handle);
     set_stdby_mode(spi_handle);
@@ -172,7 +174,7 @@ void test_Lora_sx1278_device_creation_standby_sleep(void)
     data.receive_length = 1;
     read_result = read_sx1278(device.spi_handle, &data);
     TEST_ASSERT_EQUAL_INT(2, read_result);
-    TEST_ASSERT_EQUAL_UINT8((OPMODE_DEFAULT & ~(0b111)) | OPMODE_SLEEP, mode);
+    TEST_ASSERT_EQUAL_UINT8(((OPMODE_DEFAULT & ~(0b111)) | OPMODE_SLEEP), mode);
     device.vtable->close(&device);
     close_spi(spi_handle);
     return;
@@ -227,7 +229,7 @@ void test_lora_sx1278_device_reset(void)
     data.receive_length = 1;
     int read_result = read_sx1278(device.spi_handle, &data);
     TEST_ASSERT_EQUAL_INT(2, read_result);
-    TEST_ASSERT_EQUAL_UINT8(OPMODE_DEFAULT | OPMODE_RX_CONTINUOUS, read_mode);
+    TEST_ASSERT_EQUAL_UINT8((OPMODE_DEFAULT | OPMODE_RX_CONTINUOUS), read_mode);
     device.vtable->reset(&device);
     read_result = read_sx1278(device.spi_handle, &data);
     TEST_ASSERT_EQUAL_INT(2, read_result);
