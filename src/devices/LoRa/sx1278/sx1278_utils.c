@@ -260,11 +260,7 @@ int set_stdby_mode(int spi_handle)
     {
         return n;
     }
-    fprintf(stdout, "Mode %.2X\n", mode);
     n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x07, mode, 1000, 1000);
-    data.write = 0;
-    int y = read_sx1278(spi_handle, &data);
-    fprintf(stdout, "After poll, mode %.2X\n", current_mode);
     return n;
 }
 
