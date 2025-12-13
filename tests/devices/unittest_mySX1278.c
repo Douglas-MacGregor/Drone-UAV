@@ -15,6 +15,7 @@ void setUp(void)
     reset_sx1278(spi_handle);
     deactivate_lora(spi_handle);
     close_sx1278(spi_handle);
+    usleep(10000);
 }
 
 void tearDown(void)
@@ -161,26 +162,16 @@ void test_Lora_sx1278_device_creation_standby_sleep(void)
     int read_result = read_sx1278(device.spi_handle, &data);
     TEST_ASSERT_EQUAL_INT(2, read_result);
     TEST_ASSERT_EQUAL_UINT8(OPMODE_DEFAULT, mode);
-    int m = device.vtable->standby(&device);
-    TEST_ASSERT_EQUAL_INT(0, m);
-    uint8_t trial_mode = 0;
-    data.address = REG_OPMODE;
-    data.write = 0;
-    data.data_receive = &trial_mode;
-    data.receive_length = 1;
-    read_result = read_sx1278(spi_handle, &data);
-    TEST_ASSERT_EQUAL_INT(2, read_result);
-    fprintf(stdout, "mode=0x%02X\n", mode);
-    TEST_ASSERT_EQUAL_UINT8(((OPMODE_DEFAULT & ~(0b111)) | OPMODE_STDBY), mode);
-    device.vtable->sleep(&device);
-    mode = 0;
-    data.address = REG_OPMODE;
-    data.write = 0;
-    data.data_receive = &mode;
-    data.receive_length = 1;
+    int sleep_result = device.vtable->sleep(&device);
+    TEST_ASSERT_EQUAL_INT(0, sleep_result);
     read_result = read_sx1278(device.spi_handle, &data);
     TEST_ASSERT_EQUAL_INT(2, read_result);
-    TEST_ASSERT_EQUAL_UINT8(((OPMODE_DEFAULT & ~(0b111)) | OPMODE_SLEEP), mode);
+    TEST_ASSERT_EQUAL_UINT8((OPMODE_DEFAULT & ~(0b111)) | OPMODE_SLEEP, mode);
+    int standby_result = device.vtable->standby(&device);
+    TEST_ASSERT_EQUAL_INT(0, standby_result);
+    read_result = read_sx1278(device.spi_handle, &data);
+    TEST_ASSERT_EQUAL_INT(2, read_result);
+    TEST_ASSERT_EQUAL_UINT8((OPMODE_DEFAULT & ~(0b111)) | OPMODE_STDBY, mode);
     device.vtable->close(&device);
     close_spi(spi_handle);
     return;
