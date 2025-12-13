@@ -250,8 +250,8 @@ int set_stdby_mode(int spi_handle)
         return n;
     }
     uint8_t mode = (current_mode & ~(0b111));
-    data.address = REG_OPMODE;
     mode |= OPMODE_STDBY; // Standby mode
+    data.address = REG_OPMODE;
     data.data_transmit = &mode;
     data.transmit_length = 1;
     data.write = 1;
@@ -260,7 +260,7 @@ int set_stdby_mode(int spi_handle)
     {
         return n;
     }
-    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x07, OPMODE_STDBY, 1000, 1000);
+    n = poll_reg(spi_handle, REG_OPMODE, (uint8_t)0x07, mode, 1000, 1000);
     return n;
 }
 
@@ -336,6 +336,7 @@ int poll_reg(int spi_handle, uint8_t reg_address, uint8_t mask, uint8_t expected
 
         if ((reg_value & mask) == (expected_value & mask))
         {
+            fprintf(stderr, "poll_reg: reg 0x%02X matched expected value 0x%02X (got 0x%02X)\n", reg_address, expected_value, reg_value);
             return 0; // Success
         }
         usleep(delay_us);
