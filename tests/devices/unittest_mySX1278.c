@@ -20,6 +20,10 @@ void tearDown(void)
 void test_read_write_sx1278(void)
 {
     spi_handle = init_sx1278();
+    reset_sx1278(spi_handle);
+    deactivate_lora(spi_handle);
+    reset_sx1278(spi_handle);
+    set_stdby_mode(spi_handle);
     SX1278Data data;
     data.address = 0x04;
     data.write = 1;
@@ -43,6 +47,10 @@ void test_read_write_sx1278(void)
 void test_lora_mode_sx1278(void)
 {
     spi_handle = init_sx1278();
+    reset_sx1278(spi_handle);
+    deactivate_lora(spi_handle);
+    reset_sx1278(spi_handle);
+    set_stdby_mode(spi_handle);
     SX1278Data data;
     data.address = REG_OPMODE;
     data.write = 0;
@@ -69,6 +77,10 @@ void test_lora_mode_sx1278(void)
 void test_set_modes_sx1278(void)
 {
     spi_handle = init_sx1278();
+    reset_sx1278(spi_handle);
+    deactivate_lora(spi_handle);
+    reset_sx1278(spi_handle);
+    set_stdby_mode(spi_handle);
     SX1278Data data;
     data.address = REG_OPMODE;
     data.write = 0;
