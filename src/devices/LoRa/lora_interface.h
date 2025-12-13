@@ -1,6 +1,4 @@
 #include <stdint.h>
-#include "../utils.h"
-#include <stdlib.h>
 
 typedef struct
 {
