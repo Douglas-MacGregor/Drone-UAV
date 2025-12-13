@@ -12,13 +12,14 @@ int spi_handle;
 void setUp(void)
 {
     printf("\n----- Starting Test -----\n");
+    spi_handle = init_sx1278();
     print_reg_values(spi_handle);
+    close_sx1278(spi_handle);
+    usleep(100000);
 }
 
 void tearDown(void)
 {
-    print_reg_values(spi_handle);
-    printf("----- Test Complete -----\n");
 }
 
 void test_read_write_sx1278(void)
