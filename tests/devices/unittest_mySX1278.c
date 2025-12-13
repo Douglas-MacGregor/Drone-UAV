@@ -11,9 +11,9 @@ int spi_handle;
 
 void setUp(void)
 {
-    spi_handle = init_sx1278();
+    spi_handle = init_spi();
     reset_sx1278(spi_handle);
-    close_sx1278(spi_handle);
+    close_spi(spi_handle);
     usleep(10000);
     printf("Setup complete\n");
 }
