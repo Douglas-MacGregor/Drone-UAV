@@ -155,17 +155,21 @@ int sx1278_receive(void *self, uint8_t *buffer, int max_len)
         fprintf(stderr, "Failed to read FIFO RX Base Address\n");
         return -1;
     }
+    // Clear IRQ flags first (like in working rx.c)
     data.address = REG_IRQ_FLAGS;
-    data.write = 0;
-    uint8_t irq_flags = 0;
-    uint8_t clear = 0xFF;
     data.write = 1;
+    uint8_t clear = 0xFF;
     data.data_transmit = &clear;
     data.transmit_length = 1;
     write_sx1278(spi_handle, &data);
+
+    // Setup for reading IRQ flags
+    data.address = REG_IRQ_FLAGS;
     data.write = 0;
+    uint8_t irq_flags = 0;
     data.data_receive = &irq_flags;
     data.receive_length = 1;
+
     set_rx_continuous_mode(spi_handle);
     read_sx1278(spi_handle, &data);
 
