@@ -1,11 +1,13 @@
 #include <stdio.h>
-#include <pigpio.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdint.h>
-#include "mySX1278.h"
+#include "sx1278_utils.h"
 #include "../../utils.h"
 #include <stdlib.h>
+#include <pigpio.h>
+
+// lower level functions for SX1278 operation
 
 int init_sx1278()
 {

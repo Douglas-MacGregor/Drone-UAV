@@ -71,6 +71,7 @@ int main()
     {
         read_sx1278(spi_handle, &data);
     }
+    set_stdby_mode(spi_handle);
 
     fprintf(stdout, "Transmission complete\n");
     close_sx1278(spi_handle);

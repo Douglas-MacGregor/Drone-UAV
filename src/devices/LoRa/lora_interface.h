@@ -1,10 +1,10 @@
 #include <stdint.h>
 #include "../utils.h"
-#include "sx1278/mySX1278.h"
 #include <stdlib.h>
 
 typedef struct
 {
+    int (*init)(void *self);
     int (*close)(void *self);
     int (*send)(void *self, const uint8_t *data, int len);
     int (*receive)(void *self, uint8_t *buffer, int max_len);
@@ -12,10 +12,7 @@ typedef struct
     int (*set_frequency)(void *self, uint32_t freq);
     int (*set_power)(void *self, int level);
     int (*set_spreading_factor)(void *self, int sf);
+    int (*sleep)(void *self);
+    int (*standby)(void *self);
+    int (*reset)(void *self);
 } LoRaInterface;
-
-typedef struct
-{
-    LoRaInterface *vtable; // pointer to interface
-    int spi_handle;        // SPI handle for communication
-} LoRaDevice;

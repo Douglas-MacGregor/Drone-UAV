@@ -1,5 +1,6 @@
 #include "../unity.h"
-#include "../../src/devices/LoRa/sx1278/mySX1278.h"
+#include "../../src/devices/LoRa/sx1278/sx1278_utils.h"
+#include "../../src/devices/LoRa/sx1278/sx1278_device.h"
 #include <string.h>
 #include <unistd.h>
 int spi_handle;

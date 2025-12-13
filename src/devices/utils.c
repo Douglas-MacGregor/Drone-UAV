@@ -1,8 +1,4 @@
-#include <stdio.h>
 #include <pigpio.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdint.h>
 #include "utils.h"
 
 int init_spi()
