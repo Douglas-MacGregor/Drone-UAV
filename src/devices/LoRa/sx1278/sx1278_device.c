@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "sx1278_device.h"
+#include <unistd.h>
 
 // functions to implement LoRaInterface
 
@@ -189,7 +190,7 @@ int sx1278_sleep(void *self)
     int n = set_sleep_mode(spi_handle);
     if (n < 0)
     {
-        printf(stdout, "Failed to set sleep mode\n");
+        fprintf(stderr, "Failed to set sleep mode\n");
         return n;
     }
     return 0;
@@ -202,7 +203,7 @@ int sx1278_standby(void *self)
     int n = set_stdby_mode(spi_handle);
     if (n < 0)
     {
-        printf(stdout, "Failed to set standby mode\n");
+        fprintf(stderr, "Failed to set standby mode\n");
         return n;
     }
     return 0;
@@ -216,15 +217,15 @@ int sx1278_init(void *self)
     n = activate_lora(spi_handle);
     if (n < 0)
     {
-        printf(stdout, "Failed to activate LoRa mode\n");
+        fprintf(stderr, "Failed to activate LoRa mode\n");
         return n;
     }
     n = set_stdby_mode(spi_handle);
     {
-        printf(stdout, "Failed to set standby mode\n");
+        fprintf(stderr, "Failed to set standby mode\n");
         return n;
     }
-    fprintf(stdout, "SX1278 initialized successfully\n");
+    fprintf(stderr, "SX1278 initialized successfully\n");
     return 0;
 }
 
