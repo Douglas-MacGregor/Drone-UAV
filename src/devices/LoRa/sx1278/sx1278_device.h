@@ -1,3 +1,5 @@
+#ifndef SX1278_DEVICE_H
+#define SX1278_DEVICE_H
 #include <stdint.h>
 #include "../lora_interface.h"
 #include "sx1278_utils.h"
@@ -8,18 +10,7 @@ typedef struct
     int spi_handle;        // SPI handle for communication
 } sx1278_Device;
 
-LoRaInterface sx1278_vtable = {
-    .init = sx1278_init,
-    .close = sx1278_close,
-    .send = sx1278_send,
-    .receive = sx1278_receive,
-    .set_frequency = sx1278_set_frequency,
-    .set_power = sx1278_set_power,
-    .set_spreading_factor = sx1278_set_spreading_factor,
-    .set_syncword = sx1278_set_syncword,
-    .sleep = sx1278_sleep,
-    .standby = sx1278_sleep,
-    .reset = sx1278_standby};
+extern LoRaInterface sx1278_Device;
 
 // functions to implement LoRaInterface
 int sx1278_set_frequency(void *self, uint32_t freq);
@@ -34,3 +25,4 @@ int sx1278_init(void *self);
 int sx1278_close(void *self);
 
 sx1278_Device create_sx1278_device(int spi_handle);
+#endif // SX1278_DEVICE_H

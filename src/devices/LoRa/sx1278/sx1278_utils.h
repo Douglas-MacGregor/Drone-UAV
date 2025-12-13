@@ -1,3 +1,5 @@
+#ifndef SX1278_UTILS_H
+#define SX1278_UTILS_H
 #include <stdint.h>
 #include "../lora_interface.h"
 
@@ -90,3 +92,5 @@ int set_stdby_mode(int spi_handle);
 int rx_set_base_address(int spi_handle, uint8_t address);
 int tx_set_base_address(int spi_handle, uint8_t address);
 int spi_set_fifo_addr_ptr(int spi_handle, uint8_t address);
+
+#endif // SX1278_UTILS_H

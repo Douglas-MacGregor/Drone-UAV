@@ -1,3 +1,5 @@
+#ifndef LORA_INTERFACE_H
+#define LORA_INTERFACE_H
 #include <stdint.h>
 
 typedef struct
@@ -14,3 +16,4 @@ typedef struct
     int (*standby)(void *self);
     int (*reset)(void *self);
 } LoRaInterface;
+#endif // LORA_INTERFACE_H
