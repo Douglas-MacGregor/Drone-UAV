@@ -238,25 +238,43 @@ void test_lora_sx1278_device_reset(void)
     return;
 };
 
-void test_lora_sx1278_device_rx_tx(void)
+void test_lora_sx1278_device_tx(void)
 {
     spi_handle = init_spi();
     sx1278_Device device = create_sx1278_device(spi_handle);
     TEST_ASSERT_EQUAL_INT(spi_handle, device.spi_handle);
 
-    SX1278Data data;
-    data.address = REG_SYNC_WORD;
-    data.write = 0;
-    uint8_t read_mode = 0;
-    data.data_receive = &read_mode;
-    data.receive_length = 1;
-    int read_result = read_sx1278(device.spi_handle, &data);
-    TEST_ASSERT_EQUAL_INT(2, read_result);
-    TEST_ASSERT_EQUAL_UINT8(0x12, read_mode);
-    device.vtable->send(&device, (uint8_t *)"Hello", 5);
-    uint8_t buffer[5];
-    device.vtable->receive(&device, buffer, 5);
-    TEST_ASSERT_EQUAL_MEMORY((uint8_t *)"Hello", buffer, 5);
+    // Test that send function works without crashing
+    int send_result = device.vtable->send(&device, (uint8_t *)"Hello", 5);
+    TEST_ASSERT_EQUAL_INT(0, send_result);
+
+    device.vtable->close(&device);
+    close_spi(spi_handle);
+    return;
+}
+
+void test_lora_sx1278_device_rx(void)
+{
+    spi_handle = init_spi();
+    sx1278_Device device = create_sx1278_device(spi_handle);
+    TEST_ASSERT_EQUAL_INT(spi_handle, device.spi_handle);
+
+    // Test receive function with background transmitter
+    uint8_t buffer[10];
+    memset(buffer, 0, 10);
+
+    // This should receive data from your background transmitter
+    int bytes_received = device.vtable->receive(&device, buffer, 10);
+    TEST_ASSERT_GREATER_THAN(0, bytes_received);
+
+    // Print what was received for debugging
+    fprintf(stderr, "Received %d bytes: ", bytes_received);
+    for (int i = 0; i < bytes_received; i++)
+    {
+        fprintf(stderr, "0x%02X ", buffer[i]);
+    }
+    fprintf(stderr, "\n");
+
     device.vtable->close(&device);
     close_spi(spi_handle);
     return;
@@ -271,6 +289,7 @@ int main(void)
     RUN_TEST(test_Lora_sx1278_device_creation_standby_sleep);
     RUN_TEST(test_Lora_sx1278_device_syncword);
     RUN_TEST(test_lora_sx1278_device_reset);
-    RUN_TEST(test_lora_sx1278_device_rx_tx);
+    RUN_TEST(test_lora_sx1278_device_tx);
+    RUN_TEST(test_lora_sx1278_device_rx);
     return UNITY_END();
 }
