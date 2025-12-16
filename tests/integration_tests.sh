@@ -44,8 +44,8 @@ add_integration_test() {
     local test_name="$1"
     local test_function="$2"
     
-    # Store test info for later execution
-    INTEGRATION_TESTS+=("$test_name|$test_function")
+    # Store test info for later execution using a unique delimiter
+    INTEGRATION_TESTS+=("$test_name|||$test_function")
 }
 
 setup_integration_tests() {
@@ -71,7 +71,7 @@ run_all_integration_tests() {
     
     # Execute all registered tests
     for test_info in "${INTEGRATION_TESTS[@]}"; do
-        IFS='|' read -r test_name test_function <<< "$test_info"
+        IFS='|||' read -r test_name test_function <<< "$test_info"
         $test_function
     done
     

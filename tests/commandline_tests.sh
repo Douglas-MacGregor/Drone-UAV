@@ -54,8 +54,8 @@ add_cmd_test() {
     local expected_file="$3"
     local fail_msg="$4"
     
-    # Store test info for later execution
-    CMDLINE_TESTS+=("$name|$command|$expected_file|$fail_msg")
+    # Store test info for later execution using a unique delimiter
+    CMDLINE_TESTS+=("$name|||$command|||$expected_file|||$fail_msg")
 }
 
 run_all_cmdline_tests() {
@@ -70,7 +70,7 @@ run_all_cmdline_tests() {
     
     # Execute all registered tests
     for test_info in "${CMDLINE_TESTS[@]}"; do
-        IFS='|' read -r name command expected_file fail_msg <<< "$test_info"
+        IFS='|||' read -r name command expected_file fail_msg <<< "$test_info"
         run_cmd_test "$name" "$command" "$expected_file" "$fail_msg"
     done
     

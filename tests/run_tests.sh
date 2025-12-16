@@ -80,10 +80,13 @@ run_test_module() {
         return 1
     fi
     
-    # Execute module and show output in real-time, capture results separately
+    # Execute module and capture all output
     local temp_file=$(mktemp)
-    "$SCRIPT_DIR/$module_script" | tee "$temp_file"
+    "$SCRIPT_DIR/$module_script" > "$temp_file" 2>&1
     local module_status=$?
+    
+    # Show all output except the last line (which contains results)
+    head -n -1 "$temp_file"
     
     # Get the last line which should contain the results
     local results
