@@ -121,7 +121,11 @@ run_all_unit_tests() {
     cleanup_unit_tests
     cd "$current_dir"
     
-    # Return results
+    # Output summary for this module
+    echo ""
+    echo "Unit tests: $UNIT_PASS passed, $UNIT_FAIL failed"
+    
+    # Return results as the last line for parsing by master script
     echo "$UNIT_PASS,$UNIT_FAIL"
 }
 

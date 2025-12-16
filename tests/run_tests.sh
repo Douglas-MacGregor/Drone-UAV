@@ -80,10 +80,15 @@ run_test_module() {
         return 1
     fi
     
-    # Execute module and capture results
-    local results
-    results=$("$SCRIPT_DIR/$module_script")
+    # Execute module and show output in real-time, capture results separately
+    local temp_file=$(mktemp)
+    "$SCRIPT_DIR/$module_script" | tee "$temp_file"
     local module_status=$?
+    
+    # Get the last line which should contain the results
+    local results
+    results=$(tail -n 1 "$temp_file")
+    rm -f "$temp_file"
     
     # Parse results (format: "pass_count,fail_count")
     if [[ $results =~ ^[0-9]+,[0-9]+$ ]]; then
