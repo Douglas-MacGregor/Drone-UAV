@@ -3,8 +3,17 @@
 # ============================================
 #   Master Test Runner
 #   Orchestrates all test modules in the project
+#   Master Test Runner
+#   Orchestrates all test modules in the project
 # ============================================
 
+# Get script directory for relative imports
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/test_utils.sh"
+
+# Global test counters
+TOTAL_PASS=0
+TOTAL_FAIL=0
 # Get script directory for relative imports
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/test_utils.sh"
@@ -80,18 +89,10 @@ run_test_module() {
         return 1
     fi
     
-    # Execute module and capture all output
-    local temp_file=$(mktemp)
-    "$SCRIPT_DIR/$module_script" > "$temp_file" 2>&1
-    local module_status=$?
-    
-    # Show all output except the last line (which contains results)
-    head -n -1 "$temp_file"
-    
-    # Get the last line which should contain the results
+    # Execute module and capture results
     local results
-    results=$(tail -n 1 "$temp_file")
-    rm -f "$temp_file"
+    results=$("$SCRIPT_DIR/$module_script")
+    local module_status=$?
     
     # Parse results (format: "pass_count,fail_count")
     if [[ $results =~ ^[0-9]+,[0-9]+$ ]]; then

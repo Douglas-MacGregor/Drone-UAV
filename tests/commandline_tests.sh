@@ -22,14 +22,7 @@ run_cmd_test() {
     local fail_msg="$4"
 
     local actual
-    actual=$(eval "$command" 2>/dev/null)
-    local command_exit_code=$?
-
-    if [ ! -f "$expected_file" ]; then
-        fail "$name" "Expected output file '$expected_file' does not exist"
-        CMD_FAIL=$((CMD_FAIL+1))
-        return 1
-    fi
+    actual=$(eval "$command")
 
     local expected
     expected=$(cat "$expected_file")
@@ -40,10 +33,9 @@ run_cmd_test() {
     else
         fail "$name" "$fail_msg"
         echo "---- Expected ----"
-        echo "'$expected'"
+        echo "$expected"
         echo "---- Actual ----"
-        echo "'$actual'"
-        echo "---- Command Exit Code: $command_exit_code ----"
+        echo "$actual"
         CMD_FAIL=$((CMD_FAIL+1))
     fi
 }
@@ -54,46 +46,44 @@ add_cmd_test() {
     local expected_file="$3"
     local fail_msg="$4"
     
-    # Store test info as separate arrays
-    CMDLINE_TEST_NAMES+=("$name")
-    CMDLINE_TEST_COMMANDS+=("$command")
-    CMDLINE_TEST_EXPECTED+=("$expected_file")
-    CMDLINE_TEST_MESSAGES+=("$fail_msg")
+    # Store test info for later execution
+    CMDLINE_TESTS+=("$name|$command|$expected_file|$fail_msg")
 }
 
 run_all_cmdline_tests() {
     section "Running Command-Line Tests"
     
-    # Initialize test arrays if not already done
-    if [ ${#CMDLINE_TEST_NAMES[@]} -eq 0 ]; then
+    # Initialize test array if not already done
+    if [ ${#CMDLINE_TESTS[@]} -eq 0 ]; then
         setup_cmdline_tests
     fi
     
-    info "Found ${#CMDLINE_TEST_NAMES[@]} command-line tests"
-    
     # Execute all registered tests
-    for ((i=0; i<${#CMDLINE_TEST_NAMES[@]}; i++)); do
-        run_cmd_test "${CMDLINE_TEST_NAMES[i]}" "${CMDLINE_TEST_COMMANDS[i]}" "${CMDLINE_TEST_EXPECTED[i]}" "${CMDLINE_TEST_MESSAGES[i]}"
+    for test_info in "${CMDLINE_TESTS[@]}"; do
+        IFS='|' read -r name command expected_file fail_msg <<< "$test_info"
+        run_cmd_test "$name" "$command" "$expected_file" "$fail_msg"
     done
     
-    # Output summary for this module
-    echo ""
-    echo "Command-line tests: $CMD_PASS passed, $CMD_FAIL failed"
-    
-    # Return results as the last line for parsing by master script
+    # Return results
     echo "$CMD_PASS,$CMD_FAIL"
 }
 
 # ---- Test Definitions ----
 # Add your command-line tests here
 setup_cmdline_tests() {
-    CMDLINE_TEST_NAMES=()
-    CMDLINE_TEST_COMMANDS=()
-    CMDLINE_TEST_EXPECTED=()
-    CMDLINE_TEST_MESSAGES=()
+    CMDLINE_TESTS=()
     
-    add_cmd_test "Check SPI is enabled" "ls /dev/spi*" "expected/spi_enabled.out" "SPI interface not available."
-    add_cmd_test "Checking that PIGPIO is installed" "dpkg -l | grep pigpio" "expected/pigpio_installed.out" "PIGPIO library is not installed."
+    add_cmd_test \
+        "Check SPI is enabled" \
+        "ls /dev/spi*" \
+        "expected/spi_enabled.out" \
+        "SPI interface not available."
+
+    add_cmd_test \
+        "Checking that PIGPIO is installed" \
+        "dpkg -l | grep pigpio" \
+        "expected/pigpio_installed.out" \
+        "PIGPIO library is not installed."
     
     # Add more tests by calling add_cmd_test here...
 }
