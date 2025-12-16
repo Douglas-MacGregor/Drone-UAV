@@ -75,7 +75,11 @@ run_all_integration_tests() {
         $test_function
     done
     
-    # Return results
+    # Output summary for this module
+    echo ""
+    echo "Integration tests: $INT_PASS passed, $INT_FAIL failed"
+    
+    # Return results as the last line for parsing by master script
     echo "$INT_PASS,$INT_FAIL"
 }
 

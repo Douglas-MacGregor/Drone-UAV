@@ -74,7 +74,11 @@ run_all_cmdline_tests() {
         run_cmd_test "$name" "$command" "$expected_file" "$fail_msg"
     done
     
-    # Return results
+    # Output summary for this module
+    echo ""
+    echo "Command-line tests: $CMD_PASS passed, $CMD_FAIL failed"
+    
+    # Return results as the last line for parsing by master script
     echo "$CMD_PASS,$CMD_FAIL"
 }
 
