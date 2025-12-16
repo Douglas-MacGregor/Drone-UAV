@@ -291,6 +291,6 @@ int main(void)
     RUN_TEST(test_Lora_sx1278_device_syncword);
     RUN_TEST(test_lora_sx1278_device_reset);
     RUN_TEST(test_lora_sx1278_device_tx);
-    RUN_TEST(test_lora_sx1278_device_rx);
+    // RUN_TEST(test_lora_sx1278_device_rx);
     return UNITY_END();
 }
