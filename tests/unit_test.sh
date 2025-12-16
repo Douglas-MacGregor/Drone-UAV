@@ -60,6 +60,7 @@ run_unity_test() {
         return 1
     fi
     
+    echo ""  # Add spacing before each test
     info "Running $test_name"
     
     $test_executable
