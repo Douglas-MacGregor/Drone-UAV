@@ -73,17 +73,8 @@ run_all_cmdline_tests() {
 setup_cmdline_tests() {
     CMDLINE_TESTS=()
     
-    add_cmd_test \
-        "Check SPI is enabled" \
-        "ls /dev/spi*" \
-        "expected/spi_enabled.out" \
-        "SPI interface not available."
-
-    add_cmd_test \
-        "Checking that PIGPIO is installed" \
-        "dpkg -l | grep pigpio" \
-        "expected/pigpio_installed.out" \
-        "PIGPIO library is not installed."
+    add_cmd_test "Check SPI is enabled" "ls /dev/spi*" "expected/spi_enabled.out" "SPI interface not available."
+    add_cmd_test "Checking that PIGPIO is installed" "dpkg -l | grep pigpio" "expected/pigpio_installed.out" "PIGPIO library is not installed."
     
     # Add more tests by calling add_cmd_test here...
 }
