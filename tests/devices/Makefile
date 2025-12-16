@@ -3,29 +3,45 @@ CFLAGS = -g -Wall
 LDFLAGS = -lpigpio -lrt -lpthread
 
 
-SX1278_unittest = SX1278_unittest
-MY_SX1278_DIR = ../../src/devices/LoRa/sx1278
+unittest_sx1278 = unittest_sx1278
+unittest_mpu6050 = unittest_mpu6050
+mpu6050_dir = ../../src/devices/IMU/MPU-6050
+sx1278_dir = ../../src/devices/LoRa/sx1278
 
-SX1278_unittest_OBJS = \
+unittest_mpu6050_OBJS = \
 	unity.o \
-	unittest_mySX1278.o \
-	$(MY_SX1278_DIR)/sx1278_utils.o \
-	$ ../../src/devices/utils.o \
-	${MY_SX1278_DIR}/sx1278_device.o
+	unittest_mpu6050.o \
+	$(mpu6050_dir)/mpu6050_utils.o \
+	../../src/devices/utils.o \
+	$(mpu6050_dir)/mpu6050_device.o
 
-TARGET = $(SX1278_unittest)
+unittest_sx1278_OBJS = \
+	unity.o \
+	unittest_sx1278.o \
+	$(sx1278_dir)/sx1278_utils.o \
+	../../src/devices/utils.o \
+	$(sx1278_dir)/sx1278_device.o
+
+TARGET = $(unittest_sx1278) $(unittest_mpu6050)
 
 all: $(TARGET)
 
-$(SX1278_unittest): $(SX1278_unittest_OBJS)
+$(unittest_sx1278): $(unittest_sx1278_OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+$(unittest_mpu6050): $(unittest_mpu6050_OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 unity.o: ../unity.c ../unity.h ../unity_internals.h
 	$(CC) -c ../unity.c $(CFLAGS)
 
-$(SX1278_unittest).o: unittest_mySX1278.c $(MY_SX1278_DIR)/sx1278_utils.h $(MY_SX1278_DIR)/sx1278_device.h
-	$(CC) -c unittest_mySX1278.c $(CFLAGS)
+$(unittest_sx1278).o: unittest_sx1278.c $(sx1278_dir)/sx1278_utils.h $(sx1278_dir)/sx1278_device.h
+	$(CC) -c unittest_sx1278.c $(CFLAGS)
+
+$(unittest_mpu6050).o: unittest_mpu6050.c $(mpu6050_dir)/mpu6050_utils.h $(mpu6050_dir)/mpu6050_device.h
+	$(CC) -c unittest_mpu6050.c $(CFLAGS)
 
 clean:
 	rm -f *.o $(TARGET)
-	$(MAKE) -C $(MY_SX1278_DIR) clean
+	$(MAKE) -C $(sx1278_dir) clean
+	$(MAKE) -C $(mpu6050_dir) clean
