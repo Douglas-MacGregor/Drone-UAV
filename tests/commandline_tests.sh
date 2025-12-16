@@ -22,7 +22,14 @@ run_cmd_test() {
     local fail_msg="$4"
 
     local actual
-    actual=$(eval "$command")
+    actual=$(eval "$command" 2>/dev/null)
+    local command_exit_code=$?
+
+    if [ ! -f "$expected_file" ]; then
+        fail "$name" "Expected output file '$expected_file' does not exist"
+        CMD_FAIL=$((CMD_FAIL+1))
+        return 1
+    fi
 
     local expected
     expected=$(cat "$expected_file")
@@ -33,9 +40,10 @@ run_cmd_test() {
     else
         fail "$name" "$fail_msg"
         echo "---- Expected ----"
-        echo "$expected"
+        echo "'$expected'"
         echo "---- Actual ----"
-        echo "$actual"
+        echo "'$actual'"
+        echo "---- Command Exit Code: $command_exit_code ----"
         CMD_FAIL=$((CMD_FAIL+1))
     fi
 }
@@ -57,6 +65,8 @@ run_all_cmdline_tests() {
     if [ ${#CMDLINE_TESTS[@]} -eq 0 ]; then
         setup_cmdline_tests
     fi
+    
+    info "Found ${#CMDLINE_TESTS[@]} command-line tests"
     
     # Execute all registered tests
     for test_info in "${CMDLINE_TESTS[@]}"; do
