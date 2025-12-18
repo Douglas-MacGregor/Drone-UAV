@@ -22,7 +22,7 @@ int read_mpu6050(int i2c_handle, mpu6050_Data *data)
 
 int write_mpu6050(int i2c_handle, mpu6050_Data *data)
 {
-    int n = i2cWriteI2CBlockData(i2c_handle, data->address, data->data, data->length);
+    int n = i2cWriteI2CBlockData(i2c_handle, data->address, &(data->data), data->length);
     if (n < 0)
     {
         fprintf(stderr, "MPU6050 write error\n");
