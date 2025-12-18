@@ -191,6 +191,7 @@ int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_f
     {
         return -1;
     }
+    usleep(100000); // 100 ms
 
     // Configure gyro full-scale range
     data.address = REG_GYRO_CONFIG;
