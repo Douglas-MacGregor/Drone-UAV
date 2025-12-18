@@ -3,8 +3,17 @@
 # ============================================
 #   Master Test Runner
 #   Orchestrates all test modules in the project
+#   Master Test Runner
+#   Orchestrates all test modules in the project
 # ============================================
 
+# Get script directory for relative imports
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/test_utils.sh"
+
+# Global test counters
+TOTAL_PASS=0
+TOTAL_FAIL=0
 # Get script directory for relative imports
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/test_utils.sh"
@@ -27,7 +36,17 @@ show_usage() {
     echo "  -u, --unit-only         Run only unit tests"
     echo "  -i, --integration-only  Run only integration tests"
     echo "  -a, --all               Run all tests including integration"
+    echo "  --config <file>         Load configuration from file"
+    echo "  --skip-hardware         Skip hardware-dependent tests (SPI, I2C, PIGPIO)"
+    echo "  --skip-mpu6050          Skip MPU6050 unit tests"
+    echo "  --skip-sx1278           Skip SX1278 unit tests"
+    echo "  --dev-mode              Skip all hardware tests (equivalent to --skip-hardware --skip-mpu6050 --skip-sx1278)"
     echo "  -h, --help             Show this help message"
+    echo ""
+    echo "Available preset configs:"
+    echo "  --config configs/dev_mode.config    - Development mode (no hardware)"
+    echo "  --config configs/hardware.config    - Full hardware testing"
+    echo "  --config configs/ci.config          - CI/CD pipeline testing"
 }
 
 parse_arguments() {
@@ -56,6 +75,39 @@ parse_arguments() {
                 RUN_UNIT=true
                 RUN_INTEGRATION=true
                 shift
+                ;;
+            --skip-hardware)
+                export SKIP_SPI_TESTS=true
+                export SKIP_I2C_TESTS=true
+                export SKIP_PIGPIO_TESTS=true
+                shift
+                ;;
+            --skip-mpu6050)
+                export SKIP_MPU6050_TESTS=true
+                shift
+                ;;
+            --skip-sx1278)
+                export SKIP_SX1278_TESTS=true
+                shift
+                ;;
+            --dev-mode)
+                export SKIP_SPI_TESTS=true
+                export SKIP_I2C_TESTS=true
+                export SKIP_PIGPIO_TESTS=true
+                export SKIP_MPU6050_TESTS=true
+                export SKIP_SX1278_TESTS=true
+                info "Development mode: All hardware tests disabled"
+                shift
+                ;;
+            --config)
+                if [ -n "$2" ] && [ -f "$SCRIPT_DIR/$2" ]; then
+                    source "$SCRIPT_DIR/$2"
+                    info "Loaded configuration from $2"
+                else
+                    echo "Error: Configuration file '$2' not found"
+                    exit 1
+                fi
+                shift 2
                 ;;
             -h|--help)
                 show_usage
@@ -111,7 +163,29 @@ run_test_module() {
 }
 
 main() {
-    # Parse command line arguments
+    # Load test configuration if it exists
+    if [ -f "$SCRIPT_DIR/test_config.sh" ]; then
+        source "$SCRIPT_DIR/test_config.sh"
+        
+        # Export the variables so they're available to child processes
+        export SKIP_SPI_TESTS
+        export SKIP_I2C_TESTS
+        export SKIP_PIGPIO_TESTS
+        export SKIP_MPU6050_TESTS
+        export SKIP_SX1278_TESTS
+        export SKIP_INTEGRATION_TESTS
+        
+        # Apply DEV_MODE if set
+        if [ "$DEV_MODE" = "true" ]; then
+            export SKIP_SPI_TESTS=true
+            export SKIP_I2C_TESTS=true
+            export SKIP_PIGPIO_TESTS=true
+            export SKIP_MPU6050_TESTS=true
+            export SKIP_SX1278_TESTS=true
+        fi
+    fi
+    
+    # Parse command line arguments (these override config file)
     parse_arguments "$@"
     
     # Ensure we're in the correct directory

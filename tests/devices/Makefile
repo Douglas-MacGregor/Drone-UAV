@@ -7,6 +7,10 @@ unittest_sx1278 = unittest_sx1278
 unittest_mpu6050 = unittest_mpu6050
 mpu6050_dir = ../../src/devices/IMU/MPU-6050
 sx1278_dir = ../../src/devices/LoRa/sx1278
+unittest_sx1278 = unittest_sx1278
+unittest_mpu6050 = unittest_mpu6050
+mpu6050_dir = ../../src/devices/IMU/MPU-6050
+sx1278_dir = ../../src/devices/LoRa/sx1278
 
 unittest_mpu6050_OBJS = \
 	unity.o \
@@ -23,9 +27,14 @@ unittest_sx1278_OBJS = \
 	$(sx1278_dir)/sx1278_device.o
 
 TARGET = $(unittest_sx1278) $(unittest_mpu6050)
+TARGET = $(unittest_sx1278) $(unittest_mpu6050)
 
 all: $(TARGET)
 
+$(unittest_sx1278): $(unittest_sx1278_OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+$(unittest_mpu6050): $(unittest_mpu6050_OBJS)
 $(unittest_sx1278): $(unittest_sx1278_OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
@@ -43,5 +52,7 @@ $(unittest_mpu6050).o: unittest_mpu6050.c $(mpu6050_dir)/mpu6050_utils.h $(mpu60
 
 clean:
 	rm -f *.o $(TARGET)
+	$(MAKE) -C $(sx1278_dir) clean
+	$(MAKE) -C $(mpu6050_dir) clean
 	$(MAKE) -C $(sx1278_dir) clean
 	$(MAKE) -C $(mpu6050_dir) clean

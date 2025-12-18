@@ -108,6 +108,22 @@ run_all_unit_tests() {
     local test_found=false
     for test_exe in unittest_*; do
         if [ -x "$test_exe" ]; then
+            # Check if specific tests should be skipped
+            case "$test_exe" in
+                *mpu6050*)
+                    if [ "${SKIP_MPU6050_TESTS:-false}" = "true" ]; then
+                        info "Skipping $test_exe (SKIP_MPU6050_TESTS=true)"
+                        continue
+                    fi
+                    ;;
+                *sx1278*)
+                    if [ "${SKIP_SX1278_TESTS:-false}" = "true" ]; then
+                        info "Skipping $test_exe (SKIP_SX1278_TESTS=true)"
+                        continue
+                    fi
+                    ;;
+            esac
+            
             test_found=true
             run_unity_test "./$test_exe"
         fi
