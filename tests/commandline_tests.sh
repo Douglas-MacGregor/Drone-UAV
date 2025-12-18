@@ -92,10 +92,19 @@ setup_cmdline_tests() {
     CMDLINE_TEST_EXPECTED=()
     CMDLINE_TEST_MESSAGES=()
     
-    add_cmd_test "Check SPI is enabled" "ls /dev/spi*" "expected/spi_enabled.out" "SPI interface not available."
-    add_cmd_test "Checking that PIGPIO is installed" "dpkg -l | grep pigpio" "expected/pigpio_installed.out" "PIGPIO library is not installed."
+    # Hardware-dependent tests - can be disabled via environment variables
+    if [ "${SKIP_SPI_TESTS:-false}" != "true" ]; then
+        add_cmd_test "Check SPI is enabled" "ls /dev/spi*" "expected/spi_enabled.out" "SPI interface not available."
+    fi
+    
+    if [ "${SKIP_PIGPIO_TESTS:-false}" != "true" ]; then
+        add_cmd_test "Checking that PIGPIO is installed" "dpkg -l | grep pigpio" "expected/pigpio_installed.out" "PIGPIO library is not installed."
+    fi
     
     # Add more tests by calling add_cmd_test here...
+    # Example: if [ "${SKIP_GPIO_TESTS:-false}" != "true" ]; then
+    #   add_cmd_test "GPIO Test" "..." "expected/..." "..."
+    # fi
 }
 
 # Run tests if this script is executed directly
