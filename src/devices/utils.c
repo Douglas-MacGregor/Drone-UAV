@@ -35,7 +35,7 @@ void close_gpio()
     return;
 }
 
-int init_i2c(u_int8_t I2C_BUS, u_int8_t I2C_ADDRESS)
+int init_i2c(uint8_t I2C_BUS, uint8_t I2C_ADDRESS)
 {
     int i2c_handle = i2cOpen(I2C_BUS, I2C_ADDRESS, 0);
     if (i2c_handle < 0)
