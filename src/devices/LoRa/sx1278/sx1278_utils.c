@@ -12,6 +12,7 @@
 
 int init_sx1278()
 {
+    init_gpio();
     int spi_handle = init_spi();
     if (spi_handle < 0)
     {
@@ -44,6 +45,7 @@ void reset_sx1278(int spi_handle)
 void close_sx1278(int spi_handle)
 {
     close_spi(spi_handle);
+    close_gpio();
 }
 
 int read_sx1278(int spi_handle, SX1278Data *data)

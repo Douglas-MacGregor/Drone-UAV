@@ -11,11 +11,13 @@ int spi_handle;
 
 void setUp(void)
 {
+    init_gpio();
     spi_handle = init_spi();
     reset_sx1278(spi_handle);
     close_spi(spi_handle);
     usleep(10000);
     printf("Setup complete\n");
+    close_gpio();
 }
 
 void tearDown(void)
@@ -146,6 +148,7 @@ void test_set_modes_sx1278(void)
 
 void test_Lora_sx1278_device_creation_standby_sleep(void)
 {
+    init_gpio();
     spi_handle = init_spi();
     sx1278_Device device = create_sx1278_device(spi_handle);
     TEST_ASSERT_EQUAL_INT(spi_handle, device.spi_handle);
@@ -175,11 +178,13 @@ void test_Lora_sx1278_device_creation_standby_sleep(void)
     TEST_ASSERT_EQUAL_UINT8((OPMODE_DEFAULT & ~(0b111)) | OPMODE_STDBY, mode);
     device.vtable->close(&device);
     close_spi(spi_handle);
+    close_gpio();
     return;
 }
 
 void test_Lora_sx1278_device_syncword(void)
 {
+    init_gpio();
     spi_handle = init_spi();
     sx1278_Device device = create_sx1278_device(spi_handle);
     TEST_ASSERT_EQUAL_INT(spi_handle, device.spi_handle);
@@ -204,11 +209,13 @@ void test_Lora_sx1278_device_syncword(void)
     TEST_ASSERT_EQUAL_UINT8(syncword, read_syncword);
     device.vtable->close(&device);
     close_spi(spi_handle);
+    close_gpio();
     return;
 }
 
 void test_lora_sx1278_device_reset(void)
 {
+    init_gpio();
     spi_handle = init_spi();
     sx1278_Device device = create_sx1278_device(spi_handle);
     TEST_ASSERT_EQUAL_INT(spi_handle, device.spi_handle);
@@ -235,11 +242,13 @@ void test_lora_sx1278_device_reset(void)
     TEST_ASSERT_EQUAL_UINT8(OPMODE_DEFAULT, read_mode);
     device.vtable->close(&device);
     close_spi(spi_handle);
+    close_gpio();
     return;
 };
 
 void test_lora_sx1278_device_tx(void)
 {
+    init_gpio();
     spi_handle = init_spi();
     sx1278_Device device = create_sx1278_device(spi_handle);
     TEST_ASSERT_EQUAL_INT(spi_handle, device.spi_handle);
@@ -250,11 +259,13 @@ void test_lora_sx1278_device_tx(void)
 
     device.vtable->close(&device);
     close_spi(spi_handle);
+    close_gpio();
     return;
 }
 
 void test_lora_sx1278_device_rx(void)
 {
+    init_gpio();
     spi_handle = init_spi();
     sx1278_Device device = create_sx1278_device(spi_handle);
     TEST_ASSERT_EQUAL_INT(spi_handle, device.spi_handle);
@@ -278,6 +289,7 @@ void test_lora_sx1278_device_rx(void)
 
     device.vtable->close(&device);
     close_spi(spi_handle);
+    close_gpio();
     return;
 }
 
