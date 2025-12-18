@@ -49,6 +49,7 @@ void test_mpu6050_gyro_acc_config(void)
     data.length = 1;
     uint8_t gyro_config = 0;
     data.data_receive = &gyro_config;
+    fprintf(stderr, "Reading back gyro config\n");
     n = read_mpu6050(iic_handle, &data);
     TEST_ASSERT_EQUAL_INT(1, n);
     TEST_ASSERT_EQUAL_UINT8(0x00, gyro_config); // GYRO_FS
@@ -64,6 +65,7 @@ void test_mpu6050_gyro_acc_config(void)
     gyro_config = 0;
     data.data_receive = &gyro_config;
     n = read_mpu6050(iic_handle, &data);
+    fprintf(stderr, "Reading back gyro config\n");
     TEST_ASSERT_EQUAL_INT(1, n);
     TEST_ASSERT_EQUAL_UINT8(0x10, gyro_config); // GYRO_FS
     data.address = REG_ACCEL_CONFIG;
