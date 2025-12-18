@@ -97,6 +97,10 @@ setup_cmdline_tests() {
         add_cmd_test "Check SPI is enabled" "ls /dev/spi*" "expected/spi_enabled.out" "SPI interface not available."
     fi
     
+    if [ "${SKIP_I2C_TESTS:-false}" != "true" ]; then
+        add_cmd_test "Check I2C is enabled" "ls /dev/i2c-*" "expected/iic_enabled.out" "I2C interface not available."
+    fi
+    
     if [ "${SKIP_PIGPIO_TESTS:-false}" != "true" ]; then
         add_cmd_test "Checking that PIGPIO is installed" "dpkg -l | grep pigpio" "expected/pigpio_installed.out" "PIGPIO library is not installed."
     fi

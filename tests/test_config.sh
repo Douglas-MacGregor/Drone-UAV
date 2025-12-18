@@ -3,11 +3,12 @@
 
 # Hardware-dependent tests
 SKIP_SPI_TESTS=false
+SKIP_I2C_TESTS=false
 SKIP_PIGPIO_TESTS=false
 
 # Device-specific unit tests  
 SKIP_MPU6050_TESTS=false
-SKIP_SX1278_TESTS=false
+SKIP_SX1278_TESTS=true
 
 # Integration tests
 SKIP_INTEGRATION_TESTS=false

@@ -37,7 +37,7 @@ show_usage() {
     echo "  -i, --integration-only  Run only integration tests"
     echo "  -a, --all               Run all tests including integration"
     echo "  --config <file>         Load configuration from file"
-    echo "  --skip-hardware         Skip hardware-dependent tests (SPI, PIGPIO)"
+    echo "  --skip-hardware         Skip hardware-dependent tests (SPI, I2C, PIGPIO)"
     echo "  --skip-mpu6050          Skip MPU6050 unit tests"
     echo "  --skip-sx1278           Skip SX1278 unit tests"
     echo "  --dev-mode              Skip all hardware tests (equivalent to --skip-hardware --skip-mpu6050 --skip-sx1278)"
@@ -78,6 +78,7 @@ parse_arguments() {
                 ;;
             --skip-hardware)
                 export SKIP_SPI_TESTS=true
+                export SKIP_I2C_TESTS=true
                 export SKIP_PIGPIO_TESTS=true
                 shift
                 ;;
@@ -91,6 +92,7 @@ parse_arguments() {
                 ;;
             --dev-mode)
                 export SKIP_SPI_TESTS=true
+                export SKIP_I2C_TESTS=true
                 export SKIP_PIGPIO_TESTS=true
                 export SKIP_MPU6050_TESTS=true
                 export SKIP_SX1278_TESTS=true
@@ -168,6 +170,7 @@ main() {
         # Apply DEV_MODE if set
         if [ "$DEV_MODE" = "true" ]; then
             export SKIP_SPI_TESTS=true
+            export SKIP_I2C_TESTS=true
             export SKIP_PIGPIO_TESTS=true
             export SKIP_MPU6050_TESTS=true
             export SKIP_SX1278_TESTS=true
