@@ -189,10 +189,10 @@ int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_f
     int n = write_mpu6050(i2c_handle, &data);
     if (n < 0)
     {
+        fprintf(stderr, "Failed to wake up MPU-6050\n");
         return -1;
     }
     usleep(100000); // 100 ms
-    fprintf(stderr, "MPU6050 awakened from sleep mode\n");
 
     // Configure gyro full-scale range
     data.address = REG_GYRO_CONFIG;
@@ -201,9 +201,9 @@ int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_f
     n = write_mpu6050(i2c_handle, &data);
     if (n < 0)
     {
+        fprintf(stderr, "Failed to configure gyro full-scale range\n");
         return -1;
     }
-    fprintf(stderr, "MPU6050 gyro full-scale range set to %d\n", gyro_fs);
 
     // Configure accelerometer full-scale range
     data.address = REG_ACCEL_CONFIG;
@@ -212,9 +212,9 @@ int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_f
     n = write_mpu6050(i2c_handle, &data);
     if (n < 0)
     {
+        fprintf(stderr, "Failed to configure accelerometer full-scale range\n");
         return -1;
     }
-    fprintf(stderr, "MPU6050 accelerometer full-scale range set to %d\n", accel_fs);
 
     return 0;
 }
