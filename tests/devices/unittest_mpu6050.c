@@ -88,5 +88,7 @@ int main(void)
     UNITY_BEGIN();
     RUN_TEST(test_mpu6050_device_creation);
     RUN_TEST(test_mpu6050_utils_read);
+    RUN_TEST(test_mpu6050_gyro_acc_config);
+
     return UNITY_END();
 }
