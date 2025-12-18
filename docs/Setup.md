@@ -19,8 +19,17 @@ When mapping to raspberry pi zero 2 W using physical pin numbers
 | 23                        | SCK        | Serial Clock         |
 | 19                        | MOSI       | Master Out Slave In  |
 | 21                        | MISO       | Master In Slave Out  |
-| 26                        | RST        | Reset (with pull-up) |
+| 37                        | RST        | Reset (with pull-up) |
 | 16                        | DIO0       | Interrupt Pin        |
+
+---
+
+| Raspberry Pi Physical Pin | I2C Device Pin | Description               |
+| ------------------------- | -------------- | ------------------------- |
+| 3.3V 1                    | VCC            | Power Supply              |
+| GND 6                     | GND            | Ground                    |
+| 3                         | SDA            | Data Line (with pull-up)  |
+| 5                         | SCL            | Clock Line (with pull-up) |
 
 ### Enabling SPI Interface
 
