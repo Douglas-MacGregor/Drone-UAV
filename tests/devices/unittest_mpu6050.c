@@ -49,5 +49,6 @@ int main(void)
 {
     UNITY_BEGIN();
     RUN_TEST(test_mpu6050_device_creation);
+    RUN_TEST(test_mpu6050_utils_read);
     return UNITY_END();
 }
