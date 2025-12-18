@@ -42,7 +42,9 @@ void test_mpu6050_gyro_acc_config(void)
     int m = init_gpio();
     TEST_ASSERT_EQUAL_INT(0, m);
     iic_handle = init_i2c(1, 0x68); // Assuming
+    fprintf(stderr, "Configuring MPU6050 gyro and accel full-scale ranges\n");
     int n = configure_mpu6050(iic_handle, GYRO_FS_250, ACCEL_FS_8);
+    fprintf(stderr, "Configuration returned: %d\n", n);
     TEST_ASSERT_EQUAL_INT(0, n); // Expect to write 2 bytes (one for gyro config, one for accel config)
     mpu6050_Data data;
     data.address = REG_GYRO_CONFIG;
