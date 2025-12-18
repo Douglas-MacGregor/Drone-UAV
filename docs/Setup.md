@@ -24,7 +24,7 @@ When mapping to raspberry pi zero 2 W using physical pin numbers
 
 ### Enabling SPI Interface
 
-#### 1. Enable SPI using raspi-config
+#### 1. Enable SPI and I2C using raspi-config
 
 1. Open a terminal (or SSH in).
 2. Run:
@@ -36,9 +36,11 @@ When mapping to raspberry pi zero 2 W using physical pin numbers
 3. Navigate to:
 
    Interface Options → SPI
+   Interface Options → I2C
 
 4. Select **Yes** to enable SPI.
-5. Exit and reboot:
+5. Select **Yes** to enable I2C.
+6. Exit and reboot:
 
 ```bash
    sudo reboot
@@ -58,6 +60,16 @@ You should see:
 
     /dev/spidev0.0  /dev/spidev0.1
 
+Check for I2C devices:
+
+```bash
+     ls /dev/i2c-*
+```
+
+You should see:
+
+    /dev/i2c-1 /dev/i2c-2
+
 ---
 
 ### Install Necessary Libraries
@@ -73,8 +85,9 @@ For a quicker setup, you can use the following commands:
 
 ```bash
     sudo raspi-config
+    #> Interface Options > SPI > Yes
+    #> Interface Options > I2C > Yes
     sudo reboot
-    ls /dev/spi*
     sudo apt update
     sudo apt install pigpio
 ```
