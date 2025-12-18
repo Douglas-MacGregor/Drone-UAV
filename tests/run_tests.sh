@@ -167,6 +167,14 @@ main() {
     if [ -f "$SCRIPT_DIR/test_config.sh" ]; then
         source "$SCRIPT_DIR/test_config.sh"
         
+        # Export the variables so they're available to child processes
+        export SKIP_SPI_TESTS
+        export SKIP_I2C_TESTS
+        export SKIP_PIGPIO_TESTS
+        export SKIP_MPU6050_TESTS
+        export SKIP_SX1278_TESTS
+        export SKIP_INTEGRATION_TESTS
+        
         # Apply DEV_MODE if set
         if [ "$DEV_MODE" = "true" ]; then
             export SKIP_SPI_TESTS=true
