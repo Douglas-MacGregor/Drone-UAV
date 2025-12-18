@@ -37,6 +37,44 @@ void test_mpu6050_utils_read(void)
     close_gpio();
 }
 
+void test_mpu6050_gyro_acc_config(void)
+{
+    init_gpio();
+    iic_handle = init_i2c(1, 0x68); // Assuming
+    int n = configure_mpu6050(iic_handle, GYRO_FS_250, ACCEL_FS_8);
+    TEST_ASSERT_EQUAL_INT(2, n); // Expect to write 2 bytes (one for gyro config, one for accel config)
+    mpu6050_Data data;
+    data.address = REG_GYRO_CONFIG;
+    data.length = 1;
+    uint8_t gyro_config = 0;
+    data.data_receive = &gyro_config;
+    n = read_mpu6050(iic_handle, &data);
+    TEST_ASSERT_EQUAL_INT(1, n);
+    TEST_ASSERT_EQUAL_UINT8(0x00, gyro_config); // GYRO_FS
+    data.address = REG_ACCEL_CONFIG;
+    uint8_t accel_config = 0;
+    data.data_receive = &accel_config;
+    n = read_mpu6050(iic_handle, &data);
+    TEST_ASSERT_EQUAL_INT(1, n);
+    TEST_ASSERT_EQUAL_UINT8(0x10, accel_config); // ACCEL_FS
+    n = configure_mpu6050(iic_handle, GYRO_FS_1000, ACCEL_FS_16);
+    TEST_ASSERT_EQUAL_INT(2, n); // Expect to write 2 bytes (one for gyro config, one for accel config)
+    data.address = REG_GYRO_CONFIG;
+    gyro_config = 0;
+    data.data_receive = &gyro_config;
+    n = read_mpu6050(iic_handle, &data);
+    TEST_ASSERT_EQUAL_INT(1, n);
+    TEST_ASSERT_EQUAL_UINT8(0x10, gyro_config); // GYRO_FS
+    data.address = REG_ACCEL_CONFIG;
+    accel_config = 0;
+    data.data_receive = &accel_config;
+    n = read_mpu6050(iic_handle, &data);
+    TEST_ASSERT_EQUAL_INT(1, n);
+    TEST_ASSERT_EQUAL_UINT8(0x18, accel_config); // ACCEL_FS
+    close_i2c(iic_handle);
+    close_gpio();
+}
+
 void test_mpu6050_device_creation(void)
 {
     iic_handle = 1; // Dummy I2C handle for testing
