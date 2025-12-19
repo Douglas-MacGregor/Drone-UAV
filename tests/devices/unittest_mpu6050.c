@@ -145,5 +145,6 @@ int main(void)
     RUN_TEST(test_mpu6050_device_creation);
     RUN_TEST(test_mpu6050_utils_read);
     RUN_TEST(test_mpu6050_gyro_acc_config);
+    RUN_TEST(test_mpu6050_gyro_acc_getters_converter);
     return UNITY_END();
 }
