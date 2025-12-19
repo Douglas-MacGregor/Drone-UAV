@@ -178,7 +178,7 @@ int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g)
     return 0;
 }
 
-int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs)
+int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs, mp6050_gyro_bias_t *gyro_bias, mpu6050_accel_bias_t *accel_bias)
 {
     mpu6050_Data data;
 
@@ -216,5 +216,35 @@ int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_f
         return -1;
     }
 
+    n = get_accel_bias_mpu6050(i2c_handle, accel_bias);
+    if (n < 0)
+    {
+        fprintf(stderr, "Failed to get accelerometer bias\n");
+        return -1;
+    }
+    n = get_gyro_bias_mpu6050(i2c_handle, gyro_bias);
+    if (n < 0)
+    {
+        fprintf(stderr, "Failed to get gyroscope bias\n");
+        return -1;
+    }
+    return 0;
+}
+
+int get_gyro_bias_mpu6050(int i2c_handle, mp6050_gyro_bias_t *gyro_bias)
+{
+    // Placeholder implementation
+    gyro_bias->x = 0.0f;
+    gyro_bias->y = 0.0f;
+    gyro_bias->z = 0.0f;
+    return 0;
+}
+
+int get_accel_bias_mpu6050(int i2c_handle, mpu6050_accel_bias_t *accel_bias)
+{
+    // Placeholder implementation
+    accel_bias->x = 0.0f;
+    accel_bias->y = 0.0f;
+    accel_bias->z = 0.0f;
     return 0;
 }

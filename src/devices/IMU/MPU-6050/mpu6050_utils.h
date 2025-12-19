@@ -11,6 +11,20 @@ typedef struct
     uint8_t *data_receive;
 } mpu6050_Data;
 
+typedef struct
+{
+    float x;
+    float y;
+    float z;
+} mp6050_gyro_bias_t;
+
+typedef struct
+{
+    float x;
+    float y;
+    float z;
+} mpu6050_accel_bias_t;
+
 typedef enum
 {
     REG_WHO_AM_I = 0x75,
