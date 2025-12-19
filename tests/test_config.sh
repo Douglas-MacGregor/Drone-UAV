@@ -8,7 +8,7 @@ SKIP_PIGPIO_TESTS=false
 
 # Device-specific unit tests  
 SKIP_MPU6050_TESTS=false
-SKIP_SX1278_TESTS=true
+SKIP_SX1278_TESTS=false
 
 # Integration tests
 SKIP_INTEGRATION_TESTS=false

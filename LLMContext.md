@@ -22,6 +22,7 @@ Drone-UAV/
 ├── tests/
 │   ├── devices/
 │   │   └── unittest_mySX1278.c
+│   │   └── unittest_mpu6050.c
 │   ├── unityfiles
 │   └── test_script.sh
 │
@@ -33,7 +34,7 @@ Drone-UAV/
 
 ## Things of Note
 
-A few important aspects of the project is to make all of the code modular so that it can be reused in other projects. The code is primarily designed for the Raspberry Pi Zero 2 W, and it is essential to ensure compatibility if different hardware is used.
+A few important aspects of the project is to make all of the code **modular** so that it can be reused in other projects. The code is primarily designed for the Raspberry Pi Zero 2 W, and it is essential to ensure compatibility if different hardware is used.
 
 Throrough testing is emphasized, with unit tests included where applicable. The project also follows specific Git usage guidelines to maintain a clean and organized codebase.
 
