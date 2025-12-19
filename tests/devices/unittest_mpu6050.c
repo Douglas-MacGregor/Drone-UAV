@@ -42,16 +42,13 @@ void test_mpu6050_gyro_acc_config(void)
     int m = init_gpio();
     TEST_ASSERT_EQUAL_INT(0, m);
     iic_handle = init_i2c(1, 0x68); // Assuming
-    fprintf(stderr, "Configuring MPU6050 gyro and accel full-scale ranges\n");
     int n = configure_mpu6050(iic_handle, GYRO_FS_250, ACCEL_FS_8);
-    fprintf(stderr, "Configuration returned: %d\n", n);
     TEST_ASSERT_EQUAL_INT(0, n); // Expect to write 2 bytes (one for gyro config, one for accel config)
     mpu6050_Data data;
     data.address = REG_GYRO_CONFIG;
     data.length = 1;
     uint8_t gyro_config = 0;
     data.data_receive = &gyro_config;
-    fprintf(stderr, "Reading back gyro config\n");
     n = read_mpu6050(iic_handle, &data);
     TEST_ASSERT_EQUAL_INT(1, n);
     TEST_ASSERT_EQUAL_UINT8(0x00, gyro_config); // GYRO_FS
@@ -67,7 +64,6 @@ void test_mpu6050_gyro_acc_config(void)
     gyro_config = 0;
     data.data_receive = &gyro_config;
     n = read_mpu6050(iic_handle, &data);
-    fprintf(stderr, "Reading back gyro config\n");
     TEST_ASSERT_EQUAL_INT(1, n);
     TEST_ASSERT_EQUAL_UINT8(0x10, gyro_config); // GYRO_FS
     data.address = REG_ACCEL_CONFIG;
