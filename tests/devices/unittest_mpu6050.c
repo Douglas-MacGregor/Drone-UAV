@@ -88,6 +88,57 @@ void test_mpu6050_device_creation(void)
     TEST_ASSERT_EQUAL_PTR(&mpu6050_imu_interface, device.vtable);
 }
 
+void test_mpu6050_gyro_acc_getters_converter(void)
+{
+    init_gpio();
+    iic_handle = init_i2c(1, 0x68); // Assuming
+    configure_mpu6050(iic_handle, GYRO_FS_250, ACCEL_FS_8);
+    int16_t raw_gyro_x, raw_gyro_y, raw_gyro_z;
+    int n = get_accelX_mpu6050(iic_handle, &raw_gyro_x);
+    TEST_ASSERT_EQUAL_INT(0, n);
+    TEST_ASSERT_NOT_EQUAL(0, raw_gyro_x); // Expect some non-zero value
+    n = get_accelY_mpu6050(iic_handle, &raw_gyro_y);
+    TEST_ASSERT_EQUAL_INT(0, n);
+    TEST_ASSERT_NOT_EQUAL(0, raw_gyro_y); // Expect some non-zero value
+    n = get_accelZ_mpu6050(iic_handle, &raw_gyro_z);
+    TEST_ASSERT_EQUAL_INT(0, n);
+    TEST_ASSERT_NOT_EQUAL(0, raw_gyro_z); // Expect some non-zero value
+    float g_x, g_y, g_z;
+    n = convert_accel_to_g(raw_gyro_x, ACCEL_FS_8, &g_x);
+    TEST_ASSERT_EQUAL_INT(0, n);
+    n = convert_accel_to_g(raw_gyro_y, ACCEL_FS_8, &g_y);
+    TEST_ASSERT_EQUAL_INT(0, n);
+    n = convert_accel_to_g(raw_gyro_z, ACCEL_FS_8, &g_z);
+    TEST_ASSERT_EQUAL_INT(0, n);
+    float expected_g_x = (float)raw_gyro_x / 131.0;
+    float acctual_g_x;
+    convert_gyro_to_dps(raw_gyro_x, GYRO_FS_250, &acctual_g_x);
+    TEST_ASSERT_FLOAT_WITHIN(0.1, expected_g_x, acctual_g_x);
+    float expected_g_y = (float)raw_gyro_y / 131.0;
+    float acctual_g_y;
+    convert_gyro_to_dps(raw_gyro_y, GYRO_FS_250, &acctual_g_y);
+    TEST_ASSERT_FLOAT_WITHIN(0.1, expected_g_y, acctual_g_y);
+    float expected_g_z = (float)raw_gyro_z / 131.0;
+    float acctual_g_z;
+    convert_gyro_to_dps(raw_gyro_z, GYRO_FS_250, &acctual_g_z);
+    TEST_ASSERT_FLOAT_WITHIN(0.1, expected_g_z, acctual_g_z);
+    float expected_accel_x = (float)raw_gyro_x / 4096.0;
+    float actual_accel_x;
+    convert_accel_to_g(raw_gyro_x, ACCEL_FS_8, &actual_accel_x);
+    TEST_ASSERT_FLOAT_WITHIN(0.1, expected_accel_x, g_x);
+    float expected_accel_y = (float)raw_gyro_y / 4096.0;
+    float actual_accel_y;
+    convert_accel_to_g(raw_gyro_y, ACCEL_FS_8, &actual_accel_y);
+    TEST_ASSERT_FLOAT_WITHIN(0.1, expected_accel_y, g_y);
+    float expected_accel_z = (float)raw_gyro_z / 4096.0;
+    float actual_accel_z;
+    convert_accel_to_g(raw_gyro_z, ACCEL_FS_8, &actual_accel_z);
+    TEST_ASSERT_FLOAT_WITHIN(0.1, expected_accel_z, g_z);
+
+    close_i2c(iic_handle);
+    close_gpio();
+}
+
 int main(void)
 {
     UNITY_BEGIN();

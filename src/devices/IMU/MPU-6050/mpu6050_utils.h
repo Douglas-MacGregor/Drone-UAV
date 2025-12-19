@@ -60,4 +60,16 @@ typedef enum
     ACCEL_16_SENSITIVITY = 2048
 } mpu6050_accel_sensitivity_t;
 
+int read_mpu6050(int i2c_handle, mpu6050_Data *data);
+int write_mpu6050(int i2c_handle, mpu6050_Data *data);
+int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs);
+int get_gyroX_mpu6050(int i2c_handle, int16_t *gyroX);
+int get_gyroY_mpu6050(int i2c_handle, int16_t *gyroY);
+int get_gyroZ_mpu6050(int i2c_handle, int16_t *gyroZ);
+int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps);
+int get_accelX_mpu6050(int i2c_handle, int16_t *accelX);
+int get_accelY_mpu6050(int i2c_handle, int16_t *accelY);
+int get_accelZ_mpu6050(int i2c_handle, int16_t *accelZ);
+int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g);
+
 #endif // mpu6050_UTILS_H
