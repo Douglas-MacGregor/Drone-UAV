@@ -236,7 +236,7 @@ int get_gyro_bias_mpu6050(int i2c_handle, mp6050_gyro_bias_t *gyro_bias)
     // Placeholder implementation
     uint16_t raw_gyroX, raw_gyroY, raw_gyroZ;
     float sumX = 0.0f, sumY = 0.0f, sumZ = 0.0f;
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 200; i++)
     {
         get_gyroX_mpu6050(i2c_handle, (int16_t *)&raw_gyroX);
         get_gyroY_mpu6050(i2c_handle, (int16_t *)&raw_gyroY);
@@ -246,9 +246,9 @@ int get_gyro_bias_mpu6050(int i2c_handle, mp6050_gyro_bias_t *gyro_bias)
         sumZ += (float)raw_gyroZ;
         usleep(1000); // 1ms delay between samples
     }
-    gyro_bias->x = sumX / 1000.0f;
-    gyro_bias->y = sumY / 1000.0f;
-    gyro_bias->z = sumZ / 1000.0f;
+    gyro_bias->x = sumX / 200.0f;
+    gyro_bias->y = sumY / 200.0f;
+    gyro_bias->z = sumZ / 200.0f;
     return 0;
 }
 
@@ -256,7 +256,7 @@ int get_accel_bias_mpu6050(int i2c_handle, mpu6050_accel_bias_t *accel_bias)
 {
     uint16_t raw_accelX, raw_accelY, raw_accelZ;
     float sumX = 0.0f, sumY = 0.0f, sumZ = 0.0f;
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 200; i++)
     {
         get_accelX_mpu6050(i2c_handle, (int16_t *)&raw_accelX);
         get_accelY_mpu6050(i2c_handle, (int16_t *)&raw_accelY);
@@ -266,8 +266,8 @@ int get_accel_bias_mpu6050(int i2c_handle, mpu6050_accel_bias_t *accel_bias)
         sumZ += (float)raw_accelZ;
         usleep(1000); // 1ms delay between samples
     }
-    accel_bias->x = sumX / 1000.0f;
-    accel_bias->y = sumY / 1000.0f;
-    accel_bias->z = sumZ / 1000.0f;
+    accel_bias->x = sumX / 200.0f;
+    accel_bias->y = sumY / 200.0f;
+    accel_bias->z = sumZ / 200.0f;
     return 0;
 }
