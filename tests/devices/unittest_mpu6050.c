@@ -100,7 +100,7 @@ void test_mpu6050_gyro_getters_converter(void)
     n = get_gyroY_mpu6050(iic_handle, &raw_gyro_y);
     TEST_ASSERT_EQUAL_INT(0, n);
     TEST_ASSERT_NOT_EQUAL(0, raw_gyro_y); // Expect some non-zero value
-    n = get_accelZ_mpu6050(iic_handle, &raw_gyro_z);
+    n = get_gyroZ_mpu6050(iic_handle, &raw_gyro_z);
     TEST_ASSERT_EQUAL_INT(0, n);
     TEST_ASSERT_NOT_EQUAL(0, raw_gyro_z); // Expect some non-zero value
     float g_x, g_y, g_z;

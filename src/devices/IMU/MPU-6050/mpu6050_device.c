@@ -183,7 +183,7 @@ int mpu6050_self_test(void *self)
     self_test_ay |= (self_test_a & 0x0C) >> 2;
     self_test_az |= (self_test_a & 0x03);
 
-    float factory_trim_gyro_x = 25.0f * 131.0f * powf(1.046f, (float)self_test_gx - 1.0f);
+    float factory_trim_gyro_x = -25.0f * 131.0f * powf(1.046f, (float)self_test_gx - 1.0f);
     float factory_trim_gyro_y = -25.0f * 131.0f * powf(1.046f, (float)self_test_gy - 1.0f);
     float factory_trim_gyro_z = 25.0f * 131.0f * powf(1.046f, (float)self_test_gz - 1.0f);
     float factory_trim_accel_x = 4096.0f * 0.34f * powf(0.92f / 0.34f, ((self_test_ax - 1.0f) / 30));
