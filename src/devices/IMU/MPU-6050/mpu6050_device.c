@@ -116,12 +116,12 @@ int mpu6050_self_test(void *self)
     get_accel_bias_mpu6050(device->iic_handle, &accel_bias_self_test);
     // Compare biases to determine if self-test passed
     // str values //
-    float gyro_diff_x = gyro_bias_self_test.x - gyro_bias_inital.x;
-    float gyro_diff_y = gyro_bias_self_test.y - gyro_bias_inital.y;
-    float gyro_diff_z = gyro_bias_self_test.z - gyro_bias_inital.z;
-    float accel_diff_x = accel_bias_self_test.x - accel_bias_inital.x;
-    float accel_diff_y = accel_bias_self_test.y - accel_bias_inital.y;
-    float accel_diff_z = accel_bias_self_test.z - accel_bias_inital.z;
+    float gyro_diff_x = fabsf(gyro_bias_self_test.x - gyro_bias_inital.x);
+    float gyro_diff_y = fabsf(gyro_bias_self_test.y - gyro_bias_inital.y);
+    float gyro_diff_z = fabsf(gyro_bias_self_test.z - gyro_bias_inital.z);
+    float accel_diff_x = fabsf(accel_bias_self_test.x - accel_bias_inital.x);
+    float accel_diff_y = fabsf(accel_bias_self_test.y - accel_bias_inital.y);
+    float accel_diff_z = fabsf(accel_bias_self_test.z - accel_bias_inital.z);
 
     // Factory trim values
     uint8_t self_test_gx, self_test_gy, self_test_gz;
@@ -153,12 +153,12 @@ int mpu6050_self_test(void *self)
     self_test_ay |= (self_test_a & 0x0C) >> 2;
     self_test_az |= (self_test_a & 0x03);
 
-    float factory_trim_gyro_x = 25.0f * (131.0f) * (1.046f) * (powf(1.046f, (float)self_test_gx - 1.0f));
-    float factory_trim_gyro_y = 25.0f * (131.0f) * (1.046f) * (powf(1.046f, (float)self_test_gy - 1.0f));
-    float factory_trim_gyro_z = 25.0f * (131.0f) * (1.046f) * (powf(1.046f, (float)self_test_gz - 1.0f));
-    float factory_trim_accel_x = 4096.0f * (0.34f) * (powf(0.34f, (float)self_test_ax - 1.0f));
-    float factory_trim_accel_y = 4096.0f * (0.34f) * (powf(0.34f, (float)self_test_ay - 1.0f));
-    float factory_trim_accel_z = 4096.0f * (0.34f) * (powf(0.34f, (float)self_test_az - 1.0f));
+    float factory_trim_gyro_x = 25.0f * 131.0f * powf(1.046f, (float)self_test_gx - 1.0f);
+    float factory_trim_gyro_y = 25.0f * 131.0f * powf(1.046f, (float)self_test_gy - 1.0f);
+    float factory_trim_gyro_z = 25.0f * 131.0f * powf(1.046f, (float)self_test_gz - 1.0f);
+    float factory_trim_accel_x = 4096.0f * powf(0.34f, (float)self_test_ax - 1.0f);
+    float factory_trim_accel_y = 4096.0f * powf(0.34f, (float)self_test_ay - 1.0f);
+    float factory_trim_accel_z = 4096.0f * powf(0.34f, (float)self_test_az - 1.0f);
 
     float gyro_result_x = (gyro_diff_x / factory_trim_gyro_x) * 100.0f;
     float gyro_result_y = (gyro_diff_y / factory_trim_gyro_y) * 100.0f;
