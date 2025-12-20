@@ -85,7 +85,37 @@ int mpu6050_self_test(void *self)
 {
     mpu6050_Device *device = (mpu6050_Device *)self;
     device->vtable->reset(self);
-    device->vtable->wake(self);
+
+    mpu6050_Data power;
+    power.address = REG_PWR_MGMT_1;
+    power.data = 0x00; // Clear sleep bit to wake up the device
+    power.length = 1;
+    int n = write_mpu6050(device->iic_handle, &power);
+    if (n < 0)
+    {
+        fprintf(stderr, "MPU6050 wake write error\n");
+        return -1;
+    }
+    mpu6050_Data config;
+    config.address = REG_GYRO_CONFIG;
+    config.data = 0x00; // Set gyro full scale to ±250 dps
+    config.length = 1;
+    n = write_mpu6050(device->iic_handle, &config);
+    if (n < 0)
+    {
+        fprintf(stderr, "MPU6050 gyro config write error\n");
+        return -1;
+    }
+    config.address = REG_ACCEL_CONFIG;
+    config.data = 0x10; // Set accel full scale to ±2g
+    config.length = 1;
+    n = write_mpu6050(device->iic_handle, &config);
+    if (n < 0)
+    {
+        fprintf(stderr, "MPU6050 accel config write error\n");
+        return -1;
+    }
+
     mp6050_gyro_bias_t gyro_bias_inital;
     mpu6050_accel_bias_t accel_bias_inital;
     get_gyro_bias_mpu6050(device->iic_handle, &gyro_bias_inital);
