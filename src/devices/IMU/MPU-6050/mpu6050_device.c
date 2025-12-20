@@ -207,7 +207,7 @@ int mpu6050_sleep(void *self)
     data.data = 0x40; // Set the sleep bit
     data.length = 1;
     int n = write_mpu6050(device->iic_handle, &data);
-    ulseep(100000); // wait for 100ms after sleep command
+    usleep(100000); // wait for 100ms after sleep command
     if (n < 0)
     {
         fprintf(stderr, "MPU6050 sleep error\n");
