@@ -92,7 +92,7 @@ int mpu6050_self_test(void *self)
     get_accel_bias_mpu6050(device->iic_handle, &accel_bias_inital);
     mpu6050_Data data;
     data.address = REG_GYRO_CONFIG;
-    data.data = (0xE0 | 0x10); // Enable self-test for all axes
+    data.data = (0xE0); // Enable self-test for all axes
     data.length = 1;
     int n = write_mpu6050(device->iic_handle, &data);
     if (n < 0)
@@ -101,7 +101,7 @@ int mpu6050_self_test(void *self)
         return -1;
     }
     data.address = REG_ACCEL_CONFIG;
-    data.data = 0xE0; // Enable self-test for all axes
+    data.data = (0xE0 | 0x10); // Enable self-test for all axes
     data.length = 1;
     n = write_mpu6050(device->iic_handle, &data);
     if (n < 0)
@@ -156,9 +156,9 @@ int mpu6050_self_test(void *self)
     float factory_trim_gyro_x = 25.0f * 131.0f * powf(1.046f, (float)self_test_gx - 1.0f);
     float factory_trim_gyro_y = 25.0f * 131.0f * powf(1.046f, (float)self_test_gy - 1.0f);
     float factory_trim_gyro_z = 25.0f * 131.0f * powf(1.046f, (float)self_test_gz - 1.0f);
-    float factory_trim_accel_x = 4096.0f * powf(0.34f, (float)self_test_ax - 1.0f);
-    float factory_trim_accel_y = 4096.0f * powf(0.34f, (float)self_test_ay - 1.0f);
-    float factory_trim_accel_z = 4096.0f * powf(0.34f, (float)self_test_az - 1.0f);
+    float factory_trim_accel_x = 4096.0f * 0.34f * powf(0.92f / 0.34f, ((self_test_ax - 1.0f) / 30));
+    float factory_trim_accel_y = 4096.0f * 0.34f * powf(0.92f / 0.34f, ((self_test_ay - 1.0f) / 30));
+    float factory_trim_accel_z = 4096.0f * 0.34f * powf(0.92f / 0.34f, ((self_test_az - 1.0f) / 30));
 
     float gyro_result_x = ((gyro_diff_x - factory_trim_gyro_x) / factory_trim_gyro_x) * 100.0f;
     float gyro_result_y = ((gyro_diff_y - factory_trim_gyro_y) / factory_trim_gyro_y) * 100.0f;
