@@ -160,12 +160,12 @@ int mpu6050_self_test(void *self)
     float factory_trim_accel_y = 4096.0f * powf(0.34f, (float)self_test_ay - 1.0f);
     float factory_trim_accel_z = 4096.0f * powf(0.34f, (float)self_test_az - 1.0f);
 
-    float gyro_result_x = (gyro_diff_x / factory_trim_gyro_x) * 100.0f;
-    float gyro_result_y = (gyro_diff_y / factory_trim_gyro_y) * 100.0f;
-    float gyro_result_z = (gyro_diff_z / factory_trim_gyro_z) * 100.0f;
-    float accel_result_x = (accel_diff_x / factory_trim_accel_x) * 100.0f;
-    float accel_result_y = (accel_diff_y / factory_trim_accel_y) * 100.0f;
-    float accel_result_z = (accel_diff_z / factory_trim_accel_z) * 100.0f;
+    float gyro_result_x = ((gyro_diff_x - factory_trim_gyro_x) / factory_trim_gyro_x) * 100.0f;
+    float gyro_result_y = ((gyro_diff_y - factory_trim_gyro_y) / factory_trim_gyro_y) * 100.0f;
+    float gyro_result_z = ((gyro_diff_z - factory_trim_gyro_z) / factory_trim_gyro_z) * 100.0f;
+    float accel_result_x = ((accel_diff_x - factory_trim_accel_x) / factory_trim_accel_x) * 100.0f;
+    float accel_result_y = ((accel_diff_y - factory_trim_accel_y) / factory_trim_accel_y) * 100.0f;
+    float accel_result_z = ((accel_diff_z - factory_trim_accel_z) / factory_trim_accel_z) * 100.0f;
 
     fprintf(stderr, "MPU6050 Self-Test Results:\n");
     fprintf(stderr, "gyro self test values X: %.2f, Y: %.2f, Z: %.2f\n", gyro_bias_self_test.x, gyro_bias_self_test.y, gyro_bias_self_test.z);
