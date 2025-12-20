@@ -116,12 +116,12 @@ int mpu6050_self_test(void *self)
     get_accel_bias_mpu6050(device->iic_handle, &accel_bias_self_test);
     // Compare biases to determine if self-test passed
     // str values //
-    float gyro_diff_x = fabsf(gyro_bias_self_test.x - gyro_bias_inital.x);
-    float gyro_diff_y = fabsf(gyro_bias_self_test.y - gyro_bias_inital.y);
-    float gyro_diff_z = fabsf(gyro_bias_self_test.z - gyro_bias_inital.z);
-    float accel_diff_x = fabsf(accel_bias_self_test.x - accel_bias_inital.x);
-    float accel_diff_y = fabsf(accel_bias_self_test.y - accel_bias_inital.y);
-    float accel_diff_z = fabsf(accel_bias_self_test.z - accel_bias_inital.z);
+    float gyro_diff_x = gyro_bias_self_test.x - gyro_bias_inital.x;
+    float gyro_diff_y = gyro_bias_self_test.y - gyro_bias_inital.y;
+    float gyro_diff_z = gyro_bias_self_test.z - gyro_bias_inital.z;
+    float accel_diff_x = accel_bias_self_test.x - accel_bias_inital.x;
+    float accel_diff_y = accel_bias_self_test.y - accel_bias_inital.y;
+    float accel_diff_z = accel_bias_self_test.z - accel_bias_inital.z;
 
     // Factory trim values
     uint8_t self_test_gx, self_test_gy, self_test_gz;
