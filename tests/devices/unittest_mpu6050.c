@@ -104,11 +104,11 @@ void test_mpu6050_gyro_getters_converter(void)
     TEST_ASSERT_EQUAL_INT(0, n);
     TEST_ASSERT_NOT_EQUAL(0, raw_gyro_z); // Expect some non-zero value
     float g_x, g_y, g_z;
-    n = convert_gyro_to_dps(raw_gyro_x, ACCEL_FS_8, &g_x, 0.0);
+    n = convert_gyro_to_dps(raw_gyro_x, GYRO_FS_250, &g_x, 0.0);
     TEST_ASSERT_EQUAL_INT(0, n);
-    n = convert_gyro_to_dps(raw_gyro_y, ACCEL_FS_8, &g_y, 0.0);
+    n = convert_gyro_to_dps(raw_gyro_y, GYRO_FS_250, &g_y, 0.0);
     TEST_ASSERT_EQUAL_INT(0, n);
-    n = convert_gyro_to_dps(raw_gyro_z, ACCEL_FS_8, &g_z, 0.0);
+    n = convert_gyro_to_dps(raw_gyro_z, GYRO_FS_250, &g_z, 0.0);
     TEST_ASSERT_EQUAL_INT(0, n);
     float expected_g_x = (float)raw_gyro_x / 131.0;
     float acctual_g_x = g_x;
@@ -165,6 +165,7 @@ void test_mpu6050_self_test(void)
     init_gpio();
     iic_handle = init_i2c(1, 0x68); // Assuming
     mpu6050_Device device = create_mpu6050_device(iic_handle, GYRO_FS_250, ACCEL_FS_8);
+    device.vtable->wake(&device);
     int n = device.vtable->self_test(&device);
     TEST_ASSERT_EQUAL_INT(0, n); // Expect self-test to pass
     close_i2c(iic_handle);
