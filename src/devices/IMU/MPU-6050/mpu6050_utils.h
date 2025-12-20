@@ -11,6 +11,20 @@ typedef struct
     uint8_t *data_receive;
 } mpu6050_Data;
 
+typedef struct
+{
+    float x;
+    float y;
+    float z;
+} mp6050_gyro_bias_t;
+
+typedef struct
+{
+    float x;
+    float y;
+    float z;
+} mpu6050_accel_bias_t;
+
 typedef enum
 {
     REG_WHO_AM_I = 0x75,
@@ -28,7 +42,11 @@ typedef enum
     REG_ACCEL_ZOUT_L = 0x40,
     REG_PWR_MGMT_1 = 0x6B,
     REG_GYRO_CONFIG = 0x1B,
-    REG_ACCEL_CONFIG = 0x1C
+    REG_ACCEL_CONFIG = 0x1C,
+    REG_SELF_TEST_X = 0x0D,
+    REG_SELF_TEST_Y = 0x0E,
+    REG_SELF_TEST_Z = 0x0F,
+    REG_SELF_TEST_A = 0x10
 } mpu6050_registers_t;
 
 typedef enum
@@ -62,14 +80,16 @@ typedef enum
 
 int read_mpu6050(int i2c_handle, mpu6050_Data *data);
 int write_mpu6050(int i2c_handle, mpu6050_Data *data);
-int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs);
+int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs, mp6050_gyro_bias_t *gyro_bias, mpu6050_accel_bias_t *accel_bias);
 int get_gyroX_mpu6050(int i2c_handle, int16_t *gyroX);
 int get_gyroY_mpu6050(int i2c_handle, int16_t *gyroY);
 int get_gyroZ_mpu6050(int i2c_handle, int16_t *gyroZ);
-int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps);
+int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias);
 int get_accelX_mpu6050(int i2c_handle, int16_t *accelX);
 int get_accelY_mpu6050(int i2c_handle, int16_t *accelY);
 int get_accelZ_mpu6050(int i2c_handle, int16_t *accelZ);
-int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g);
+int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float bias);
+int get_gyro_bias_mpu6050(int i2c_handle, mp6050_gyro_bias_t *gyro_bias, float samples);
+int get_accel_bias_mpu6050(int i2c_handle, mpu6050_accel_bias_t *accel_bias, float samples);
 
 #endif // mpu6050_UTILS_H
