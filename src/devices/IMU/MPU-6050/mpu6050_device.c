@@ -208,6 +208,10 @@ int mpu6050_self_test(void *self)
         fprintf(stderr, "MPU6050 Self-Test Failed\n");
         return -1;
     }
+    device->vtable->reset(self);
+    usleep(100000); // wait for 100ms after reset
+    device->vtable->wake(self);
+    usleep(100000); // wait for 100ms after wake
     return 0;
 }
 
