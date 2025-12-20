@@ -234,13 +234,13 @@ int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_f
 int get_gyro_bias_mpu6050(int i2c_handle, mp6050_gyro_bias_t *gyro_bias)
 {
     // Placeholder implementation
-    uint16_t raw_gyroX, raw_gyroY, raw_gyroZ;
+    int16_t raw_gyroX, raw_gyroY, raw_gyroZ;
     float sumX = 0.0f, sumY = 0.0f, sumZ = 0.0f;
     for (int i = 0; i < 200; i++)
     {
-        get_gyroX_mpu6050(i2c_handle, (int16_t *)&raw_gyroX);
-        get_gyroY_mpu6050(i2c_handle, (int16_t *)&raw_gyroY);
-        get_gyroZ_mpu6050(i2c_handle, (int16_t *)&raw_gyroZ);
+        get_gyroX_mpu6050(i2c_handle, &raw_gyroX);
+        get_gyroY_mpu6050(i2c_handle, &raw_gyroY);
+        get_gyroZ_mpu6050(i2c_handle, &raw_gyroZ);
         sumX += (float)raw_gyroX;
         sumY += (float)raw_gyroY;
         sumZ += (float)raw_gyroZ;
@@ -254,13 +254,13 @@ int get_gyro_bias_mpu6050(int i2c_handle, mp6050_gyro_bias_t *gyro_bias)
 
 int get_accel_bias_mpu6050(int i2c_handle, mpu6050_accel_bias_t *accel_bias)
 {
-    uint16_t raw_accelX, raw_accelY, raw_accelZ;
+    int16_t raw_accelX, raw_accelY, raw_accelZ;
     float sumX = 0.0f, sumY = 0.0f, sumZ = 0.0f;
     for (int i = 0; i < 200; i++)
     {
-        get_accelX_mpu6050(i2c_handle, (int16_t *)&raw_accelX);
-        get_accelY_mpu6050(i2c_handle, (int16_t *)&raw_accelY);
-        get_accelZ_mpu6050(i2c_handle, (int16_t *)&raw_accelZ);
+        get_accelX_mpu6050(i2c_handle, &raw_accelX);
+        get_accelY_mpu6050(i2c_handle, &raw_accelY);
+        get_accelZ_mpu6050(i2c_handle, &raw_accelZ);
         sumX += (float)raw_accelX;
         sumY += (float)raw_accelY;
         sumZ += (float)raw_accelZ;
