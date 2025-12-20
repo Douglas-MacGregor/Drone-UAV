@@ -12,7 +12,6 @@ typedef struct
     int (*reset)(void *self);
     int (*sleep)(void *self);
     int (*wake)(void *self);
-    int (*configure)(void *self);
     // add more function pointers as needed
 } IMUInterface;
 

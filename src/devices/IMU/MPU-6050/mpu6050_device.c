@@ -46,14 +46,12 @@ int mpu6050_read_data(void *self, void *data)
         fprintf(stderr, "MPU6050 read PWR_MGMT_1 error\n");
         return -1;
     }
-    if (reg_value & 0x40 != 0)
+    if ((reg_value & 0x40) != 0)
     {
         fprintf(stderr, "Warning: MPU6050 is in sleep mode\n");
         return -1;
     }
-    // Wake up the device
     IMUData *imu_data = (IMUData *)data;
-
     int16_t raw_gyroX, raw_gyroY, raw_gyroZ;
     int16_t raw_accelX, raw_accelY, raw_accelZ;
     if (get_gyroX_mpu6050(device->iic_handle, &raw_gyroX) < 0 ||
@@ -68,22 +66,16 @@ int mpu6050_read_data(void *self, void *data)
     }
     float gyroX_dps, gyroY_dps, gyroZ_dps;
     float accelX_g, accelY_g, accelZ_g;
-    if (convert_gyro_to_dps(raw_gyroX, device->gyro_fs, &gyroX_dps) < 0 ||
-        convert_gyro_to_dps(raw_gyroY, device->gyro_fs, &gyroY_dps) < 0 ||
-        convert_gyro_to_dps(raw_gyroZ, device->gyro_fs, &gyroZ_dps) < 0 ||
-        convert_accel_to_g(raw_accelX, device->accel_fs, &accelX_g) < 0 ||
-        convert_accel_to_g(raw_accelY, device->accel_fs, &accelY_g) < 0 ||
-        convert_accel_to_g(raw_accelZ, device->accel_fs, &accelZ_g) < 0)
+    if (convert_gyro_to_dps(raw_gyroX, device->gyro_fs, &(imu_data->gyroX), device->gyro_bias.x) < 0 ||
+        convert_gyro_to_dps(raw_gyroY, device->gyro_fs, &(imu_data->gyroY), device->gyro_bias.y) < 0 ||
+        convert_gyro_to_dps(raw_gyroZ, device->gyro_fs, &(imu_data->gyroZ), device->gyro_bias.z) < 0 ||
+        convert_accel_to_g(raw_accelX, device->accel_fs, &(imu_data->accelX), device->accel_bias.x) < 0 ||
+        convert_accel_to_g(raw_accelY, device->accel_fs, &(imu_data->accelY), device->accel_bias.y) < 0 ||
+        convert_accel_to_g(raw_accelZ, device->accel_fs, &(imu_data->accelZ), device->accel_bias.z) < 0)
     {
         fprintf(stderr, "MPU6050 data conversion error\n");
         return -1; // Error converting data
     }
-    imu_data->gyroX = gyroX_dps;
-    imu_data->gyroY = gyroY_dps;
-    imu_data->gyroZ = gyroZ_dps;
-    imu_data->accelX = accelX_g;
-    imu_data->accelY = accelY_g;
-    imu_data->accelZ = accelZ_g;
     imu_data->temperature = -300; // Temperature reading not implemented yet
     return 0;
 }
@@ -91,6 +83,102 @@ int mpu6050_read_data(void *self, void *data)
 int mpu6050_self_test(void *self)
 {
     mpu6050_Device *device = (mpu6050_Device *)self;
+    device->vtable->reset(self);
+    device->vtable->wake(self);
+    mp6050_gyro_bias_t gyro_bias_inital;
+    mpu6050_accel_bias_t accel_bias_inital;
+    get_gyro_bias_mpu6050(device->iic_handle, &gyro_bias_inital);
+    get_accel_bias_mpu6050(device->iic_handle, &accel_bias_inital);
+    mpu6050_Data data;
+    data.address = REG_GYRO_CONFIG;
+    data.data = 0xE0; // Enable self-test for all axes
+    data.length = 1;
+    int n = write_mpu6050(device->iic_handle, &data);
+    if (n < 0)
+    {
+        fprintf(stderr, "MPU6050 self-test write error\n");
+        return -1;
+    }
+    data.address = REG_ACCEL_CONFIG;
+    data.data = 0xE0; // Enable self-test for all axes
+    data.length = 1;
+    n = write_mpu6050(device->iic_handle, &data);
+    if (n < 0)
+    {
+        fprintf(stderr, "MPU6050 self-test write error\n");
+        return -1;
+    }
+    usleep(200000); // wait for 200ms for self-test to complete
+    mp6050_gyro_bias_t gyro_bias_self_test;
+    mpu6050_accel_bias_t accel_bias_self_test;
+    get_gyro_bias_mpu6050(device->iic_handle, &gyro_bias_self_test);
+    get_accel_bias_mpu6050(device->iic_handle, &accel_bias_self_test);
+    // Compare biases to determine if self-test passed
+    // str values //
+    float gyro_diff_x = gyro_bias_self_test.x - gyro_bias_inital.x;
+    float gyro_diff_y = gyro_bias_self_test.y - gyro_bias_inital.y;
+    float gyro_diff_z = gyro_bias_self_test.z - gyro_bias_inital.z;
+    float accel_diff_x = accel_bias_self_test.x - accel_bias_inital.x;
+    float accel_diff_y = accel_bias_self_test.y - accel_bias_inital.y;
+    float accel_diff_z = accel_bias_self_test.z - accel_bias_inital.z;
+
+    // Factory trim values
+    uint8_t self_test_gx, self_test_gy, self_test_gz;
+    uint8_t self_test_ax, self_test_ay, self_test_az;
+    data.address = REG_SELF_TEST_X;
+    data.length = 1;
+    data.data_receive = &self_test_gx;
+    read_mpu6050(device->iic_handle, &data);
+    self_test_ax = (self_test_gx & 0xE0) >> 3;
+    self_test_gx &= 0x18;
+    data.address = REG_SELF_TEST_Y;
+    data.length = 1;
+    data.data_receive = &self_test_gy;
+    read_mpu6050(device->iic_handle, &data);
+    self_test_ay = (self_test_gy & 0xE0) >> 3;
+    self_test_gy &= 0x18;
+    data.address = REG_SELF_TEST_Z;
+    data.length = 1;
+    data.data_receive = &self_test_gz;
+    read_mpu6050(device->iic_handle, &data);
+    self_test_az = (self_test_gz & 0xE0) >> 3;
+    self_test_gz &= 0x18;
+    uint8_t self_test_a;
+    data.address = REG_SELF_TEST_A;
+    data.length = 1;
+    data.data_receive = &self_test_a;
+    read_mpu6050(device->iic_handle, &data);
+    self_test_ax |= (self_test_a & 0x30) >> 4;
+    self_test_ay |= (self_test_a & 0x0C) >> 2;
+    self_test_az |= (self_test_a & 0x03);
+
+    float factory_trim_gyro_x = 25.0f * (131.0f) * (1.046f) * (powf(1.046f, (float)self_test_gx - 1.0f));
+    float factory_trim_gyro_y = 25.0f * (131.0f) * (1.046f) * (powf(1.046f, (float)self_test_gy - 1.0f));
+    float factory_trim_gyro_z = 25.0f * (131.0f) * (1.046f) * (powf(1.046f, (float)self_test_gz - 1.0f));
+    float factory_trim_accel_x = 4096.0f * (0.34f) * (powf(0.34f, (float)self_test_ax - 1.0f));
+    float factory_trim_accel_y = 4096.0f * (0.34f) * (powf(0.34f, (float)self_test_ay - 1.0f));
+    float factory_trim_accel_z = 4096.0f * (0.34f) * (powf(0.34f, (float)self_test_az - 1.0f));
+
+    float gyro_result_x = (gyro_diff_x / factory_trim_gyro_x) * 100.0f;
+    float gyro_result_y = (gyro_diff_y / factory_trim_gyro_y) * 100.0f;
+    float gyro_result_z = (gyro_diff_z / factory_trim_gyro_z) * 100.0f;
+    float accel_result_x = (accel_diff_x / factory_trim_accel_x) * 100.0f;
+    float accel_result_y = (accel_diff_y / factory_trim_accel_y) * 100.0f;
+    float accel_result_z = (accel_diff_z / factory_trim_accel_z) * 100.0f;
+
+    fprintf(stderr, "MPU6050 Self-Test Results:\n");
+    fprintf(stderr, "Gyro X: %.2f%%, Gyro Y: %.2f%%, Gyro Z: %.2f%%\n", gyro_result_x, gyro_result_y, gyro_result_z);
+    fprintf(stderr, "Accel X: %.2f%%, Accel Y: %.2f%%, Accel Z: %.2f%%\n", accel_result_x, accel_result_y, accel_result_z);
+    if (gyro_result_x < -14.0f || gyro_result_x > 14.0f ||
+        gyro_result_y < -14.0f || gyro_result_y > 14.0f ||
+        gyro_result_z < -14.0f || gyro_result_z > 14.0f ||
+        accel_result_x < -14.0f || accel_result_x > 14.0f ||
+        accel_result_y < -14.0f || accel_result_y > 14.0f ||
+        accel_result_z < -14.0f || accel_result_z > 14.0f)
+    {
+        fprintf(stderr, "MPU6050 Self-Test Failed\n");
+        return -1;
+    }
     return 0;
 }
 
@@ -131,7 +219,7 @@ int mpu6050_sleep(void *self)
 int mpu6050_wake(void *self)
 {
     mpu6050_Device *device = (mpu6050_Device *)self;
-    configure_mpu6050(device->iic_handle, device->gyro_fs, device->accel_fs);
+    configure_mpu6050(device->iic_handle, device->gyro_fs, device->accel_fs, &(device->gyro_bias), &(device->accel_bias));
     return 0;
 }
 
