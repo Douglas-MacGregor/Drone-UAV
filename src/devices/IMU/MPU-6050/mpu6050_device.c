@@ -173,9 +173,9 @@ int mpu6050_self_test(void *self)
 
     fprintf(stderr, "\n");
 
-    fprintf(stderr, "Factory Trim Values:\n");
-    fprintf(stderr, "Gyro X: %.2X, Gyro Y: %.2X, Gyro Z: %.2X\n", factory_trim_gyro_x, factory_trim_gyro_y, factory_trim_gyro_z);
-    fprintf(stderr, "Accel X: %.2X, Accel Y: %.2X, Accel Z: %.2X\n", factory_trim_accel_x, factory_trim_accel_y, factory_trim_accel_z);
+    fprintf(stderr, " Values:\n");
+    fprintf(stderr, "Gyro X: %.2X, Gyro Y: %.2X, Gyro Z: %.2X\n", self_test_gx, self_test_gy, self_test_gz);
+    fprintf(stderr, "Accel X: %.2X, Accel Y: %.2X, Accel Z: %.2X\n", self_test_ax, self_test_ay, self_test_az);
 
     fprintf(stderr, "\n");
 
