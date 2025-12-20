@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 
 IMUInterface mpu6050_imu_interface = {
     .init = mpu6050_init,
