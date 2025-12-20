@@ -124,7 +124,7 @@ int mpu6050_self_test(void *self)
     data.address = REG_GYRO_CONFIG;
     data.data = (0xE0); // Enable self-test for all axes
     data.length = 1;
-    int n = write_mpu6050(device->iic_handle, &data);
+    n = write_mpu6050(device->iic_handle, &data);
     if (n < 0)
     {
         fprintf(stderr, "MPU6050 self-test write error\n");
