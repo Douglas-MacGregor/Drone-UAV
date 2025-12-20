@@ -92,7 +92,7 @@ int mpu6050_self_test(void *self)
     get_accel_bias_mpu6050(device->iic_handle, &accel_bias_inital);
     mpu6050_Data data;
     data.address = REG_GYRO_CONFIG;
-    data.data = 0xE0; // Enable self-test for all axes
+    data.data = (0xE0 | 0x10); // Enable self-test for all axes
     data.length = 1;
     int n = write_mpu6050(device->iic_handle, &data);
     if (n < 0)
