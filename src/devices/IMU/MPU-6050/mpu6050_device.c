@@ -198,21 +198,6 @@ int mpu6050_self_test(void *self)
     float accel_result_x = ((accel_diff_x - factory_trim_accel_x) / factory_trim_accel_x) * 100.0f;
     float accel_result_y = ((accel_diff_y - factory_trim_accel_y) / factory_trim_accel_y) * 100.0f;
     float accel_result_z = ((accel_diff_z - factory_trim_accel_z) / factory_trim_accel_z) * 100.0f;
-
-    fprintf(stderr, "MPU6050 Self-Test Results:\n");
-    fprintf(stderr, "gyro self test values X: %.2f, Y: %.2f, Z: %.2f\n", gyro_bias_self_test.x, gyro_bias_self_test.y, gyro_bias_self_test.z);
-    fprintf(stderr, "acc self test values X: %.2f, Y: %.2f, Z: %.2f\n", accel_bias_self_test.x, accel_bias_self_test.y, accel_bias_self_test.z);
-
-    fprintf(stderr, "\n");
-
-    fprintf(stderr, " Values:\n");
-    fprintf(stderr, "Gyro X: %.2X, Gyro Y: %.2X, Gyro Z: %.2X\n", self_test_gx, self_test_gy, self_test_gz);
-    fprintf(stderr, "Accel X: %.2X, Accel Y: %.2X, Accel Z: %.2X\n", self_test_ax, self_test_ay, self_test_az);
-
-    fprintf(stderr, "\n");
-
-    fprintf(stderr, "Gyro X: %.2f%%, Gyro Y: %.2f%%, Gyro Z: %.2f%%\n", gyro_result_x, gyro_result_y, gyro_result_z);
-    fprintf(stderr, "Accel X: %.2f%%, Accel Y: %.2f%%, Accel Z: %.2f%%\n", accel_result_x, accel_result_y, accel_result_z);
     if (gyro_result_x < -14.0f || gyro_result_x > 14.0f ||
         gyro_result_y < -14.0f || gyro_result_y > 14.0f ||
         gyro_result_z < -14.0f || gyro_result_z > 14.0f ||
