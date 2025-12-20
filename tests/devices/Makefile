@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -g -Wall
-LDFLAGS = -lpigpio -lrt -lpthread
+LDFLAGS = -lpigpio -lrt -lpthread -lm
 
 
 unittest_sx1278 = unittest_sx1278
