@@ -89,7 +89,7 @@ int get_accelX_mpu6050(int i2c_handle, int16_t *accelX);
 int get_accelY_mpu6050(int i2c_handle, int16_t *accelY);
 int get_accelZ_mpu6050(int i2c_handle, int16_t *accelZ);
 int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float bias);
-int get_gyro_bias_mpu6050(int i2c_handle, mp6050_gyro_bias_t *gyro_bias);
-int get_accel_bias_mpu6050(int i2c_handle, mpu6050_accel_bias_t *accel_bias);
+int get_gyro_bias_mpu6050(int i2c_handle, mp6050_gyro_bias_t *gyro_bias, float samples);
+int get_accel_bias_mpu6050(int i2c_handle, mpu6050_accel_bias_t *accel_bias, float samples);
 
 #endif // mpu6050_UTILS_H
