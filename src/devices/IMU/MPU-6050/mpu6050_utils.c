@@ -37,7 +37,7 @@ int write_mpu6050(int i2c_handle, mpu6050_Data *data)
 int get_gyroX_mpu6050(int i2c_handle, int16_t *gyroX)
 {
     mpu6050_Data data;
-    data.address = REG_ACCEL_XOUT_H; // Gyro X high byte register
+    data.address = REG_GYRO_XOUT_H; // Gyro X high byte register
     data.length = 2;
     uint8_t buffer[2];
     data.data_receive = buffer;
@@ -53,7 +53,7 @@ int get_gyroX_mpu6050(int i2c_handle, int16_t *gyroX)
 int get_gyroY_mpu6050(int i2c_handle, int16_t *gyroY)
 {
     mpu6050_Data data;
-    data.address = REG_ACCEL_YOUT_H; // Gyro Y high byte register
+    data.address = REG_GYRO_YOUT_H; // Gyro Y high byte register
     data.length = 2;
     uint8_t buffer[2];
     data.data_receive = buffer;
@@ -69,7 +69,7 @@ int get_gyroY_mpu6050(int i2c_handle, int16_t *gyroY)
 int get_gyroZ_mpu6050(int i2c_handle, int16_t *gyroZ)
 {
     mpu6050_Data data;
-    data.address = REG_ACCEL_ZOUT_H; // Gyro Z high byte register
+    data.address = REG_GYRO_ZOUT_H; // Gyro Z high byte register
     data.length = 2;
     uint8_t buffer[2];
     data.data_receive = buffer;
