@@ -24,12 +24,6 @@ IMUInterface mpu6050_imu_interface = {
     .reset = mpu6050_reset,
     .sleep = mpu6050_sleep,
     .wake = mpu6050_wake};
-.self_test = mpu6050_self_test,
-    .reset = mpu6050_reset,
-    .sleep = mpu6050_sleep,
-    .wake = mpu6050_wake
-}
-;
 
 int mpu6050_init(void *self)
 {
@@ -287,13 +281,10 @@ int mpu6050_wake(void *self)
 }
 
 mpu6050_Device create_mpu6050_device(int iic_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs)
-    mpu6050_Device create_mpu6050_device(int iic_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs)
 {
     mpu6050_Device device;
     device.vtable = &mpu6050_imu_interface;
     device.iic_handle = iic_handle;
-    device.gyro_fs = gyro_fs;
-    device.accel_fs = accel_fs;
     device.gyro_fs = gyro_fs;
     device.accel_fs = accel_fs;
     return device;
