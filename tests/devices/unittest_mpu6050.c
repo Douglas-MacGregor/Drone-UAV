@@ -139,8 +139,14 @@ void test_mpu6050_acc_getters_converters(void)
 {
     init_gpio();
     iic_handle = init_i2c(1, 0x68); // Assuming
-    cordirnate3D_t gyro_bias = {0.0f, 0.0f, 0.0f};
-    cordirnate3D_t accel_bias = {0.0f, 0.0f, 0.0f};
+    cordirnate3D_t gyro_bias;
+    cordirnate3D_t accel_bias;
+    gyro_bias.x = 0.0f;
+    gyro_bias.y = 0.0f;
+    gyro_bias.z = 0.0f;
+    accel_bias.x = 0.0f;
+    accel_bias.y = 0.0f;
+    accel_bias.z = 0.0f;
     configure_mpu6050(iic_handle, GYRO_FS_250, ACCEL_FS_8, &gyro_bias, &accel_bias);
     int16_t raw_accel_x, raw_accel_y, raw_accel_z;
     int n = get_accelX_mpu6050(iic_handle, &raw_accel_x);
