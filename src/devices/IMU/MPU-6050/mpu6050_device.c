@@ -8,6 +8,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
+#include "mpu6050_utils.h"
+#include "../../utils.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <math.h>
 
 IMUInterface mpu6050_imu_interface = {
     .init = mpu6050_init,
@@ -17,10 +24,17 @@ IMUInterface mpu6050_imu_interface = {
     .reset = mpu6050_reset,
     .sleep = mpu6050_sleep,
     .wake = mpu6050_wake};
+.self_test = mpu6050_self_test,
+    .reset = mpu6050_reset,
+    .sleep = mpu6050_sleep,
+    .wake = mpu6050_wake
+}
+;
 
 int mpu6050_init(void *self)
 {
     mpu6050_Device *device = (mpu6050_Device *)self;
+    device->vtable->reset(self);
     device->vtable->reset(self);
     return 0;
 }
@@ -36,6 +50,22 @@ int mpu6050_read_data(void *self, void *data)
 {
 
     mpu6050_Device *device = (mpu6050_Device *)self;
+    mpu6050_Data sleep_check;
+    sleep_check.address = REG_PWR_MGMT_1;
+    uint8_t reg_value;
+    sleep_check.length = 1;
+    sleep_check.data_receive = &reg_value;
+    int n = read_mpu6050(device->iic_handle, &sleep_check);
+    if (n != 1)
+    {
+        fprintf(stderr, "MPU6050 read PWR_MGMT_1 error\n");
+        return -1;
+    }
+    if ((reg_value & 0x40) != 0)
+    {
+        fprintf(stderr, "Warning: MPU6050 is in sleep mode\n");
+        return -1;
+    }
     mpu6050_Data sleep_check;
     sleep_check.address = REG_PWR_MGMT_1;
     uint8_t reg_value;
@@ -257,10 +287,13 @@ int mpu6050_wake(void *self)
 }
 
 mpu6050_Device create_mpu6050_device(int iic_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs)
+    mpu6050_Device create_mpu6050_device(int iic_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs)
 {
     mpu6050_Device device;
     device.vtable = &mpu6050_imu_interface;
     device.iic_handle = iic_handle;
+    device.gyro_fs = gyro_fs;
+    device.accel_fs = accel_fs;
     device.gyro_fs = gyro_fs;
     device.accel_fs = accel_fs;
     return device;

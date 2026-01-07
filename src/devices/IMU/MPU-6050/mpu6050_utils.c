@@ -39,6 +39,7 @@ int get_gyroX_mpu6050(int i2c_handle, int16_t *gyroX)
 {
     mpu6050_Data data;
     data.address = REG_GYRO_XOUT_H; // Gyro X high byte register
+    data.address = REG_GYRO_XOUT_H; // Gyro X high byte register
     data.length = 2;
     uint8_t buffer[2];
     data.data_receive = buffer;
@@ -54,6 +55,7 @@ int get_gyroX_mpu6050(int i2c_handle, int16_t *gyroX)
 int get_gyroY_mpu6050(int i2c_handle, int16_t *gyroY)
 {
     mpu6050_Data data;
+    data.address = REG_GYRO_YOUT_H; // Gyro Y high byte register
     data.address = REG_GYRO_YOUT_H; // Gyro Y high byte register
     data.length = 2;
     uint8_t buffer[2];
@@ -71,6 +73,7 @@ int get_gyroZ_mpu6050(int i2c_handle, int16_t *gyroZ)
 {
     mpu6050_Data data;
     data.address = REG_GYRO_ZOUT_H; // Gyro Z high byte register
+    data.address = REG_GYRO_ZOUT_H; // Gyro Z high byte register
     data.length = 2;
     uint8_t buffer[2];
     data.data_receive = buffer;
@@ -83,7 +86,7 @@ int get_gyroZ_mpu6050(int i2c_handle, int16_t *gyroZ)
     return 0;
 }
 
-int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias)
+int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias) int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias)
 {
     float sensitivity;
     switch (fs)
@@ -103,6 +106,7 @@ int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, floa
     default:
         return -1; // Invalid full-scale range
     }
+    *dps = ((float)raw_gyro - bias) / sensitivity;
     *dps = ((float)raw_gyro - bias) / sensitivity;
     return 0;
 }
@@ -155,7 +159,7 @@ int get_accelZ_mpu6050(int i2c_handle, int16_t *accelZ)
     return 0;
 }
 
-int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float bias)
+int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float bias) int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float bias)
 {
     float sensitivity;
     switch (fs)
@@ -175,6 +179,7 @@ int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float
     default:
         return -1; // Invalid full-scale range
     }
+    *g = ((float)raw_accel - bias) / sensitivity;
     *g = ((float)raw_accel - bias) / sensitivity;
     return 0;
 }
