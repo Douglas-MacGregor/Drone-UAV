@@ -45,7 +45,6 @@ void test_mpu6050_gyro_acc_config(void)
     TEST_ASSERT_EQUAL_INT(0, m);
     iic_handle = init_i2c(1, 0x68); // Assuming
     int n = configure_mpu6050(iic_handle, GYRO_FS_250, ACCEL_FS_8, &gyro_bias, &accel_bias);
-    int n = configure_mpu6050(iic_handle, GYRO_FS_250, ACCEL_FS_8, &gyro_bias, &accel_bias);
     TEST_ASSERT_EQUAL_INT(0, n); // Expect to write 2 bytes (one for gyro config, one for accel config)
     mpu6050_Data data;
     data.address = REG_GYRO_CONFIG;
@@ -61,7 +60,6 @@ void test_mpu6050_gyro_acc_config(void)
     n = read_mpu6050(iic_handle, &data);
     TEST_ASSERT_EQUAL_INT(1, n);
     TEST_ASSERT_EQUAL_UINT8(0x10, accel_config); // ACCEL_FS
-    n = configure_mpu6050(iic_handle, GYRO_FS_1000, ACCEL_FS_16, &gyro_bias, &accel_bias);
     n = configure_mpu6050(iic_handle, GYRO_FS_1000, ACCEL_FS_16, &gyro_bias, &accel_bias);
     TEST_ASSERT_EQUAL_INT(0, n);
     data.address = REG_GYRO_CONFIG;
@@ -84,7 +82,6 @@ void test_mpu6050_device_creation(void)
 {
     iic_handle = 1; // Dummy I2C handle for testing
     mpu6050_Device device = create_mpu6050_device(iic_handle, GYRO_FS_250, ACCEL_FS_8);
-    mpu6050_Device device = create_mpu6050_device(iic_handle, GYRO_FS_250, ACCEL_FS_8);
     TEST_ASSERT_EQUAL_INT(iic_handle, device.iic_handle);
     TEST_ASSERT_EQUAL_PTR(&mpu6050_imu_interface, device.vtable);
 }
@@ -98,25 +95,19 @@ void test_mpu6050_gyro_getters_converter(void)
     configure_mpu6050(iic_handle, GYRO_FS_250, ACCEL_FS_8, &gyro_bias, &accel_bias);
     int16_t raw_gyro_x, raw_gyro_y, raw_gyro_z;
     int n = get_gyroX_mpu6050(iic_handle, &raw_gyro_x);
-    int n = get_gyroX_mpu6050(iic_handle, &raw_gyro_x);
     TEST_ASSERT_EQUAL_INT(0, n);
     TEST_ASSERT_NOT_EQUAL(0, raw_gyro_x); // Expect some non-zero value
     n = get_gyroY_mpu6050(iic_handle, &raw_gyro_y);
-    n = get_gyroY_mpu6050(iic_handle, &raw_gyro_y);
     TEST_ASSERT_EQUAL_INT(0, n);
     TEST_ASSERT_NOT_EQUAL(0, raw_gyro_y); // Expect some non-zero value
-    n = get_gyroZ_mpu6050(iic_handle, &raw_gyro_z);
     n = get_gyroZ_mpu6050(iic_handle, &raw_gyro_z);
     TEST_ASSERT_EQUAL_INT(0, n);
     TEST_ASSERT_NOT_EQUAL(0, raw_gyro_z); // Expect some non-zero value
     float g_x, g_y, g_z;
     n = convert_gyro_to_dps(raw_gyro_x, GYRO_FS_250, &g_x, 0.0);
-    n = convert_gyro_to_dps(raw_gyro_x, GYRO_FS_250, &g_x, 0.0);
     TEST_ASSERT_EQUAL_INT(0, n);
     n = convert_gyro_to_dps(raw_gyro_y, GYRO_FS_250, &g_y, 0.0);
-    n = convert_gyro_to_dps(raw_gyro_y, GYRO_FS_250, &g_y, 0.0);
     TEST_ASSERT_EQUAL_INT(0, n);
-    n = convert_gyro_to_dps(raw_gyro_z, GYRO_FS_250, &g_z, 0.0);
     n = convert_gyro_to_dps(raw_gyro_z, GYRO_FS_250, &g_z, 0.0);
     TEST_ASSERT_EQUAL_INT(0, n);
     float expected_g_x = (float)raw_gyro_x / 131.0;
@@ -225,11 +216,6 @@ int main(void)
     RUN_TEST(test_mpu6050_device_creation);
     RUN_TEST(test_mpu6050_utils_read);
     RUN_TEST(test_mpu6050_gyro_acc_config);
-    RUN_TEST(test_mpu6050_gyro_getters_converter);
-    RUN_TEST(test_mpu6050_self_test);
-    RUN_TEST(test_mpu6050_reset_sleep_wake);
-    RUN_TEST(test_mpu6050_acc_getters_converters);
-    RUN_TEST(test_mpu6050_device_get_data);
     RUN_TEST(test_mpu6050_gyro_getters_converter);
     RUN_TEST(test_mpu6050_self_test);
     RUN_TEST(test_mpu6050_reset_sleep_wake);

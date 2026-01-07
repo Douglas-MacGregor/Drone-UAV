@@ -25,41 +25,51 @@ IMUInterface mpu6050_imu_interface = {
     .sleep = mpu6050_sleep,
     .wake = mpu6050_wake};
 
+/*
+ * Function: mpu6050_init
+ * Description: Initializes the MPU6050 device by resetting and waking it
+ * Parameters: self - Pointer to the MPU6050 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Leaves device in 'awake' state
+ * Assumptions: Device is properly connected via I2C
+ * Notes: None
+ */
 int mpu6050_init(void *self)
 {
     mpu6050_Device *device = (mpu6050_Device *)self;
     device->vtable->reset(self);
-    device->vtable->reset(self);
+    device->vtable->wake(self);
     return 0;
 }
 
+/*
+ * Function: mpu6050_close
+ * Description: Clean up operations for the MPU6050 device if necessary
+ * Parameters: self - Pointer to the MPU6050 device instance
+ * Returns: 0 on success
+ * Side Effects: None currently implemented
+ * Assumptions: Device has been previously initialized
+ * Notes: None
+ */
 int mpu6050_close(void *self)
 {
     mpu6050_Device *device = (mpu6050_Device *)self;
-    // cleanup operations if needed
     return 0;
 }
 
+/*
+ * Function: mpu6050_read_data
+ * Description: Reads data from the device registers and performs necessary conversions
+ * Parameters: self - Pointer to the MPU6050 device instance
+ *            data - Pointer to IMUData structure to store the results
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Returns gyro data in dps and acceleration in g's
+ * Assumptions: The device is powered on and in an 'awake' state
+ * Notes: Currently doesn't read temperature data
+ */
 int mpu6050_read_data(void *self, void *data)
 {
-
     mpu6050_Device *device = (mpu6050_Device *)self;
-    mpu6050_Data sleep_check;
-    sleep_check.address = REG_PWR_MGMT_1;
-    uint8_t reg_value;
-    sleep_check.length = 1;
-    sleep_check.data_receive = &reg_value;
-    int n = read_mpu6050(device->iic_handle, &sleep_check);
-    if (n != 1)
-    {
-        fprintf(stderr, "MPU6050 read PWR_MGMT_1 error\n");
-        return -1;
-    }
-    if ((reg_value & 0x40) != 0)
-    {
-        fprintf(stderr, "Warning: MPU6050 is in sleep mode\n");
-        return -1;
-    }
     mpu6050_Data sleep_check;
     sleep_check.address = REG_PWR_MGMT_1;
     uint8_t reg_value;
@@ -105,6 +115,15 @@ int mpu6050_read_data(void *self, void *data)
     return 0;
 }
 
+/*
+ * Function: mpu6050_self_test
+ * Description: Performs self-test on the MPU6050 device
+ * Parameters: self - Pointer to the MPU6050 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Resets device configuration during test and leaves it 'awake'
+ * Assumptions: Device is powered on and connected via I2C
+ * Notes: None
+ */
 int mpu6050_self_test(void *self)
 {
     mpu6050_Device *device = (mpu6050_Device *)self;
@@ -140,10 +159,10 @@ int mpu6050_self_test(void *self)
         return -1;
     }
 
-    cordirnate3D_t gyro_bias_inital;
-    cordirnate3D_t accel_bias_inital;
-    get_gyro_mean_window_mpu6050(device->iic_handle, &gyro_bias_inital, 200.0);
-    get_accel_mean_window_mpu6050(device->iic_handle, &accel_bias_inital, 200.0);
+    cordirnate3D_t gyro_bias_initial;
+    cordirnate3D_t accel_bias_initial;
+    get_gyro_mean_window_mpu6050(device->iic_handle, &gyro_bias_initial, 200.0);
+    get_accel_mean_window_mpu6050(device->iic_handle, &accel_bias_initial, 200.0);
     mpu6050_Data data;
     data.address = REG_GYRO_CONFIG;
     data.data = (0xE0); // Enable self-test for all axes
@@ -170,12 +189,12 @@ int mpu6050_self_test(void *self)
     get_accel_mean_window_mpu6050(device->iic_handle, &accel_bias_self_test, 200.0);
     // Compare biases to determine if self-test passed
     // str values //
-    float gyro_diff_x = gyro_bias_self_test.x - gyro_bias_inital.x;
-    float gyro_diff_y = gyro_bias_self_test.y - gyro_bias_inital.y;
-    float gyro_diff_z = gyro_bias_self_test.z - gyro_bias_inital.z;
-    float accel_diff_x = accel_bias_self_test.x - accel_bias_inital.x;
-    float accel_diff_y = accel_bias_self_test.y - accel_bias_inital.y;
-    float accel_diff_z = accel_bias_self_test.z - accel_bias_inital.z;
+    float gyro_diff_x = gyro_bias_self_test.x - gyro_bias_initial.x;
+    float gyro_diff_y = gyro_bias_self_test.y - gyro_bias_initial.y;
+    float gyro_diff_z = gyro_bias_self_test.z - gyro_bias_initial.z;
+    float accel_diff_x = accel_bias_self_test.x - accel_bias_initial.x;
+    float accel_diff_y = accel_bias_self_test.y - accel_bias_initial.y;
+    float accel_diff_z = accel_bias_self_test.z - accel_bias_initial.z;
 
     // Factory trim values
     uint8_t self_test_gx, self_test_gy, self_test_gz;
@@ -239,6 +258,15 @@ int mpu6050_self_test(void *self)
     return 0;
 }
 
+/*
+ * Function: mpu6050_reset
+ * Description: Resets the MPU6050 device
+ * Parameters: self - Pointer to the MPU6050 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Device is reset and requires reconfiguration
+ * Assumptions: Device is properly connected via I2C
+ * Notes: Leaves device in unspecified state
+ */
 int mpu6050_reset(void *self)
 {
     mpu6050_Device *device = (mpu6050_Device *)self;
@@ -256,6 +284,15 @@ int mpu6050_reset(void *self)
     return 0;
 }
 
+/*
+ * Function: mpu6050_sleep
+ * Description: Puts the MPU6050 device into sleep mode
+ * Parameters: self - Pointer to the MPU6050 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Device enters sleep mode
+ * Assumptions: Device is properly connected via I2C
+ * Notes: None
+ */
 int mpu6050_sleep(void *self)
 {
     mpu6050_Device *device = (mpu6050_Device *)self;
@@ -273,6 +310,15 @@ int mpu6050_sleep(void *self)
     return 0;
 }
 
+/*
+ * Function: mpu6050_wake
+ * Description: Wakes the MPU6050 device from sleep mode and configures it
+ * Parameters: self - Pointer to the MPU6050 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Device is configured and ready for operation
+ * Assumptions: Device is properly connected via I2C
+ * Notes: Leaves device in 'awake' state and sets device bias values
+ */
 int mpu6050_wake(void *self)
 {
     mpu6050_Device *device = (mpu6050_Device *)self;
@@ -280,6 +326,17 @@ int mpu6050_wake(void *self)
     return 0;
 }
 
+/*
+ * Function: create_mpu6050_device
+ * Description: Creates and initializes an MPU6050 device instance
+ * Parameters: iic_handle - I2C handle for communication
+ *            gyro_fs - Gyroscope full-scale range
+ *            accel_fs - Accelerometer full-scale range
+ * Returns: Initialized mpu6050_Device structure
+ * Side Effects: None
+ * Assumptions: None
+ * Notes: None
+ */
 mpu6050_Device create_mpu6050_device(int iic_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs)
 {
     mpu6050_Device device;

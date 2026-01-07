@@ -21,24 +21,64 @@ LoRaInterface sx1278_lora_interface = {
     .standby = sx1278_standby,
     .reset = sx1278_reset};
 
+/*
+ * Function: sx1278_set_frequency
+ * Description: Sets the transmission frequency for the SX1278 device
+ * Parameters: self - Pointer to the SX1278 device instance
+ *            freq - Frequency in Hz to set
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Changes device transmission frequency
+ * Assumptions: Device is properly initialized
+ * Notes: Implementation not yet complete
+ */
 int sx1278_set_frequency(void *self, uint32_t freq)
 {
     // TODO: Implementation here
     return 0;
 }
 
+/*
+ * Function: sx1278_set_power
+ * Description: Sets the transmission power level for the SX1278 device
+ * Parameters: self - Pointer to the SX1278 device instance
+ *            level - Power level to set
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Changes device transmission power
+ * Assumptions: Device is properly initialized
+ * Notes: Implementation not yet complete
+ */
 int sx1278_set_power(void *self, int level)
 {
     // TODO: Implementation here
     return 0;
 }
 
+/*
+ * Function: sx1278_set_spreading_factor
+ * Description: Sets the spreading factor for LoRa modulation
+ * Parameters: self - Pointer to the SX1278 device instance
+ *            sf - Spreading factor value (typically 6-12)
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Changes LoRa modulation parameters
+ * Assumptions: Device is properly initialized and in LoRa mode
+ * Notes: Implementation not yet complete
+ */
 int sx1278_set_spreading_factor(void *self, int sf)
 {
     // TODO: Implementation here
     return 0;
 }
 
+/*
+ * Function: sx1278_set_syncword
+ * Description: Sets the synchronization word for LoRa communication
+ * Parameters: self - Pointer to the SX1278 device instance
+ *            syncword - Synchronization word value
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Changes device synchronization word register
+ * Assumptions: Device is properly initialized and SPI communication is available
+ * Notes: None
+ */
 int sx1278_set_syncword(void *self, uint8_t syncword)
 {
     sx1278_Device *device = (sx1278_Device *)self;
@@ -57,6 +97,17 @@ int sx1278_set_syncword(void *self, uint8_t syncword)
     return 0;
 }
 
+/*
+ * Function: sx1278_send
+ * Description: Transmits data using the SX1278 LoRa device
+ * Parameters: self - Pointer to the SX1278 device instance
+ *            tx_data - Pointer to data buffer to transmit
+ *            len - Length of data to transmit (max 128 bytes)
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Sends data over LoRa radio and waits for transmission complete
+ * Assumptions: Device is properly initialized and configured
+ * Notes: Maximum payload length is limited to 128 bytes
+ */
 int sx1278_send(void *self, const uint8_t *tx_data, int len)
 {
     sx1278_Device *device = (sx1278_Device *)self;
@@ -80,7 +131,7 @@ int sx1278_send(void *self, const uint8_t *tx_data, int len)
     data.transmit_length = 1;
     if (write_sx1278(spi_handle, &data) < 0)
     {
-        fprintf(stdout, "unable too set FIFO Address Pointer to TX Base Address\n");
+        fprintf(stdout, "unable to set FIFO Address Pointer to TX Base Address\n");
         return -1;
     }
     data.address = REG_FIFO;
@@ -129,6 +180,17 @@ int sx1278_send(void *self, const uint8_t *tx_data, int len)
     return 0;
 }
 
+/*
+ * Function: sx1278_receive
+ * Description: Receives data from the SX1278 LoRa device with timeout
+ * Parameters: self - Pointer to the SX1278 device instance
+ *            buffer - Buffer to store received data
+ *            max_len - Maximum length of data to receive
+ * Returns: Number of bytes received on success, -1 on error or timeout
+ * Side Effects: Enters continuous RX mode and waits for data reception
+ * Assumptions: Device is properly initialized and configured
+ * Notes: Has 10-second timeout to prevent infinite blocking
+ */
 int sx1278_receive(void *self, uint8_t *buffer, int max_len)
 {
     // REFACTOR!!
@@ -216,6 +278,15 @@ int sx1278_receive(void *self, uint8_t *buffer, int max_len)
     return (num_bytes < max_len) ? num_bytes : max_len;
 }
 
+/*
+ * Function: sx1278_sleep
+ * Description: Puts the SX1278 device into sleep mode for power saving
+ * Parameters: self - Pointer to the SX1278 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Device enters sleep mode with minimal power consumption
+ * Assumptions: Device is properly initialized and SPI communication is available
+ * Notes: Device must be woken up before further operations
+ */
 int sx1278_sleep(void *self)
 {
     sx1278_Device *device = (sx1278_Device *)self;
@@ -235,6 +306,15 @@ int sx1278_sleep(void *self)
     return 0;
 }
 
+/*
+ * Function: sx1278_standby
+ * Description: Puts the SX1278 device into standby mode
+ * Parameters: self - Pointer to the SX1278 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Device enters standby mode ready for configuration changes
+ * Assumptions: Device is properly initialized and SPI communication is available
+ * Notes: Standby mode is required before changing device settings
+ */
 int sx1278_standby(void *self)
 {
     sx1278_Device *device = (sx1278_Device *)self;
@@ -248,6 +328,15 @@ int sx1278_standby(void *self)
     return 0;
 }
 
+/*
+ * Function: sx1278_init
+ * Description: Initializes the SX1278 device for LoRa operation
+ * Parameters: self - Pointer to the SX1278 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Activates LoRa mode and puts device in standby
+ * Assumptions: Device is properly connected via SPI
+ * Notes: Must be called before any other device operations
+ */
 int sx1278_init(void *self)
 {
     sx1278_Device *device = (sx1278_Device *)self;
@@ -268,10 +357,19 @@ int sx1278_init(void *self)
     return 0;
 }
 
+/*
+ * Function: sx1278_close
+ * Description: Closes the SX1278 device and puts it into sleep mode
+ * Parameters: self - Pointer to the SX1278 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Device enters sleep mode for power saving
+ * Assumptions: Device is properly initialized
+ * Notes: Should be called when device is no longer needed
+ */
 int sx1278_close(void *self)
 {
-    // sx1278_Device *device = (sx1278_Device *)self;
-    int n = set_sleep_mode(((sx1278_Device *)self)->spi_handle);
+    sx1278_Device *device = (sx1278_Device *)self;
+    int n = device->vtable->sleep(self);
     if (n < 0)
     {
         fprintf(stdout, "Failed to set sleep mode\n");
@@ -280,6 +378,15 @@ int sx1278_close(void *self)
     return 0;
 }
 
+/*
+ * Function: sx1278_reset
+ * Description: Resets the SX1278 device and reinitializes it
+ * Parameters: self - Pointer to the SX1278 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Device is reset and returned to standby mode
+ * Assumptions: Device is properly connected via SPI
+ * Notes: Includes necessary delays for proper reset sequence
+ */
 int sx1278_reset(void *self)
 {
     sx1278_Device *device = (sx1278_Device *)self;
@@ -291,6 +398,15 @@ int sx1278_reset(void *self)
     return 0;
 }
 
+/*
+ * Function: create_sx1278_device
+ * Description: Creates and initializes an SX1278 device instance
+ * Parameters: spi_handle - SPI handle for communication with the device
+ * Returns: Initialized sx1278_Device structure
+ * Side Effects: Device is initialized and ready for operation
+ * Assumptions: SPI interface is properly configured
+ * Notes: Automatically calls init function during creation
+ */
 sx1278_Device create_sx1278_device(int spi_handle)
 {
     sx1278_Device device;

@@ -91,7 +91,6 @@ int get_gyroX_mpu6050(int i2c_handle, int16_t *gyroX);
 int get_gyroY_mpu6050(int i2c_handle, int16_t *gyroY);
 int get_gyroZ_mpu6050(int i2c_handle, int16_t *gyroZ);
 int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias);
-int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias);
 int get_accelX_mpu6050(int i2c_handle, int16_t *accelX);
 int get_accelY_mpu6050(int i2c_handle, int16_t *accelY);
 int get_accelZ_mpu6050(int i2c_handle, int16_t *accelZ);
