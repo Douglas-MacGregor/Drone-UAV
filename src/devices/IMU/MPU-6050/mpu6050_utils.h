@@ -48,11 +48,6 @@ typedef enum
     REG_SELF_TEST_Y = 0x0E,
     REG_SELF_TEST_Z = 0x0F,
     REG_SELF_TEST_A = 0x10,
-    REG_ACCEL_CONFIG = 0x1C,
-    REG_SELF_TEST_X = 0x0D,
-    REG_SELF_TEST_Y = 0x0E,
-    REG_SELF_TEST_Z = 0x0F,
-    REG_SELF_TEST_A = 0x10
 } mpu6050_registers_t;
 
 typedef enum
@@ -90,7 +85,6 @@ int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_f
 int get_gyroX_mpu6050(int i2c_handle, int16_t *gyroX);
 int get_gyroY_mpu6050(int i2c_handle, int16_t *gyroY);
 int get_gyroZ_mpu6050(int i2c_handle, int16_t *gyroZ);
-int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias);
 int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias);
 int get_accelX_mpu6050(int i2c_handle, int16_t *accelX);
 int get_accelY_mpu6050(int i2c_handle, int16_t *accelY);

@@ -24,12 +24,7 @@ int mpu6050_self_test(void *self);
 int mpu6050_reset(void *self);
 int mpu6050_sleep(void *self);
 int mpu6050_wake(void *self);
-int mpu6050_self_test(void *self);
-int mpu6050_reset(void *self);
-int mpu6050_sleep(void *self);
-int mpu6050_wake(void *self);
 
-mpu6050_Device create_mpu6050_device(int iic_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs);
 mpu6050_Device create_mpu6050_device(int iic_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs);
 
 #endif // MPU6050_DEVICE_H
