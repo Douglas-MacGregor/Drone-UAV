@@ -48,11 +48,6 @@ typedef enum
     REG_SELF_TEST_Y = 0x0E,
     REG_SELF_TEST_Z = 0x0F,
     REG_SELF_TEST_A = 0x10,
-    REG_ACCEL_CONFIG = 0x1C,
-    REG_SELF_TEST_X = 0x0D,
-    REG_SELF_TEST_Y = 0x0E,
-    REG_SELF_TEST_Z = 0x0F,
-    REG_SELF_TEST_A = 0x10
 } mpu6050_registers_t;
 
 typedef enum
