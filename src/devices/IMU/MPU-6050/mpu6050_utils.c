@@ -86,7 +86,7 @@ int get_gyroZ_mpu6050(int i2c_handle, int16_t *gyroZ)
     return 0;
 }
 
-int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias) int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias)
+int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias)
 {
     float sensitivity;
     switch (fs)
@@ -159,7 +159,7 @@ int get_accelZ_mpu6050(int i2c_handle, int16_t *accelZ)
     return 0;
 }
 
-int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float bias) int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float bias)
+int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float bias)
 {
     float sensitivity;
     switch (fs)
