@@ -217,13 +217,13 @@ int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_f
         return -1;
     }
 
-    n = get_accel_bias_mpu6050(i2c_handle, accel_bias, 1000.0);
+    n = get_accel_mean_window_mpu6050(i2c_handle, accel_bias, 1000.0);
     if (n < 0)
     {
         fprintf(stderr, "Failed to get accelerometer bias\n");
         return -1;
     }
-    n = get_gyro_bias_mpu6050(i2c_handle, gyro_bias, 1000.0);
+    n = get_accel_mean_window_mpu6050(i2c_handle, gyro_bias, 1000.0);
     if (n < 0)
     {
         fprintf(stderr, "Failed to get gyroscope bias\n");
