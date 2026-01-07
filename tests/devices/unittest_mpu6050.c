@@ -113,11 +113,7 @@ void test_mpu6050_gyro_getters_converter(void)
     float expected_g_x = (float)raw_gyro_x / 131.0;
     float acctual_g_x = g_x;
     TEST_ASSERT_FLOAT_WITHIN(0.1f, expected_g_x, acctual_g_x);
-    float acctual_g_x = g_x;
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, expected_g_x, acctual_g_x);
     float expected_g_y = (float)raw_gyro_y / 131.0;
-    float acctual_g_y = g_y;
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, expected_g_y, acctual_g_y);
     float acctual_g_y = g_y;
     TEST_ASSERT_FLOAT_WITHIN(0.1f, expected_g_y, acctual_g_y);
     float expected_g_z = (float)raw_gyro_z / 131.0;
