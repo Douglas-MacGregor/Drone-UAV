@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "../imu_interface.h"
 
 int read_mpu6050(int i2c_handle, mpu6050_Data *data)
 {
@@ -178,7 +179,7 @@ int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float
     return 0;
 }
 
-int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs, mp6050_gyro_bias_t *gyro_bias, mpu6050_accel_bias_t *accel_bias)
+int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs, cordirnate3D_t *gyro_bias, cordirnate3D_t *accel_bias)
 {
     mpu6050_Data data;
 
@@ -231,7 +232,7 @@ int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_f
     return 0;
 }
 
-int get_gyro_bias_mpu6050(int i2c_handle, mp6050_gyro_bias_t *gyro_bias, float samples)
+int get_gyro_mean_window_mpu6050(int i2c_handle, cordirnate3D_t *gyro_bias, float samples)
 {
     // Placeholder implementation
     int16_t raw_gyroX, raw_gyroY, raw_gyroZ;
@@ -252,7 +253,7 @@ int get_gyro_bias_mpu6050(int i2c_handle, mp6050_gyro_bias_t *gyro_bias, float s
     return 0;
 }
 
-int get_accel_bias_mpu6050(int i2c_handle, mpu6050_accel_bias_t *accel_bias, float samples)
+int get_accel_mean_window_mpu6050(int i2c_handle, cordirnate3D_t *accel_bias, float samples)
 {
     int16_t raw_accelX, raw_accelY, raw_accelZ;
     float sumX = 0.0f, sumY = 0.0f, sumZ = 0.0f;

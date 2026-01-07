@@ -10,8 +10,8 @@ typedef struct
     int iic_handle;       // SPI handle for communication
     mpu6050_gyro_fs_t gyro_fs;
     mpu6050_accel_fs_t accel_fs;
-    mp6050_gyro_bias_t gyro_bias;
-    mpu6050_accel_bias_t accel_bias;
+    cordirnate3D_t gyro_bias;
+    cordirnate3D_t accel_bias;
 } mpu6050_Device;
 
 extern IMUInterface mpu6050_imu_interface;

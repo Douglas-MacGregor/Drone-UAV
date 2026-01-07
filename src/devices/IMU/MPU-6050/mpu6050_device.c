@@ -116,10 +116,10 @@ int mpu6050_self_test(void *self)
         return -1;
     }
 
-    mp6050_gyro_bias_t gyro_bias_inital;
-    mpu6050_accel_bias_t accel_bias_inital;
-    get_gyro_bias_mpu6050(device->iic_handle, &gyro_bias_inital, 200.0);
-    get_accel_bias_mpu6050(device->iic_handle, &accel_bias_inital, 200.0);
+    cordirnate3D_t gyro_bias_inital;
+    cordirnate3D_t accel_bias_inital;
+    get_gyro_mean_window_mpu6050(device->iic_handle, &gyro_bias_inital, 200.0);
+    get_accel_mean_window_mpu6050(device->iic_handle, &accel_bias_inital, 200.0);
     mpu6050_Data data;
     data.address = REG_GYRO_CONFIG;
     data.data = (0xE0); // Enable self-test for all axes
@@ -140,10 +140,10 @@ int mpu6050_self_test(void *self)
         return -1;
     }
     usleep(200000); // wait for 200ms for self-test to complete
-    mp6050_gyro_bias_t gyro_bias_self_test;
-    mpu6050_accel_bias_t accel_bias_self_test;
-    get_gyro_bias_mpu6050(device->iic_handle, &gyro_bias_self_test, 200.0);
-    get_accel_bias_mpu6050(device->iic_handle, &accel_bias_self_test, 200.0);
+    cordirnate3D_t gyro_bias_self_test;
+    cordirnate3D_t accel_bias_self_test;
+    get_gyro_mean_window_mpu6050(device->iic_handle, &gyro_bias_self_test, 200.0);
+    get_accel_mean_window_mpu6050(device->iic_handle, &accel_bias_self_test, 200.0);
     // Compare biases to determine if self-test passed
     // str values //
     float gyro_diff_x = gyro_bias_self_test.x - gyro_bias_inital.x;
