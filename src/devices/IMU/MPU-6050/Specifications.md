@@ -11,7 +11,7 @@ can be found at:
 
 ## Our Implementation
 
-There is two levels of implementation for the SX1278 module in this project:
+There is two levels of implementation for the mpu6050 module in this project:
 
 1. **Low-Level Driver**: This layer handles direct communication with the mpu6050 hardware via IIC. It includes functions for reading and writing registers, configuring the module, and managing power states.
 

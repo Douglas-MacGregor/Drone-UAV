@@ -8,6 +8,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
+#include "mpu6050_utils.h"
+#include "../../utils.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <math.h>
 
 IMUInterface mpu6050_imu_interface = {
     .init = mpu6050_init,
@@ -21,6 +28,7 @@ IMUInterface mpu6050_imu_interface = {
 int mpu6050_init(void *self)
 {
     mpu6050_Device *device = (mpu6050_Device *)self;
+    device->vtable->reset(self);
     device->vtable->reset(self);
     return 0;
 }
@@ -36,6 +44,22 @@ int mpu6050_read_data(void *self, void *data)
 {
 
     mpu6050_Device *device = (mpu6050_Device *)self;
+    mpu6050_Data sleep_check;
+    sleep_check.address = REG_PWR_MGMT_1;
+    uint8_t reg_value;
+    sleep_check.length = 1;
+    sleep_check.data_receive = &reg_value;
+    int n = read_mpu6050(device->iic_handle, &sleep_check);
+    if (n != 1)
+    {
+        fprintf(stderr, "MPU6050 read PWR_MGMT_1 error\n");
+        return -1;
+    }
+    if ((reg_value & 0x40) != 0)
+    {
+        fprintf(stderr, "Warning: MPU6050 is in sleep mode\n");
+        return -1;
+    }
     mpu6050_Data sleep_check;
     sleep_check.address = REG_PWR_MGMT_1;
     uint8_t reg_value;
@@ -116,10 +140,10 @@ int mpu6050_self_test(void *self)
         return -1;
     }
 
-    mp6050_gyro_bias_t gyro_bias_inital;
-    mpu6050_accel_bias_t accel_bias_inital;
-    get_gyro_bias_mpu6050(device->iic_handle, &gyro_bias_inital, 200.0);
-    get_accel_bias_mpu6050(device->iic_handle, &accel_bias_inital, 200.0);
+    cordirnate3D_t gyro_bias_inital;
+    cordirnate3D_t accel_bias_inital;
+    get_gyro_mean_window_mpu6050(device->iic_handle, &gyro_bias_inital, 200.0);
+    get_accel_mean_window_mpu6050(device->iic_handle, &accel_bias_inital, 200.0);
     mpu6050_Data data;
     data.address = REG_GYRO_CONFIG;
     data.data = (0xE0); // Enable self-test for all axes
@@ -140,10 +164,10 @@ int mpu6050_self_test(void *self)
         return -1;
     }
     usleep(200000); // wait for 200ms for self-test to complete
-    mp6050_gyro_bias_t gyro_bias_self_test;
-    mpu6050_accel_bias_t accel_bias_self_test;
-    get_gyro_bias_mpu6050(device->iic_handle, &gyro_bias_self_test, 200.0);
-    get_accel_bias_mpu6050(device->iic_handle, &accel_bias_self_test, 200.0);
+    cordirnate3D_t gyro_bias_self_test;
+    cordirnate3D_t accel_bias_self_test;
+    get_gyro_mean_window_mpu6050(device->iic_handle, &gyro_bias_self_test, 200.0);
+    get_accel_mean_window_mpu6050(device->iic_handle, &accel_bias_self_test, 200.0);
     // Compare biases to determine if self-test passed
     // str values //
     float gyro_diff_x = gyro_bias_self_test.x - gyro_bias_inital.x;

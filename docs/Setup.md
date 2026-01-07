@@ -86,6 +86,9 @@ You should see:
 ```bash
 sudo apt update
 sudo apt install pigpio
+sudo apt install i2c-tools
+sudo apt install git
+
 ```
 
 ### Reduced Setup Instructions

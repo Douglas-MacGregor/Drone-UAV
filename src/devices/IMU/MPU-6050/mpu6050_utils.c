@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "../imu_interface.h"
 
 int read_mpu6050(int i2c_handle, mpu6050_Data *data)
 {
@@ -38,6 +39,7 @@ int get_gyroX_mpu6050(int i2c_handle, int16_t *gyroX)
 {
     mpu6050_Data data;
     data.address = REG_GYRO_XOUT_H; // Gyro X high byte register
+    data.address = REG_GYRO_XOUT_H; // Gyro X high byte register
     data.length = 2;
     uint8_t buffer[2];
     data.data_receive = buffer;
@@ -53,6 +55,7 @@ int get_gyroX_mpu6050(int i2c_handle, int16_t *gyroX)
 int get_gyroY_mpu6050(int i2c_handle, int16_t *gyroY)
 {
     mpu6050_Data data;
+    data.address = REG_GYRO_YOUT_H; // Gyro Y high byte register
     data.address = REG_GYRO_YOUT_H; // Gyro Y high byte register
     data.length = 2;
     uint8_t buffer[2];
@@ -70,6 +73,7 @@ int get_gyroZ_mpu6050(int i2c_handle, int16_t *gyroZ)
 {
     mpu6050_Data data;
     data.address = REG_GYRO_ZOUT_H; // Gyro Z high byte register
+    data.address = REG_GYRO_ZOUT_H; // Gyro Z high byte register
     data.length = 2;
     uint8_t buffer[2];
     data.data_receive = buffer;
@@ -82,7 +86,7 @@ int get_gyroZ_mpu6050(int i2c_handle, int16_t *gyroZ)
     return 0;
 }
 
-int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias)
+int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias) int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, float bias)
 {
     float sensitivity;
     switch (fs)
@@ -102,6 +106,7 @@ int convert_gyro_to_dps(int16_t raw_gyro, mpu6050_gyro_fs_t fs, float *dps, floa
     default:
         return -1; // Invalid full-scale range
     }
+    *dps = ((float)raw_gyro - bias) / sensitivity;
     *dps = ((float)raw_gyro - bias) / sensitivity;
     return 0;
 }
@@ -154,7 +159,7 @@ int get_accelZ_mpu6050(int i2c_handle, int16_t *accelZ)
     return 0;
 }
 
-int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float bias)
+int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float bias) int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float bias)
 {
     float sensitivity;
     switch (fs)
@@ -175,10 +180,11 @@ int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float
         return -1; // Invalid full-scale range
     }
     *g = ((float)raw_accel - bias) / sensitivity;
+    *g = ((float)raw_accel - bias) / sensitivity;
     return 0;
 }
 
-int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs, mp6050_gyro_bias_t *gyro_bias, mpu6050_accel_bias_t *accel_bias)
+int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs, cordirnate3D_t *gyro_bias, cordirnate3D_t *accel_bias)
 {
     mpu6050_Data data;
 
@@ -216,13 +222,13 @@ int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_f
         return -1;
     }
 
-    n = get_accel_bias_mpu6050(i2c_handle, accel_bias, 1000.0);
+    n = get_accel_mean_window_mpu6050(i2c_handle, accel_bias, 1000.0);
     if (n < 0)
     {
         fprintf(stderr, "Failed to get accelerometer bias\n");
         return -1;
     }
-    n = get_gyro_bias_mpu6050(i2c_handle, gyro_bias, 1000.0);
+    n = get_accel_mean_window_mpu6050(i2c_handle, gyro_bias, 1000.0);
     if (n < 0)
     {
         fprintf(stderr, "Failed to get gyroscope bias\n");
@@ -231,7 +237,7 @@ int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_f
     return 0;
 }
 
-int get_gyro_bias_mpu6050(int i2c_handle, mp6050_gyro_bias_t *gyro_bias, float samples)
+int get_gyro_mean_window_mpu6050(int i2c_handle, cordirnate3D_t *gyro_bias, float samples)
 {
     // Placeholder implementation
     int16_t raw_gyroX, raw_gyroY, raw_gyroZ;
@@ -252,7 +258,7 @@ int get_gyro_bias_mpu6050(int i2c_handle, mp6050_gyro_bias_t *gyro_bias, float s
     return 0;
 }
 
-int get_accel_bias_mpu6050(int i2c_handle, mpu6050_accel_bias_t *accel_bias, float samples)
+int get_accel_mean_window_mpu6050(int i2c_handle, cordirnate3D_t *accel_bias, float samples)
 {
     int16_t raw_accelX, raw_accelY, raw_accelZ;
     float sumX = 0.0f, sumY = 0.0f, sumZ = 0.0f;

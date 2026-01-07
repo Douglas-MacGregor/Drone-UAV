@@ -265,7 +265,6 @@ int sx1278_init(void *self)
         fprintf(stderr, "Failed to set standby mode\n");
         return n;
     }
-    fprintf(stderr, "SX1278 initialized successfully\n");
     return 0;
 }
 
@@ -278,7 +277,6 @@ int sx1278_close(void *self)
         fprintf(stdout, "Failed to set sleep mode\n");
         return n;
     }
-    fprintf(stdout, "Closing SX1278\n");
     return 0;
 }
 
