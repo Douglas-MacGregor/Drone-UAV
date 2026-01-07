@@ -89,7 +89,7 @@ void test_mpu6050_device_creation(void)
     TEST_ASSERT_EQUAL_PTR(&mpu6050_imu_interface, device.vtable);
 }
 
-void test_mpu6050_gyro_getters_converter(void) void test_mpu6050_gyro_getters_converter(void)
+void test_mpu6050_gyro_getters_converter(void)
 {
     init_gpio();
     iic_handle = init_i2c(1, 0x68); // Assuming
