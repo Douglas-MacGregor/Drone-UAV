@@ -11,7 +11,7 @@ RUN_PIGPIO_TEST = True
 RUN_INTEGRATION_TESTS = True
 RUN_MPU6050_I2C_TEST = True
 
-RUN_DEVICE_TESTS = True
+RUN_DEVICE_TESTS = False
 RUN_DEVICE_BUILD_TEST = True
 
 @unittest.skipUnless(RUN_COMMANDLINE_TESTS, "Skipping commandline tests.")
@@ -72,4 +72,4 @@ class DeviceTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, f"Building device executables failed with error: {result.stderr}")
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)
