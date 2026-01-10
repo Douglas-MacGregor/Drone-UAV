@@ -50,7 +50,8 @@ class DeviceTests(unittest.TestCase):
             capture_output=True,
             text=True
         )
-        print(run.stdout)
+        if run.returncode != 0:  
+            print(run.stdout)
 
     @unittest.skipUnless(config.RUN_SX1278_BUILD_TEST, "Skipping device build test.")
     def test_sx1278_build(self):
@@ -97,5 +98,6 @@ class DeviceTests(unittest.TestCase):
             capture_output=True,
             text=True
         )
-        print(run.stdout)
+        if run.returncode != 0:  
+            print(run.stdout)
 
