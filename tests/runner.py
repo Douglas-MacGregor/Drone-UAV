@@ -1,19 +1,6 @@
 import subprocess
 import unittest
 from pathlib import Path
-
-RUN_COMMANDLINE_TESTS = True
-RUN_SPI_TEST = True
-RUN_I2C_TEST = True
-RUN_I2C_TOOLS_TEST = True
-RUN_PIGPIO_TEST = True 
-
-RUN_INTEGRATION_TESTS = True
-RUN_MPU6050_I2C_TEST = True
-
-RUN_DEVICE_TESTS = True
-RUN_DEVICE_BUILD_TEST = True
-
 import unittest
 import sys
 
@@ -36,9 +23,9 @@ def run_all_tests():
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
 
-    from test_commandline import CommandLineTests
-    from test_device import DeviceTests
-    from test_integration import IntegrationTests
+    from commandline_tests import CommandLineTests
+    from device_tests import DeviceTests
+    from intergration_tests import IntegrationTests
 
     suite.addTests(loader.loadTestsFromTestCase(CommandLineTests))
     suite.addTests(loader.loadTestsFromTestCase(DeviceTests))
