@@ -3,9 +3,9 @@ import subprocess
 from pathlib import Path
 import config
 
-@unittest.skipUnless(RUN_DEVICE_TESTS, "Skipping device tests.")
+@unittest.skipUnless(config.RUN_DEVICE_TESTS, "Skipping device tests.")
 class DeviceTests(unittest.TestCase):
-    @unittest.skipUnless(RUN_DEVICE_BUILD_TEST, "Skipping device build test.")
+    @unittest.skipUnless(config.RUN_DEVICE_BUILD_TEST, "Skipping device build test.")
     def test_building_device_executables(self):
         """Test MPU-6050 self-test functionality."""
         subdir = Path("devices")  # change this to your subdirectory path
