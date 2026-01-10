@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest   # GitHub only provides Ubuntu runners
+    runs-on: ubuntu-latest # GitHub only provides Ubuntu runners
     container:
       image: debian:bookworm-slim
 
@@ -35,4 +35,3 @@ jobs:
       # Run your Python unified test runner
       - name: Run Python tests
         run: python3 tests/runner.py
-s
