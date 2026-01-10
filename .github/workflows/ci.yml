@@ -2,7 +2,7 @@ name: CI (Debian Bookworm)
 
 on:
   push:
-    branches: [main]
+    branches: [main, refactor/test-script]
   pull_request:
     branches: [main]
 
