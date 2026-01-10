@@ -7,8 +7,42 @@ import config
 class DeviceTests(unittest.TestCase):
     @unittest.skipUnless(config.RUN_MPU6050_BUILD_TEST, "Skipping device build test.")
     def test_mpu6050_build(self):
-        """Test building the MPU-6050 device code."""
+        """Test building the MPU-6050 unittest code."""
         result = subprocess.run("make unittest_mpu6050", capture_output=True, text=True, shell=True, check=False, cwd="devices")
         self.assertEqual(result.returncode, 0, "MPU-6050 build output does not match expected output.")
         result = subprocess.run("clean", capture_output=True, text=True, shell=True, check=False, cwd="devices")
+
+    @unittest.skipUnless(config.RUN_MPU6050_UNITTESTS, "Skipping MPU-6050 unit tests.")
+    def test_mpu6050_unittests(self):
+        """Run MPU-6050 Unity unit tests."""
+
+        # Build
+        build = subprocess.run(
+            ["make", "unittest_mpu6050"],
+            cwd="devices",
+            capture_output=True,
+            text=True
+        )
+
+        self.assertEqual(
+            build.returncode,
+            0,
+            f"MPU-6050 unit test build failed:\n{build.stdout}\n{build.stderr}"
+        )
+
+        # Run Unity tests
+        run = subprocess.run(
+            ["./unittest_mpu6050"],
+            cwd="devices",
+            capture_output=True,
+            text=True
+        )
+
+        self.assertEqual(
+            run.returncode,
+            0,
+            f"MPU-6050 unit tests failed:\n{run.stdout}\n{run.stderr}"
+        )
+        print(run.stdout)
+
 
