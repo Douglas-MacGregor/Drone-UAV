@@ -1,18 +1,5 @@
-import subprocess
 import unittest
-from pathlib import Path
-
-RUN_COMMANDLINE_TESTS = True
-RUN_SPI_TEST = True
-RUN_I2C_TEST = True
-RUN_I2C_TOOLS_TEST = True
-RUN_PIGPIO_TEST = True 
-
-RUN_INTEGRATION_TESTS = True
-RUN_MPU6050_I2C_TEST = True
-
-RUN_DEVICE_TESTS = False
-RUN_DEVICE_BUILD_TEST = True
+import config
 
 @unittest.skipUnless(RUN_COMMANDLINE_TESTS, "Skipping commandline tests.")
 class CommandLineTests(unittest.TestCase):
@@ -48,28 +35,3 @@ class CommandLineTests(unittest.TestCase):
         with open('expected/spi_enabled.out', 'r') as f:
             expected_output = f.read()
         self.assertEqual(result.stdout.strip(), expected_output.strip(), "SPI interface is not enabled as expected.")
-
-@unittest.skipUnless(RUN_INTEGRATION_TESTS, "Skipping integration tests.")
-class IntegrationTests(unittest.TestCase):
-    @unittest.skipUnless(RUN_MPU6050_I2C_TEST, "Skipping MPU-6050 I2C connection test.")
-    def test_mpu6050_i2c_connection(self):
-        """Test MPU-6050 I2C connection."""
-        result = subprocess.run(["i2cdetect", "-y", "1"], capture_output=True, text=True, shell=False, check=False)
-        with open('expected/mpu6050_i2c_connection.out', 'r') as f:
-            expected_output = f.read()
-        self.assertEqual(result.stdout.strip(), expected_output.strip(), "MPU-6050 I2C connection does not match expected output.")
-
-
-@unittest.skipUnless(RUN_DEVICE_TESTS, "Skipping device tests.")
-class DeviceTests(unittest.TestCase):
-    @unittest.skipUnless(RUN_DEVICE_BUILD_TEST, "Skipping device build test.")
-    def test_building_device_executables(self):
-        """Test MPU-6050 self-test functionality."""
-        subdir = Path("devices")  # change this to your subdirectory path
-        if not subdir.exists():
-            self.skipTest(f"{subdir} does not exist")
-        result = subprocess.run(["make"], capture_output=True, text=True, shell=False, check=False, cwd=subdir)
-        self.assertEqual(result.returncode, 0, f"Building device executables failed with error: {result.stderr}")
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
