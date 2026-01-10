@@ -21,7 +21,7 @@ class CommandLineTests(unittest.TestCase):
     def test_pigpio_installed(self):
         """Test if pigpio is installed."""
         result = subprocess.run("dpkg -l | grep pigpio", capture_output=True, text=True, shell=True, check=False)
-        with open('tests/expected/pigpio_installed.out', 'r') as f:
+        with open('expected/pigpio_installed.out', 'r') as f:
             expected_output = f.read()
         self.assertEqual(result.stdout.strip(), expected_output.strip(), "pigpio installation does not match expected output.")
 
@@ -29,7 +29,7 @@ class CommandLineTests(unittest.TestCase):
     def test_i2c_tools_installed(self):
         """Test if i2c-tools is installed."""
         result = subprocess.run("dpkg -l | grep i2c-tools", capture_output=True, text=True, shell=True, check=False)
-        with open('tests/expected/i2c_tools_installed.out', 'r') as f:
+        with open('expected/i2c_tools_installed.out', 'r') as f:
             expected_output = f.read()
         self.assertEqual(result.stdout.strip(), expected_output.strip(), "i2c-tools installation does not match expected output.")
 
@@ -37,7 +37,7 @@ class CommandLineTests(unittest.TestCase):
     def test_i2c_enabled(self):
         """Test if I2C is enabled."""
         result = subprocess.run("ls /dev/i2c-*", capture_output=True, text=True, shell=True, check=False)
-        with open('tests/expected/i2c_enabled.out', 'r') as f:
+        with open('expected/i2c_enabled.out', 'r') as f:
             expected_output = f.read()
         self.assertEqual(result.stdout.strip(), expected_output.strip(), "I2C interface is not enabled as expected.")
 
@@ -45,7 +45,7 @@ class CommandLineTests(unittest.TestCase):
     def test_spi_enabled(self):
         """Test if SPI is enabled."""
         result = subprocess.run("ls /dev/spi-*", capture_output=True, text=True, shell=True, check=False)
-        with open('tests/expected/spi_enabled.out', 'r') as f:
+        with open('expected/spi_enabled.out', 'r') as f:
             expected_output = f.read()
         self.assertEqual(result.stdout.strip(), expected_output.strip(), "SPI interface is not enabled as expected.")
 
@@ -55,7 +55,7 @@ class IntegrationTests(unittest.TestCase):
     def test_mpu6050_i2c_connection(self):
         """Test MPU-6050 I2C connection."""
         result = subprocess.run(["i2cdetect", "-y", "1"], capture_output=True, text=True, shell=False, check=False)
-        with open('tests/expected/mpu6050_i2c_connection.out', 'r') as f:
+        with open('expected/mpu6050_i2c_connection.out', 'r') as f:
             expected_output = f.read()
         self.assertEqual(result.stdout.strip(), expected_output.strip(), "MPU-6050 I2C connection does not match expected output.")
 
