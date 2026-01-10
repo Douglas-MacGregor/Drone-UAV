@@ -44,7 +44,7 @@ class CommandLineTests(unittest.TestCase):
     @unittest.skipUnless(RUN_SPI_TEST, "Skipping SPI enabled test.")
     def test_spi_enabled(self):
         """Test if SPI is enabled."""
-        result = subprocess.run("ls /dev/spi-*", capture_output=True, text=True, shell=True, check=False)
+        result = subprocess.run("ls /dev/spi*", capture_output=True, text=True, shell=True, check=False)
         with open('expected/spi_enabled.out', 'r') as f:
             expected_output = f.read()
         self.assertEqual(result.stdout.strip(), expected_output.strip(), "SPI interface is not enabled as expected.")
