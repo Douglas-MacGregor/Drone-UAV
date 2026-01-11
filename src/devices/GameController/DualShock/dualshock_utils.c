@@ -12,3 +12,27 @@ int get_dualshock_report(FILE *report, DualShockReport *report_buffer)
     }
     return 0;
 }
+
+int print_dualshock_report(const DualShockReport *report_buffer)
+{
+    printf("DualShock Report ID: %u\n", report_buffer->report_id);
+    printf("Left Stick: X=%u, Y=%u\n", report_buffer->left_stick_x, report_buffer->left_stick_y);
+    printf("Right Stick: X=%u, Y=%u\n", report_buffer->right_stick_x, report_buffer->right_stick_y);
+    printf("Buttons (Shapes): 0x%02X\n", report_buffer->buttons_shapes);
+    printf("Buttons (Misc): 0x%02X\n", report_buffer->buttons_misc);
+    printf("Counter: %u\n", report_buffer->counter);
+    printf("Left Trigger: %u\n", report_buffer->left_trigger);
+    printf("Right Trigger: %u\n", report_buffer->right_trigger);
+    return 0;
+}
+
+int process_dualshock_report(FILE *report, int dead_zone)
+{
+    DualShockReport report_buffer;
+    if (get_dualshock_report(report, &report_buffer) != 0)
+    {
+        return -1;
+    }
+    print_dualshock_report(&report_buffer);
+    return 0;
+}
