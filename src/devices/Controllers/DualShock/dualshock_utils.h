@@ -17,4 +17,7 @@ typedef struct __attribute__((packed))
     uint8_t padding[54];
 } DualShockReport;
 
+int get_dualshock_report(FILE *report, DualShockReport *report_buffer);
+int print_dualshock_report(const DualShockReport *report_buffer);
+
 #endif // DUALSHOCK_UTILS_H

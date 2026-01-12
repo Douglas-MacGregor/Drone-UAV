@@ -1,4 +1,0 @@
-#ifndef DUALSHOCK_DEVICE_H
-#define DUALSHOCK_DEVICE_H
-
-#endif // DUALSHOCK_DEVICE_H

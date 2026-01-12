@@ -26,37 +26,3 @@ int print_dualshock_report(const DualShockReport *report_buffer)
     printf("Right Trigger: %u\n", report_buffer->right_trigger);
     return 0;
 }
-
-int process_dualshock_report(FILE *report, int dead_zone)
-{
-    DualShockReport report_buffer;
-    if (get_dualshock_report(report, &report_buffer) != 0)
-    {
-        return -1;
-    }
-    print_dualshock_report(&report_buffer);
-    return 0;
-}
-
-int main()
-{
-    FILE *report_file = fopen("/dev/hidraw0", "rb");
-    if (!report_file)
-    {
-        fprintf(stderr, "Failed to open report file\n");
-        return -1;
-    }
-    for (int i = 0; i < 10; i++)
-    {                       // Read 10 reports for demonstration
-        int dead_zone = 10; // Example dead zone value
-        if (process_dualshock_report(report_file, dead_zone) != 0)
-        {
-            fclose(report_file);
-            return -1;
-        }
-    }
-    usleep(10000000); // Sleep for 100ms before next read
-
-    fclose(report_file);
-    return 0;
-}

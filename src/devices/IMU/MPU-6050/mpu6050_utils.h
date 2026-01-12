@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "../imu_interface.h"
+#include "../../utils.h"
 
 typedef struct
 {
