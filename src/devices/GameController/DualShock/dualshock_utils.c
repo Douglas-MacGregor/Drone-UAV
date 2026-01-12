@@ -1,5 +1,6 @@
 #include "dualshock_utils.h"
 #include <stdio.h>
+#include <unistd.h>
 
 int get_dualshock_report(FILE *report, DualShockReport *report_buffer)
 {
