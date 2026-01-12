@@ -1,6 +1,6 @@
 import unittest
 import subprocess
-import tests.configs.config as config
+import configs.config as config
 
 @unittest.skipUnless(config.RUN_INTEGRATION_TESTS, "Skipping integration tests.")
 class IntegrationTests(unittest.TestCase):

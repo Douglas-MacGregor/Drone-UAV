@@ -1,5 +1,5 @@
 import unittest
-import tests.configs.config as config
+import configs.config as config
 import subprocess
 
 @unittest.skipUnless(config.RUN_COMMANDLINE_TESTS, "Skipping commandline tests.")

@@ -1,7 +1,7 @@
 import unittest
 import subprocess
 from pathlib import Path
-import tests.configs.config as config
+import configs.config as config
 
 @unittest.skipUnless(config.RUN_DEVICE_TESTS and config.RUN_MPU6050_TESTS, "Skipping device tests.")
 class MPU6050DeviceTests(unittest.TestCase):

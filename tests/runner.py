@@ -5,6 +5,7 @@ import unittest
 import sys
 import argparse
 import importlib
+import os
 
 class CleanTestResult(unittest.TextTestResult):
     def addSuccess(self, test):
@@ -30,7 +31,12 @@ def run_all_tests():
     
     # Load the appropriate config and inject it into sys.modules
     config_name = f'config_{args.config}'
-    config_module = importlib.import_module(f'tests.configs.{config_name}')
+    
+    # Import from configs directory directly
+    configs_dir = os.path.join(os.path.dirname(__file__), 'configs')
+    sys.path.insert(0, configs_dir)
+    
+    config_module = importlib.import_module(config_name)
     
     # Inject the config globally so test modules can import it
     sys.modules['tests.configs.config'] = config_module
