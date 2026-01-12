@@ -1,10 +1,10 @@
 import unittest
 import subprocess
 from pathlib import Path
-import config
+import tests.configs.config as config
 
-@unittest.skipUnless(config.RUN_DEVICE_TESTS, "Skipping device tests.")
-class DeviceTests(unittest.TestCase):
+@unittest.skipUnless(config.RUN_DEVICE_TESTS and config.RUN_MPU6050_TESTS, "Skipping device tests.")
+class MPU6050DeviceTests(unittest.TestCase):
     @unittest.skipUnless(config.RUN_MPU6050_BUILD_TEST, "Skipping device build test.")
     def test_mpu6050_build(self):
         """Test building the MPU-6050 unittest code."""
@@ -53,6 +53,9 @@ class DeviceTests(unittest.TestCase):
         if run.returncode != 0:  
             print(run.stdout)
 
+
+@unittest.skipUnless(config.RUN_DEVICE_TESTS and config.RUN_SX1278_TESTS, "Skipping device tests.")
+class SX1278DeviceTests(unittest.TestCase):
     @unittest.skipUnless(config.RUN_SX1278_BUILD_TEST, "Skipping device build test.")
     def test_sx1278_build(self):
         """Test building the SX1278 unittest code."""
@@ -101,6 +104,9 @@ class DeviceTests(unittest.TestCase):
         if run.returncode != 0:  
             print(run.stdout)
 
+
+@unittest.skipUnless(config.RUN_DEVICE_TESTS and config.RUN_DUALSHOCK_TESTS, "Skipping device tests.")
+class DualShockDeviceTests(unittest.TestCase):
     @unittest.skipUnless(config.RUN_DUALSHOCK_BUILD_TEST, "Skipping device build test.")
     def test_dualshock_build(self):
         """Test building the DualShock unittest code."""

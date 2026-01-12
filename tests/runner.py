@@ -3,6 +3,8 @@ import unittest
 from pathlib import Path
 import unittest
 import sys
+import argparse
+import importlib
 
 class CleanTestResult(unittest.TextTestResult):
     def addSuccess(self, test):
@@ -20,6 +22,21 @@ class CleanTestResult(unittest.TextTestResult):
         print(f"[SKIP] {test.shortDescription()} ({reason})")
 
 def run_all_tests():
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Run drone test suite')
+    parser.add_argument('--config', choices=['base', 'controller', 'reciver'], 
+                       default='base', help='Configuration to use (default: base)')
+    args = parser.parse_args()
+    
+    # Load the appropriate config and inject it into sys.modules
+    config_name = f'config_{args.config}'
+    config_module = importlib.import_module(f'tests.configs.{config_name}')
+    
+    # Inject the config globally so test modules can import it
+    sys.modules['tests.configs.config'] = config_module
+    
+    print(f"Running tests with {args.config} configuration...")
+    
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
 
