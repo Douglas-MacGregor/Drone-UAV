@@ -1,6 +1,7 @@
 #ifndef DUALSHOCK_UTILS_H
 #define DUALSHOCK_UTILS_H
 #include <stdint.h>
+#include <stdio.h>
 
 typedef struct __attribute__((packed))
 {
