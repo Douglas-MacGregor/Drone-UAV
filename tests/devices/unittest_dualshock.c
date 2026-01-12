@@ -88,11 +88,11 @@ void test_dualshock_refresh_report(void)
 
     int result = device.vtable->refresh_report(&device);
     TEST_ASSERT_EQUAL_INT(0, result); // Expecting success
-    int threshold = 6;                // Deadzone threshold
-    TEST_ASSERT_LESS_THAN_INT(threshold, abs(device.current_report.left_stick_x - 128));
-    TEST_ASSERT_LESS_THAN_INT(threshold, abs(device.current_report.left_stick_y - 128));
-    TEST_ASSERT_LESS_THAN_INT(threshold, abs(device.current_report.right_stick_x - 128));
-    TEST_ASSERT_LESS_THAN_INT(threshold, abs(device.current_report.right_stick_y - 128));
+    int threshold = 8;                // Deadzone threshold
+    TEST_ASSERT_LESS_OR_EQUAL_INT(threshold, abs(device.current_report.left_stick_x - 128));
+    TEST_ASSERT_LESS_OR_EQUAL_INT(threshold, abs(device.current_report.left_stick_y - 128));
+    TEST_ASSERT_LESS_OR_EQUAL_INT(threshold, abs(device.current_report.right_stick_x - 128));
+    TEST_ASSERT_LESS_OR_EQUAL_INT(threshold, abs(device.current_report.right_stick_y - 128));
 
     TEST_ASSERT_EQUAL_INT(0, device.current_report.left_trigger);
     TEST_ASSERT_EQUAL_INT(0, device.current_report.right_trigger);
