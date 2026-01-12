@@ -47,11 +47,13 @@ def run_all_tests():
     suite = unittest.TestSuite()
 
     from commandline_tests import CommandLineTests
-    from device_tests import DeviceTests
+    from device_tests import MPU6050DeviceTests, SX1278DeviceTests, DualShockDeviceTests
     from intergration_tests import IntegrationTests
 
     suite.addTests(loader.loadTestsFromTestCase(CommandLineTests))
-    suite.addTests(loader.loadTestsFromTestCase(DeviceTests))
+    suite.addTests(loader.loadTestsFromTestCase(MPU6050DeviceTests))
+    suite.addTests(loader.loadTestsFromTestCase(SX1278DeviceTests))
+    suite.addTests(loader.loadTestsFromTestCase(DualShockDeviceTests))
     suite.addTests(loader.loadTestsFromTestCase(IntegrationTests))
 
     runner = unittest.TextTestRunner(
