@@ -81,8 +81,7 @@ uint8_t dualshock_get_button_state(void *self)
 int dualshock_refresh_report(void *self)
 {
     Dualshock_Device *device = (Dualshock_Device *)self;
-    DualShockReport report_buffer;
-    if (get_dualshock_report(device->file_handle, &report_buffer) < 0)
+    if (get_dualshock_report(device->file_handle, &device->current_report) < 0)
     {
         fprintf(stderr, "Failed to refresh DualShock report\n");
         return -1;
