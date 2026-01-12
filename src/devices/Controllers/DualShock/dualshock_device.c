@@ -99,24 +99,36 @@ int dualshock_refresh_report(void *self)
  * Returns: Initialized Dualshock_Device structure
  * Side Effects: Opens the device file for reading
  * Assumptions: Valid file path and deadzone value provided
- * Notes: Exits program on failure to open device file
+ * Notes: Makes the file handle NULL if opening fails
  */
 
-Dualshock_Device create_dualshock_device(char *file_name, int name_length, float joystick_deadzone)
+Dualshock_Device create_dualshock_device(const char *file_name, float joystick_deadzone)
 {
+    Dualshock_Device device = {0}; // Initialize to zero
+
     if (joystick_deadzone < 0.0f || joystick_deadzone > 1.0f)
     {
         fprintf(stderr, "Invalid joystick deadzone value: %f. Must be between 0.0 and 1.0\n", joystick_deadzone);
-        exit(EXIT_FAILURE);
+        device.file_handle = NULL; // Return invalid device
+        return device;
     }
-    Dualshock_Device device;
+
     device.vtable = &dualshock_controller_interface;
     device.joystick_deadzone_percent = joystick_deadzone;
     device.file_handle = fopen(file_name, "rb");
     if (device.file_handle == NULL)
     {
         fprintf(stderr, "Failed to open DualShock device file: %s\n", file_name);
-        exit(EXIT_FAILURE);
     }
     return device;
+}
+
+int destroy_dualshock_device(Dualshock_Device *device)
+{
+    if (device->file_handle)
+    {
+        fclose(device->file_handle);
+        device->file_handle = NULL;
+    }
+    return 0;
 }

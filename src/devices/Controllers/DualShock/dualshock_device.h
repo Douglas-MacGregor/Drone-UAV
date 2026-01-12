@@ -20,5 +20,6 @@ cordirnate3D_t dualshock_get_XYZ(void *self);
 uint8_t dualshock_get_button_state(void *self);
 int dualshock_refresh_report(void *self);
 
-Dualshock_Device create_dualshock_device(char *file_name, int name_length, float joystick_deadzone);
+Dualshock_Device create_dualshock_device(const char *file_name, float joystick_deadzone);
+int destroy_dualshock_device(Dualshock_Device *device);
 #endif // DUALSHOCK_DEVICE_H
