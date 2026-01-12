@@ -38,8 +38,14 @@ def run_all_tests():
     
     config_module = importlib.import_module(config_name)
     
-    # Inject the config globally so test modules can import it
-    sys.modules['tests.configs.config'] = config_module
+    # Inject the config globally so test modules can import it as configs.config
+    sys.modules['configs.config'] = config_module
+    
+    # Also create the configs module if it doesn't exist
+    if 'configs' not in sys.modules:
+        configs_module = type(sys)('configs')
+        configs_module.config = config_module
+        sys.modules['configs'] = configs_module
     
     print(f"Running tests with {args.config} configuration...")
     
