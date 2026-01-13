@@ -25,7 +25,7 @@ class CleanTestResult(unittest.TextTestResult):
 def run_all_tests():
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Run drone test suite')
-    parser.add_argument('--config', choices=['base', 'controller', 'reciver'], 
+    parser.add_argument('--config', choices=['base', 'controller', 'receiver'], 
                        default='base', help='Configuration to use (default: base)')
     args = parser.parse_args()
     
