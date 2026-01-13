@@ -1,0 +1,2 @@
+add_subdirectory(raspberry_pi)
+add_subdirectory(stm32)

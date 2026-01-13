@@ -19,3 +19,27 @@ Refer to [docs/Setup.md](docs/Setup.md) for detailed setup instructions, includi
 ## Using Git
 
 Refer to [docs/GitUsage.md](docs/GitUsage.md) for guidelines on using Git effectively within this project, including branching strategies and commit message conventions.
+
+## Building the Project
+
+```bash
+
+cmake -B build-host -DCMAKE_TOOLCHAIN_FILE=toolchains/host.cmake
+cmake --build .
+#Or
+cmake --build . --target <target_name>
+```
+
+```bash
+cmake -B build-rpi -DCMAKE_TOOLCHAIN_FILE=toolchains/raspberry_pi.cmake
+cmake --build build-rpi
+#Or
+cmake --build build-rpi --target <target_name>
+```
+
+```bash
+cmake -B build-stm32 -DCMAKE_TOOLCHAIN_FILE=toolchains/stm32.cmake
+cmake --build build-stm32
+#Or
+cmake --build build-stm32 --target <target_name>
+```

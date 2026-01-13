@@ -16,6 +16,6 @@ typedef struct
     float x;
     float y;
     float z;
-} coordirnate3D_t;
+} coordinate3D_t;
 
 #endif // DEVICES_UTILS_H
