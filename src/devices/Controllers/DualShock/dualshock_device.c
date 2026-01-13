@@ -64,7 +64,7 @@ uint8_t dualshock_get_button_state(void *self)
 {
     Dualshock_Device *device = (Dualshock_Device *)self;
     uint8_t button_state = 0;
-    button_state |= (device->current_report.buttons_shapes & 0x80);
+    button_state |= (device->current_report.buttons_shapes & 0xF0);
     button_state |= (device->current_report.buttons_misc & 0b11);
     return button_state;
 }
@@ -122,6 +122,15 @@ Dualshock_Device create_dualshock_device(const char *file_name, float joystick_d
     return device;
 }
 
+/*
+ * Function: destroy_dualshock_device
+ * Description: Cleans up and releases resources associated with the DualShock device
+ * Parameters: device - Pointer to the Dualshock_Device instance to be destroyed
+ * Returns: 0 on success
+ * Side Effects: Closes the device file handle if it is open
+ * Assumptions: Valid Dualshock_Device pointer provided
+ * Notes: Sets file_handle to NULL after closing
+ */
 int destroy_dualshock_device(Dualshock_Device *device)
 {
     if (device->file_handle)
