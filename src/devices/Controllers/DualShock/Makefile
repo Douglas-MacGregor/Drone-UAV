@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -g -Wall
 
-all: dualshock_device.o sx1278_utils.o
+all: dualshock_device.o dualshock_utils.o
 
 dualshock_device.o: dualshock_device.c dualshock_device.h ../../utils.h ../drone_controller_interface.h dualshock_utils.h
 	$(CC) -c dualshock_device.c $(CFLAGS)
