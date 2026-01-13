@@ -117,7 +117,7 @@ void test_dualshock_get_XYZ(void)
     device.current_report.left_trigger = 50;   // Example value
     device.current_report.right_trigger = 150; // Example value
 
-    cordirnate3D_t coords = device.vtable->get_XYZ(&device);
+    coordinate3D_t coords = device.vtable->get_XYZ(&device);
     float expected_x = (200 - 128) / 128.0f;
     float expected_y = (100 - 128) / 128.0f;
     float r = sqrtf(expected_x * expected_x + expected_y * expected_y);
