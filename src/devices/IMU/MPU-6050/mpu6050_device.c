@@ -8,13 +8,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
-#include "mpu6050_utils.h"
-#include "../../utils.h"
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <math.h>
 
 IMUInterface mpu6050_imu_interface = {
     .init = mpu6050_init,
@@ -159,8 +152,8 @@ int mpu6050_self_test(void *self)
         return -1;
     }
 
-    cordirnate3D_t gyro_bias_initial;
-    cordirnate3D_t accel_bias_initial;
+    coordinate3D_t gyro_bias_initial;
+    coordinate3D_t accel_bias_initial;
     get_gyro_mean_window_mpu6050(device->iic_handle, &gyro_bias_initial, 200.0);
     get_accel_mean_window_mpu6050(device->iic_handle, &accel_bias_initial, 200.0);
     mpu6050_Data data;
@@ -183,8 +176,8 @@ int mpu6050_self_test(void *self)
         return -1;
     }
     usleep(200000); // wait for 200ms for self-test to complete
-    cordirnate3D_t gyro_bias_self_test;
-    cordirnate3D_t accel_bias_self_test;
+    coordinate3D_t gyro_bias_self_test;
+    coordinate3D_t accel_bias_self_test;
     get_gyro_mean_window_mpu6050(device->iic_handle, &gyro_bias_self_test, 200.0);
     get_accel_mean_window_mpu6050(device->iic_handle, &accel_bias_self_test, 200.0);
     // Compare biases to determine if self-test passed

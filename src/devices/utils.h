@@ -10,4 +10,12 @@ int init_gpio();
 void close_gpio();
 int init_i2c(uint8_t I2C_BUS, uint8_t I2C_ADDRESS);
 void close_i2c(int i2c_handle);
+
+typedef struct
+{
+    float x;
+    float y;
+    float z;
+} coordirnate3D_t;
+
 #endif // DEVICES_UTILS_H

@@ -26,11 +26,4 @@ typedef struct
     float temperature;
 } IMUData;
 
-typedef struct
-{
-    float x;
-    float y;
-    float z;
-} cordirnate3D_t;
-
 #endif // IMU_INTERFACE_H

@@ -1,109 +1,67 @@
-# Test System Usage Guide
+# System Test Runner
 
-## Basic Usage
+Comprehensive test suite for the Drone UAV project with support for multiple configurations.
 
-```bash
-# Run all tests (default skips integration)
-./run_tests.sh
-
-# Run specific test types
-./run_tests.sh --cmdline-only
-./run_tests.sh --unit-only
-./run_tests.sh --integration-only
-./run_tests.sh --all  # includes integration tests
-```
-
-## Toggling Tests On/Off
-
-### Method 1: Environment Variables
+## Quick Start
 
 ```bash
-# Skip specific test categories
-SKIP_SPI_TESTS=true ./run_tests.sh
-SKIP_MPU6050_TESTS=true ./run_tests.sh
+# Run all tests (default configuration)
+python3 runner.py
 
-# Skip multiple categories
-SKIP_SPI_TESTS=true SKIP_PIGPIO_TESTS=true ./run_tests.sh
+# Run receiver-specific tests (IMU + LoRa, no controller)
+python3 runner.py --config reciver
+
+# Run controller-specific tests (LoRa + DualShock, no IMU)
+python3 runner.py --config controller
+
+# Run base configuration tests
+python3 runner.py --config base
 ```
 
-### Method 2: Command Line Options
+## Test Categories
 
-```bash
-# Skip hardware tests
-./run_tests.sh --skip-hardware
+- **Command Line Tests**: System setup validation (SPI, I2C, pigpio)
+- **Device Tests**: Hardware component unit tests (MPU-6050, SX1278, DualShock)
+- **Integration Tests**: Hardware connectivity and communication tests
 
-# Skip specific devices
-./run_tests.sh --skip-mpu6050
-./run_tests.sh --skip-sx1278
+## Configurations
 
-# Development mode (skip all hardware)
-./run_tests.sh --dev-mode
+| Config       | Command Line | Integration | MPU-6050 | SX1278 | DualShock |
+| ------------ | ------------ | ----------- | -------- | ------ | --------- |
+| `base`       | ✅           | ✅          | ✅       | ✅     | ✅        |
+| `reciver`    | ✅           | ✅          | ✅       | ✅     | ❌        |
+| `controller` | Partial      | ❌          | ❌       | ✅     | ✅        |
+
+## Requirements
+
+- Python 3.x with unittest
+- Unity C test framework (included)
+- Hardware devices for integration tests
+- Root access for some hardware tests (`sudo python3 runner.py`)
+
+## Test Structure
+
+```
+tests/
+├── runner.py              # Main test runner
+├── configs/               # Test configurations
+│   ├── config_base.py     # All tests enabled
+│   ├── config_reciver.py  # Receiver/drone tests
+│   └── config_controller.py # Controller/pilot tests
+├── devices/               # C unit tests (Unity framework)
+├── commandline_tests.py   # System setup tests
+├── device_tests.py        # Python device test wrappers
+└── integration_tests.py   # Hardware integration tests
 ```
 
-### Method 3: Configuration Files
+## Adding Tests
 
-```bash
-# Use preset configurations
-./run_tests.sh --config configs/dev_mode.config      # No hardware
-./run_tests.sh --config configs/hardware.config      # Full hardware
-./run_tests.sh --config configs/ci.config            # CI/CD pipeline
-```
+1. Add test methods to appropriate `*_tests.py` files
+2. Update config files to enable/disable new tests
+3. For C tests: Add to `devices/` and update Makefile
 
-### Method 4: Edit test_config.sh
+## Common Issues
 
-Edit the `test_config.sh` file to set your default preferences.
-
-## Available Test Controls
-
-| Environment Variable | Description               |
-| -------------------- | ------------------------- |
-| `SKIP_SPI_TESTS`     | Skip SPI interface tests  |
-| `SKIP_PIGPIO_TESTS`  | Skip PIGPIO library tests |
-| `SKIP_MPU6050_TESTS` | Skip MPU6050 unit tests   |
-| `SKIP_SX1278_TESTS`  | Skip SX1278 unit tests    |
-
-## Common Scenarios
-
-### Development on Mac (no hardware)
-
-```bash
-./run_tests.sh --dev-mode
-# or
-./run_tests.sh --config configs/dev_mode.config
-```
-
-### Testing on Raspberry Pi (with hardware)
-
-```bash
-./run_tests.sh --config configs/hardware.config
-```
-
-### CI/CD Pipeline
-
-```bash
-./run_tests.sh --config configs/ci.config
-```
-
-### Testing specific component only
-
-```bash
-# Only test MPU6050
-SKIP_SX1278_TESTS=true ./run_tests.sh --unit-only
-
-# Only test command-line setup
-./run_tests.sh --cmdline-only
-```
-
-## Adding New Tests
-
-### Command-line tests:
-
-Edit `commandline_tests.sh` and add calls to `add_cmd_test()` in `setup_cmdline_tests()`
-
-### Unit tests:
-
-Add new `.c` files in `devices/` directory and update the Makefile
-
-### Integration tests:
-
-Edit `integration_tests.sh` and add new test functions
+- **Permission errors**: Run with `sudo` for hardware access
+- **Device not found**: Check hardware connections and `/dev/` paths
+- **Import errors**: Ensure you're running from the `tests/` directory

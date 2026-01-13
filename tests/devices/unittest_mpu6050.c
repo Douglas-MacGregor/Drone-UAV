@@ -39,8 +39,8 @@ void test_mpu6050_utils_read(void)
 
 void test_mpu6050_gyro_acc_config(void)
 {
-    cordirnate3D_t accel_bias;
-    cordirnate3D_t gyro_bias;
+    coordinate3D_t accel_bias;
+    coordinate3D_t gyro_bias;
     gyro_bias.x = 0.0f;
     gyro_bias.y = 0.0f;
     gyro_bias.z = 0.0f;
@@ -96,8 +96,8 @@ void test_mpu6050_gyro_getters_converter(void)
 {
     init_gpio();
     iic_handle = init_i2c(1, 0x68); // Assuming
-    cordirnate3D_t gyro_bias;
-    cordirnate3D_t accel_bias;
+    coordinate3D_t gyro_bias;
+    coordinate3D_t accel_bias;
     gyro_bias.x = 0.0f;
     gyro_bias.y = 0.0f;
     gyro_bias.z = 0.0f;
@@ -139,8 +139,8 @@ void test_mpu6050_acc_getters_converters(void)
 {
     init_gpio();
     iic_handle = init_i2c(1, 0x68); // Assuming
-    cordirnate3D_t gyro_bias;
-    cordirnate3D_t accel_bias;
+    coordinate3D_t gyro_bias;
+    coordinate3D_t accel_bias;
     gyro_bias.x = 0.0f;
     gyro_bias.y = 0.0f;
     gyro_bias.z = 0.0f;

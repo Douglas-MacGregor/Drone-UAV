@@ -26,3 +26,9 @@
 | Test ID    | Test Name | Description | Expected Result |
 | ---------- | --------- | ----------- | --------------- |
 | SX1278-001 |           |             |                 |
+
+## DualShock
+
+| Test ID       | Test Name | Description | Expected Result |
+| ------------- | --------- | ----------- | --------------- |
+| DualShock-001 |           |             |                 |

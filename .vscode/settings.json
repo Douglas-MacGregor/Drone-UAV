@@ -1,0 +1,5 @@
+{
+  "files.associations": {
+    "drone_controller_interface.h": "c"
+  }
+}
