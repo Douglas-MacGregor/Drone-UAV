@@ -106,7 +106,7 @@ class SX1278DeviceTests(unittest.TestCase):
 
 
 @unittest.skipUnless(config.RUN_DEVICE_TESTS and config.RUN_DUALSHOCK_TESTS, "Skipping device tests.")
-class DualShockDeviceTests(unittest.TestCase):
+class DUALSHOCKDeviceTests(unittest.TestCase):
     @unittest.skipUnless(config.RUN_DUALSHOCK_BUILD_TEST, "Skipping device build test.")
     def test_dualshock_build(self):
         """Test building the DualShock unittest code."""
