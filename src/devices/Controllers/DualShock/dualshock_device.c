@@ -17,15 +17,15 @@ DroneControllerInterface dualshock_controller_interface = {
  * Function: dualshock_get_XYZ
  * Description: Retrieves the XYZ coordinates from the DualShock device
  * Parameters: self - Pointer to the Dualshock device instance
- * Returns: cordirnate3D_t structure containing X, Y, Z normalized between -1.0 and 1.0
+ * Returns: coordinate3D_t structure containing X, Y, Z normalized between -1.0 and 1.0
  * Side Effects: None
  * Assumptions: current_report field in Dualshock_Device is up-to-date
  * Notes: Applies deadzone filtering to joystick inputs
  */
-cordirnate3D_t dualshock_get_XYZ(void *self)
+coordinate3D_t dualshock_get_XYZ(void *self)
 {
     Dualshock_Device *device = (Dualshock_Device *)self;
-    cordirnate3D_t coords = {0.0f, 0.0f, 0.0f};
+    coordinate3D_t coords = {0.0f, 0.0f, 0.0f};
     float x = (device->current_report.right_stick_x - 128) / 128.0f;
     float y = (device->current_report.right_stick_y - 128) / 128.0f;
     float r = sqrtf(x * x + y * y);
