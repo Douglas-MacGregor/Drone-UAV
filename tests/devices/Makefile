@@ -56,8 +56,6 @@ $(unittest_mpu6050).o: unittest_mpu6050.c $(mpu6050_dir)/mpu6050_utils.h $(mpu60
 $(unittest_dualshock).o: unittest_dualshock.c $(dualshock_dir)/dualshock_utils.h $(dualshock_dir)/dualshock_device.h
 	$(CC) -c unittest_dualshock.c $(CFLAGS)
 
-
-
 clean:
 	rm -f *.o $(TARGET)
 	$(MAKE) -C $(sx1278_dir) clean
