@@ -65,7 +65,7 @@ uint8_t dualshock_get_button_state(void *self)
     Dualshock_Device *device = (Dualshock_Device *)self;
     uint8_t button_state = 0;
     button_state |= (device->current_report.buttons_shapes & 0xF0);
-    button_state |= (device->current_report.buttons_misc & 0b11);
+    button_state |= (device->current_report.buttons_misc & 0x03);
     return button_state;
 }
 
