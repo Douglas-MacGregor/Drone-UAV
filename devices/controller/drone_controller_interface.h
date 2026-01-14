@@ -1,7 +1,7 @@
 #ifndef CONTROLLER_INTERFACE_H
 #define CONTROLLER_INTERFACE_H
 #include <stdint.h>
-#include "../utils.h"
+#include "coordinate.h"
 
 typedef struct
 {

@@ -6,11 +6,11 @@
 #include "imu_interface.h"
 #include "hal_i2c.h"
 
-external HAL_I2C hal_i2c;
+extern HAL_I2C hal_i2c;
 
 int read_mpu6050(int i2c_handle, mpu6050_Data *data)
 {
-    int n = hal_i2c.read_i2c(hal_i2c, i2c_handle, data->data_receive, data->length, data->address);
+    int n = hal_i2c.read_i2c(i2c_handle, data->data_receive, data->length, data->address);
     if (n < 0)
     {
         fprintf(stderr, "MPU6050 read error\n");
@@ -24,7 +24,7 @@ int read_mpu6050(int i2c_handle, mpu6050_Data *data)
 
 int write_mpu6050(int i2c_handle, mpu6050_Data *data)
 {
-    int n = hal_i2c.write_i2c(hal_i2c, i2c_handle, &data->data, data->length, data->address);
+    int n = hal_i2c.write_i2c(i2c_handle, &data->data, data->length, data->address);
     if (n < 0)
     {
         fprintf(stderr, "MPU6050 write error\n");
@@ -180,7 +180,7 @@ int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float
     return 0;
 }
 
-int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs, cordirnate3D_t *gyro_bias, cordirnate3D_t *accel_bias)
+int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs, coordinate3D_t *gyro_bias, coordinate3D_t *accel_bias)
 {
     mpu6050_Data data;
 
@@ -233,7 +233,7 @@ int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_f
     return 0;
 }
 
-int get_gyro_mean_window_mpu6050(int i2c_handle, cordirnate3D_t *gyro_bias, float samples)
+int get_gyro_mean_window_mpu6050(int i2c_handle, coordinate3D_t *gyro_bias, float samples)
 {
     // Placeholder implementation
     int16_t raw_gyroX, raw_gyroY, raw_gyroZ;
@@ -254,7 +254,7 @@ int get_gyro_mean_window_mpu6050(int i2c_handle, cordirnate3D_t *gyro_bias, floa
     return 0;
 }
 
-int get_accel_mean_window_mpu6050(int i2c_handle, cordirnate3D_t *accel_bias, float samples)
+int get_accel_mean_window_mpu6050(int i2c_handle, coordinate3D_t *accel_bias, float samples)
 {
     int16_t raw_accelX, raw_accelY, raw_accelZ;
     float sumX = 0.0f, sumY = 0.0f, sumZ = 0.0f;

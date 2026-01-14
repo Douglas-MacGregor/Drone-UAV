@@ -6,4 +6,5 @@ add_library(dualshock
 target_include_directories(dualshock
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
+        ${PROJECT_SOURCE_DIR}/include
 )

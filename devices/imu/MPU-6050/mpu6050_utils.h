@@ -3,8 +3,7 @@
 
 #include <stdint.h>
 #include "../imu_interface.h"
-#include "../../utils.h"
-
+#include "coordinate.h"
 typedef struct
 {
     uint8_t address;
@@ -82,7 +81,7 @@ typedef enum
 
 int read_mpu6050(int i2c_handle, mpu6050_Data *data);
 int write_mpu6050(int i2c_handle, mpu6050_Data *data);
-int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs, cordirnate3D_t *gyro_bias, cordirnate3D_t *accel_bias);
+int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_fs_t accel_fs, coordinate3D_t *gyro_bias, coordinate3D_t *accel_bias);
 int get_gyroX_mpu6050(int i2c_handle, int16_t *gyroX);
 int get_gyroY_mpu6050(int i2c_handle, int16_t *gyroY);
 int get_gyroZ_mpu6050(int i2c_handle, int16_t *gyroZ);
@@ -91,7 +90,7 @@ int get_accelX_mpu6050(int i2c_handle, int16_t *accelX);
 int get_accelY_mpu6050(int i2c_handle, int16_t *accelY);
 int get_accelZ_mpu6050(int i2c_handle, int16_t *accelZ);
 int convert_accel_to_g(int16_t raw_accel, mpu6050_accel_fs_t fs, float *g, float bias);
-int get_gyro_mean_window_mpu6050(int i2c_handle, cordirnate3D_t *gyro_bias, float samples);
-int get_accel_mean_window_mpu6050(int i2c_handle, cordirnate3D_t *accel_bias, float samples);
+int get_gyro_mean_window_mpu6050(int i2c_handle, coordinate3D_t *gyro_bias, float samples);
+int get_accel_mean_window_mpu6050(int i2c_handle, coordinate3D_t *accel_bias, float samples);
 
 #endif // mpu6050_UTILS_H

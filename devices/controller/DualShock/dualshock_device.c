@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "../drone_controller_interface.h"
-#include "../../utils.h"
 #include <math.h>
+#include "coordinate.h"
 
 DroneControllerInterface dualshock_controller_interface = {
     .get_XYZ = dualshock_get_XYZ,
