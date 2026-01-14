@@ -6,6 +6,8 @@
 #include "sx1278_utils.h"
 #include "coordinate.h"
 #include <stdlib.h>
+#include "hal_spi.h"
+#include "hal_gpio.h"
 
 // lower level functions for SX1278 operation
 

@@ -9,5 +9,4 @@ target_include_directories(mpu6050
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/devices/imu
         ${PROJECT_SOURCE_DIR}/hal
-        ${PROJECT_SOURCE_DIR}/older-code
 )
