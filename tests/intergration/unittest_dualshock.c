@@ -1,7 +1,8 @@
-#include "../unity.h"
-#include "../unity_internals.h"
-#include "../../src/devices/Controllers/DualShock/dualshock_device.h"
-#include "../../src/devices/Controllers/DualShock/dualshock_utils.h"
+#include "unity.h"
+#include "unity_internals.h"
+#include "dualshock_device.h"
+#include "dualshock_utils.h"
+#include "coordinate.h"
 #include <stdlib.h>
 #include <math.h>
 

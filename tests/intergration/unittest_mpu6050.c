@@ -1,7 +1,8 @@
-#include "../unity.h"
-#include "../../src/devices/utils.h"
-#include "../../src/devices/IMU/MPU-6050/mpu6050_device.h"
-#include "../../src/devices/IMU/MPU-6050/mpu6050_utils.h"
+#include "unity.h"
+#include "mpu6050_device.h"
+#include "mpu6050_utils.h"
+#include "hal_i2c.h"
+#include "coordinate.h"
 #include <string.h>
 #include <unistd.h>
 #include <stdint.h>

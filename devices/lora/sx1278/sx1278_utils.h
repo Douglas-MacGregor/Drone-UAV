@@ -1,7 +1,7 @@
 #ifndef SX1278_UTILS_H
 #define SX1278_UTILS_H
 #include <stdint.h>
-#include "../lora_interface.h"
+#include "lora_interface.h"
 
 typedef struct SX1278Data
 {

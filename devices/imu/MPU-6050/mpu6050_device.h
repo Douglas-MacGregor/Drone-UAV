@@ -4,7 +4,7 @@
 #include "../imu_interface.h"
 #include "mpu6050_utils.h"
 #include "mpu6050_utils.h"
-#include "../../utils.h"
+#include "coordinate.h"
 
 typedef struct
 {
@@ -12,8 +12,8 @@ typedef struct
     int iic_handle;       // SPI handle for communication
     mpu6050_gyro_fs_t gyro_fs;
     mpu6050_accel_fs_t accel_fs;
-    cordirnate3D_t gyro_bias;
-    cordirnate3D_t accel_bias;
+    coordinate3D_t gyro_bias;
+    coordinate3D_t accel_bias;
 } mpu6050_Device;
 
 extern IMUInterface mpu6050_imu_interface;

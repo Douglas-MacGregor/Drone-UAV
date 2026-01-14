@@ -1,7 +1,9 @@
-#include "../unity.h"
-#include "../../src/devices/LoRa/sx1278/sx1278_utils.h"
-#include "../../src/devices/LoRa/sx1278/sx1278_device.h"
-#include "../../src/devices/utils.h"
+#include "unity.h"
+#include "sx1278_utils.h"
+#include "sx1278_device.h"
+#include "coordinate.h"
+#include "hal_spi.h"
+#include "hal_gpio.h"
 
 #include <string.h>
 #include <unistd.h>

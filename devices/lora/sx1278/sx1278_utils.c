@@ -4,9 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "sx1278_utils.h"
-#include "../../utils.h"
+#include "coordinate.h"
 #include <stdlib.h>
-#include <pigpio.h>
 
 // lower level functions for SX1278 operation
 
