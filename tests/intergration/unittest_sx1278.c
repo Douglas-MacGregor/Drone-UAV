@@ -4,12 +4,13 @@
 #include "coordinate.h"
 #include "hal_spi.h"
 #include "hal_gpio.h"
-
 #include <string.h>
 #include <unistd.h>
 #include <stdint.h>
 
 int spi_handle;
+extern HAL_GPIO hal_gpio;
+extern HAL_SPI hal_spi;
 
 void setUp(void)
 {

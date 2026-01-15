@@ -2,12 +2,15 @@
 #include "mpu6050_device.h"
 #include "mpu6050_utils.h"
 #include "hal_i2c.h"
+#include "hal_gpio.h"
 #include "coordinate.h"
 #include <string.h>
 #include <unistd.h>
 #include <stdint.h>
 
 int iic_handle;
+extern HAL_I2C hal_i2c;
+extern HAL_GPIO hal_gpio;
 
 void setUp(void)
 {

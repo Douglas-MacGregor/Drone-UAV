@@ -9,6 +9,8 @@
 #include "hal_spi.h"
 #include "hal_gpio.h"
 
+extern HAL_SPI hal_spi;
+extern HAL_GPIO hal_gpio;
 // lower level functions for SX1278 operation
 
 int init_sx1278()
@@ -31,15 +33,15 @@ int init_sx1278()
 
 void reset_sx1278(int spi_handle)
 {
-    gpioSetMode(PIN_RESET, PI_OUTPUT);
-    gpioWrite(PIN_RESET, 1);
-    usleep(1000);
+    // gpioSetMode(PIN_RESET, PI_OUTPUT);
+    // gpioWrite(PIN_RESET, 1);
+    // usleep(1000);
 
-    gpioWrite(PIN_RESET, 0);
-    usleep(1000);
+    // gpioWrite(PIN_RESET, 0);
+    // usleep(1000);
 
-    gpioSetMode(PIN_RESET, PI_INPUT);
-    usleep(10000);
+    // gpioSetMode(PIN_RESET, PI_INPUT);
+    // usleep(10000);
     return;
 }
 
