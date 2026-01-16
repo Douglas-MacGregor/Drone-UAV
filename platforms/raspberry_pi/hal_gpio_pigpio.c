@@ -32,7 +32,6 @@ static int pi_gpio_read(int pin)
 
 static int pi_gpio_init()
 {
-    fprintf(stdout, "gpio init rasp**********\n");
     if (gpioInitialise() < 0)
     {
         return -1; // Initialization failed
