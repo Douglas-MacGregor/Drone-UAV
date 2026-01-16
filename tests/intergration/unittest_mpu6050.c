@@ -32,13 +32,13 @@ void test_mpu6050_utils_read(void)
     // Mock i2cReadI2CBlockData to return expected value
     int n = read_mpu6050(iic_handle, &data);
     TEST_ASSERT_EQUAL_INT(-1, n); // Since we are using a dummy handle, expect error
-    init_gpio();
-    iic_handle = init_i2c(1, 0x68); // Assuming
+    hal_gpio.init_gpio();
+    iic_handle = hal_i2c.init_i2c(1, 0x68); // Assuming
     n = read_mpu6050(iic_handle, &data);
     TEST_ASSERT_EQUAL_INT(1, n);                  // Expect to read 1 byte
     TEST_ASSERT_EQUAL_UINT8(0x68, received_data); // WHO_AM_I should return 0x68 for MPU6050
-    close_i2c(iic_handle);
-    close_gpio();
+    hal_i2c.close_i2c(iic_handle);
+    hal_gpio.close_gpio();
 }
 
 void test_mpu6050_gyro_acc_config(void)
@@ -51,9 +51,9 @@ void test_mpu6050_gyro_acc_config(void)
     accel_bias.x = 0.0f;
     accel_bias.y = 0.0f;
     accel_bias.z = 0.0f;
-    int m = init_gpio();
+    int m = hal_gpio.init_gpio();
     TEST_ASSERT_EQUAL_INT(0, m);
-    iic_handle = init_i2c(1, 0x68); // Assuming
+    iic_handle = hal_i2c.init_i2c(1, 0x68); // Assuming
     int n = configure_mpu6050(iic_handle, GYRO_FS_250, ACCEL_FS_8, &gyro_bias, &accel_bias);
     TEST_ASSERT_EQUAL_INT(0, n); // Expect to write 2 bytes (one for gyro config, one for accel config)
     mpu6050_Data data;
@@ -84,8 +84,8 @@ void test_mpu6050_gyro_acc_config(void)
     n = read_mpu6050(iic_handle, &data);
     TEST_ASSERT_EQUAL_INT(1, n);
     TEST_ASSERT_EQUAL_UINT8(0x18, accel_config); // ACCEL_FS
-    close_i2c(iic_handle);
-    close_gpio();
+    hal_i2c.close_i2c(iic_handle);
+    hal_gpio.close_gpio();
 }
 
 void test_mpu6050_device_creation(void)
@@ -98,8 +98,8 @@ void test_mpu6050_device_creation(void)
 
 void test_mpu6050_gyro_getters_converter(void)
 {
-    init_gpio();
-    iic_handle = init_i2c(1, 0x68); // Assuming
+    hal_gpio.init_gpio();
+    iic_handle = hal_i2c.init_i2c(1, 0x68); // Assuming
     coordinate3D_t gyro_bias;
     coordinate3D_t accel_bias;
     gyro_bias.x = 0.0f;
@@ -135,14 +135,14 @@ void test_mpu6050_gyro_getters_converter(void)
     float expected_g_z = (float)raw_gyro_z / 131.0;
     float acctual_g_z = g_z;
     TEST_ASSERT_FLOAT_WITHIN(0.1f, expected_g_z, acctual_g_z);
-    close_i2c(iic_handle);
-    close_gpio();
+    hal_i2c.close_i2c(iic_handle);
+    hal_gpio.close_gpio();
 }
 
 void test_mpu6050_acc_getters_converters(void)
 {
-    init_gpio();
-    iic_handle = init_i2c(1, 0x68); // Assuming
+    hal_gpio.init_gpio();
+    iic_handle = hal_i2c.init_i2c(1, 0x68); // Assuming
     coordinate3D_t gyro_bias;
     coordinate3D_t accel_bias;
     gyro_bias.x = 0.0f;
@@ -178,26 +178,26 @@ void test_mpu6050_acc_getters_converters(void)
     float expected_a_z = (float)raw_accel_z / 4096.0;
     float acctual_a_z = a_z;
     TEST_ASSERT_FLOAT_WITHIN(0.1f, expected_a_z, acctual_a_z);
-    close_i2c(iic_handle);
-    close_gpio();
+    hal_i2c.close_i2c(iic_handle);
+    hal_gpio.close_gpio();
 }
 
 void test_mpu6050_self_test(void)
 {
-    init_gpio();
-    iic_handle = init_i2c(1, 0x68); // Assuming
+    hal_gpio.init_gpio();
+    iic_handle = hal_i2c.init_i2c(1, 0x68); // Assuming
     mpu6050_Device device = create_mpu6050_device(iic_handle, GYRO_FS_250, ACCEL_FS_8);
     device.vtable->wake(&device);
     int n = device.vtable->self_test(&device);
     TEST_ASSERT_EQUAL_INT(0, n); // Expect self-test to pass
-    close_i2c(iic_handle);
-    close_gpio();
+    hal_i2c.close_i2c(iic_handle);
+    hal_gpio.close_gpio();
 }
 
 void test_mpu6050_reset_sleep_wake(void)
 {
-    init_gpio();
-    iic_handle = init_i2c(1, 0x68); // Assuming
+    hal_gpio.init_gpio();
+    iic_handle = hal_i2c.init_i2c(1, 0x68); // Assuming
     mpu6050_Device device = create_mpu6050_device(iic_handle, GYRO_FS_250, ACCEL_FS_8);
     int n = device.vtable->reset(&device);
     TEST_ASSERT_EQUAL_INT(0, n); // Expect reset to succeed
@@ -205,14 +205,14 @@ void test_mpu6050_reset_sleep_wake(void)
     TEST_ASSERT_EQUAL_INT(0, n); // Expect sleep to succeed
     n = device.vtable->wake(&device);
     TEST_ASSERT_EQUAL_INT(0, n); // Expect wake to succeed
-    close_i2c(iic_handle);
-    close_gpio();
+    hal_i2c.close_i2c(iic_handle);
+    hal_gpio.close_gpio();
 }
 
 void test_mpu6050_device_get_data(void)
 {
-    init_gpio();
-    iic_handle = init_i2c(1, 0x68); // Assuming
+    hal_gpio.init_gpio();
+    iic_handle = hal_i2c.init_i2c(1, 0x68); // Assuming
     mpu6050_Device device = create_mpu6050_device(iic_handle, GYRO_FS_250, ACCEL_FS_8);
     device.vtable->wake(&device);
     IMUData imu_data;
@@ -224,8 +224,8 @@ void test_mpu6050_device_get_data(void)
     TEST_ASSERT_NOT_EQUAL(0.0f, imu_data.accelX);
     TEST_ASSERT_NOT_EQUAL(0.0f, imu_data.accelY);
     TEST_ASSERT_NOT_EQUAL(0.0f, imu_data.accelZ);
-    close_i2c(iic_handle);
-    close_gpio();
+    hal_i2c.close_i2c(iic_handle);
+    hal_gpio.close_gpio();
 }
 
 int main(void)

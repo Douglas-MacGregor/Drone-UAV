@@ -1,9 +1,9 @@
 
 typedef struct
 {
-    int (*init_gpio)(void *self);
-    int (*close_gpio)(void *self);
-    int (*set_pin_mode)(void *self, int pin, int mode);
-    int (*write_pin)(void *self, int pin, int value);
-    int (*read_pin)(void *self, int pin);
+    int (*init_gpio)();
+    int (*close_gpio)();
+    int (*set_pin_mode)(int pin, int mode);
+    int (*write_pin)(int pin, int value);
+    int (*read_pin)(int pin);
 } HAL_GPIO;

@@ -27,7 +27,7 @@ static int pi_gpio_read(int pin)
     return gpioRead(pin);
 }
 
-static int pi_gpio_init(void *self)
+static int pi_gpio_init()
 {
     if (gpioInitialise() < 0)
     {
@@ -36,7 +36,7 @@ static int pi_gpio_init(void *self)
     return 0; // Success
 }
 
-static int pi_gpio_close(void *self)
+static int pi_gpio_close()
 {
     gpioTerminate();
     return 0; // Success

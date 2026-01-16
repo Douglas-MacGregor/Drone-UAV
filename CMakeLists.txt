@@ -7,6 +7,9 @@ add_subdirectory(platforms)
 add_subdirectory(apps)
 add_subdirectory(tests)
 
+include_directories(${PROJECT_SOURCE_DIR}/include)
+
+
 if(NOT DEFINED PLATFORM)
     message(FATAL_ERROR "You must specify a PLATFORM, e.g., -DPLATFORM=STM32")
 endif()
