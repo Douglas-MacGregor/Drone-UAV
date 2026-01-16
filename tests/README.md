@@ -9,7 +9,7 @@ Comprehensive test suite for the Drone UAV project with support for multiple con
 python3 runner.py
 
 # Run receiver-specific tests (IMU + LoRa, no controller)
-python3 runner.py --config reciver
+python3 runner.py --config receiver
 
 # Run controller-specific tests (LoRa + DualShock, no IMU)
 python3 runner.py --config controller
