@@ -8,18 +8,3 @@ add_subdirectory(apps)
 add_subdirectory(tests)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
-
-
-if(NOT DEFINED PLATFORM)
-    message(FATAL_ERROR "You must specify a PLATFORM, e.g., -DPLATFORM=STM32")
-endif()
-
-if(PLATFORM STREQUAL "STM32")
-    # list(APPEND SRC platform/stm32/hal_gpio.c src/platform/stm32/hal_i2c.c src/platform/stm32/hal_spi.c)
-elseif(PLATFORM STREQUAL "RaspberryPi")
-    list(APPEND SRC platform/raspberrypi/hal_gpio_pigpio.c src/platform/raspberrypi/hal_i2c_pigpio.c src/platform/raspberrypi/hal_spi_pigpio.c)
-elseif(PLATFORM STREQUAL "sim")
-    # list(APPEND SRC platform/sim/hal_gpio_sim.c src/platform/sim/hal_i2c_sim.c src/platform/sim/hal_spi_sim.c)
-else()
-    message(FATAL_ERROR "Unknown platform: ${PLATFORM}")
-endif()
