@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int init_i2c_rasp(void *self, uint8_t I2C_BUS, uint8_t I2C_ADDRESS)
+int init_i2c_rasp(uint8_t I2C_BUS, uint8_t I2C_ADDRESS)
 {
     int handle = i2cOpen(I2C_BUS, I2C_ADDRESS, 0);
     if (handle < 0)
@@ -16,7 +16,7 @@ int init_i2c_rasp(void *self, uint8_t I2C_BUS, uint8_t I2C_ADDRESS)
     return handle;
 }
 
-int close_i2c_rasp(void *self, int i2c_handle)
+int close_i2c_rasp(int i2c_handle)
 {
     if (i2cClose(i2c_handle) < 0)
     {
@@ -26,7 +26,7 @@ int close_i2c_rasp(void *self, int i2c_handle)
     return 0;
 }
 
-int write_i2c_rasp(void *self, int i2c_handle, uint8_t *tx_buffer, int length, uint8_t register_address)
+int write_i2c_rasp(int i2c_handle, uint8_t *tx_buffer, int length, uint8_t register_address)
 {
     int i2c_handle = *((int *)self);
     int bytes_written = i2cWriteDevice(i2c_handle, &register_address, 1);
@@ -44,7 +44,7 @@ int write_i2c_rasp(void *self, int i2c_handle, uint8_t *tx_buffer, int length, u
     return bytes_written;
 }
 
-int read_i2c_rasp(void *self, int i2c_handle, uint8_t *rx_buffer, int length, uint8_t register_address)
+int read_i2c_rasp(int i2c_handle, uint8_t *rx_buffer, int length, uint8_t register_address)
 {
     int i2c_handle = *((int *)self);
     int bytes_written = i2cWriteDevice(i2c_handle, &register_address, 1);
