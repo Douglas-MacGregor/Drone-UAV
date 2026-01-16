@@ -28,7 +28,7 @@ int close_i2c_rasp(int i2c_handle)
 
 int write_i2c_rasp(int i2c_handle, uint8_t *tx_buffer, int length, uint8_t register_address)
 {
-    int bytes_written = i2cWriteI2CBlockData(i2c_handle, &register_address, tx_buffer, length);
+    int bytes_written = i2cWriteI2CBlockData(i2c_handle, register_address, tx_buffer, length);
     if (bytes_written < 0)
     {
         fprintf(stderr, "Failed to write register address 0x%02X\n", register_address);
@@ -39,8 +39,8 @@ int write_i2c_rasp(int i2c_handle, uint8_t *tx_buffer, int length, uint8_t regis
 
 int read_i2c_rasp(int i2c_handle, uint8_t *rx_buffer, int length, uint8_t register_address)
 {
-    int bytes_written = i2cReadI2CBlockData(i2c_handle, &register_address, rx_buffer, length);
-    if (bytes_written < 0)
+    int bytes_read = i2cReadI2CBlockData(i2c_handle, register_address, rx_buffer, length);
+    if (bytes_read < 0)
     {
         fprintf(stderr, "Failed to write register address 0x%02X for reading\n", register_address);
         return -1;
