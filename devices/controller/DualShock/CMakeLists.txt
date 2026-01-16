@@ -10,3 +10,6 @@ target_include_directories(dualshock
         ${PROJECT_SOURCE_DIR}/devices/controller
         ${PROJECT_SOURCE_DIR}/hal
 )
+
+# Link math library for sqrtf function
+target_link_libraries(dualshock PUBLIC m)
