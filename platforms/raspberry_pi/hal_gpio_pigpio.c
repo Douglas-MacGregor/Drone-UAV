@@ -11,10 +11,12 @@
 
 static int pi_gpio_set_mode(int pin, int mode)
 {
-    if (mode == HAL_GPIO_INPUT)
-        return gpioSetMode(pin, PI_INPUT);
-    else
-        return gpioSetMode(pin, PI_OUTPUT);
+    // if (mode == HAL_GPIO_INPUT)
+    //     return gpioSetMode(pin, PI_INPUT);
+    // else
+    //     return gpioSetMode(pin, PI_OUTPUT);
+
+    return 0;
 }
 
 static int pi_gpio_write(int pin, int value)

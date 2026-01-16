@@ -25,9 +25,9 @@ Refer to [docs/GitUsage.md](docs/GitUsage.md) for guidelines on using Git effect
 ```bash
 
 cmake -B build-host -DCMAKE_TOOLCHAIN_FILE=toolchains/host.cmake
-cmake --build .
+cmake --build build-host
 #Or
-cmake --build . --target <target_name>
+cmake --build build-host --target <target_name>
 ```
 
 ```bash
