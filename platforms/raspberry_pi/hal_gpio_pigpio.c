@@ -1,6 +1,7 @@
 
 #include "hal_gpio.h"
 #include <pigpio.h>
+#include <stdio.h>
 
 /*
     This file provides the Raspberry Pi implementation
@@ -31,7 +32,7 @@ static int pi_gpio_read(int pin)
 
 static int pi_gpio_init()
 {
-    fprintf(stdout "gpio init rasp**********\n");
+    fprintf(stdout, "gpio init rasp**********\n");
     if (gpioInitialise() < 0)
     {
         return -1; // Initialization failed
