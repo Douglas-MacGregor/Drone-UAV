@@ -28,7 +28,6 @@ int close_i2c_rasp(int i2c_handle)
 
 int write_i2c_rasp(int i2c_handle, uint8_t *tx_buffer, int length, uint8_t register_address)
 {
-    int i2c_handle = *((int *)self);
     int bytes_written = i2cWriteDevice(i2c_handle, &register_address, 1);
     if (bytes_written != 1)
     {
@@ -46,7 +45,6 @@ int write_i2c_rasp(int i2c_handle, uint8_t *tx_buffer, int length, uint8_t regis
 
 int read_i2c_rasp(int i2c_handle, uint8_t *rx_buffer, int length, uint8_t register_address)
 {
-    int i2c_handle = *((int *)self);
     int bytes_written = i2cWriteDevice(i2c_handle, &register_address, 1);
     if (bytes_written != 1)
     {
