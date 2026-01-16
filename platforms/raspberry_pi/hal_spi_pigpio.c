@@ -1,8 +1,11 @@
 #include "hal_spi.h"
 #include <pigpio.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
 
-int init_spi_pigpio(void *self, uint8_t SPI_BUS, uint8_t SPI_MODE, uint32_t SPI_SPEED)
+int init_spi_pigpio(uint8_t SPI_BUS, uint8_t SPI_MODE, uint32_t SPI_SPEED)
 {
     int spi_handle = spiOpen(SPI_CHANNEL, SPI_SPEED, SPI_MODE);
     if (spi_handle < 0)
@@ -13,13 +16,13 @@ int init_spi_pigpio(void *self, uint8_t SPI_BUS, uint8_t SPI_MODE, uint32_t SPI_
     return spi_handle;
 }
 
-int close_spi_pigpio(void *self, int spi_handle)
+int close_spi_pigpio(int spi_handle)
 {
     spiClose(spi_handle);
     return 0;
 }
 
-int write_spi_pigpio(void *self, int spi_handle, uint8_t *tx_buffer, int length)
+int write_spi_pigpio(int spi_handle, uint8_t *tx_buffer, int length)
 {
     int bytes_written = spiWrite(spi_handle, (char *)tx_buffer, length);
     if (bytes_written != length)
@@ -30,7 +33,7 @@ int write_spi_pigpio(void *self, int spi_handle, uint8_t *tx_buffer, int length)
     return bytes_written;
 }
 
-int read_spi_pigpio(void *self, int spi_handle, uint8_t *rx_buffer, int length, uint8_t register_address)
+int read_spi_pigpio(int spi_handle, uint8_t *rx_buffer, int length, uint8_t register_address)
 {
     uint8_t *tx_buffer = malloc(length + 1);
     memset(tx_buffer, 0, length + 1);

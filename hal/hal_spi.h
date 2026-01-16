@@ -1,4 +1,7 @@
 #include <stdint.h>
+#define SPI_CHANNEL 0
+#define SPI_SPEED 100000
+#define SPI_MODE 0
 
 typedef struct
 {
