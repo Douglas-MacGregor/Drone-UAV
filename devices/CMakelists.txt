@@ -6,3 +6,5 @@ add_subdirectory(controller/DualShock)
 
 add_subdirectory(lora)
 add_subdirectory(lora/sx1278)
+
+# Add other device subdirectories here
