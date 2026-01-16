@@ -5,9 +5,9 @@
 #include <string.h>
 #include <stdint.h>
 
-int init_spi_pigpio(uint8_t SPI_BUS, uint8_t SPI_MODE, uint32_t SPI_SPEED)
+int init_spi_pigpio(uint8_t spi_bus, uint8_t spi_mode, uint32_t spi_speed)
 {
-    int spi_handle = spiOpen(SPI_CHANNEL, SPI_SPEED, SPI_MODE);
+    int spi_handle = spiOpen(SPI_CHANNEL, spi_speed, spi_mode);
     if (spi_handle < 0)
     {
         fprintf(stderr, "spi init fail\n");
