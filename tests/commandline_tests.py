@@ -2,7 +2,7 @@ import unittest
 import configs.config as config
 import subprocess
 
-@unittest.skipUnless(config.RUN_COMMANDLINE_TESTS, "Skipping commandline tests.")
+@unittest.skipUnless(config.RUN_RASP_COMMANDLINE_TESTS, "Skipping commandline tests.")
 class CommandLineTests(unittest.TestCase):
 
     @unittest.skipUnless(config.RUN_PIGPIO_TEST, "Skipping pigpio installation test.")
