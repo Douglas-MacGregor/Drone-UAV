@@ -29,7 +29,7 @@ class CommandLineTests(unittest.TestCase):
             expected_output = f.read()
         self.assertEqual(result.stdout.strip(), expected_output.strip(), "I2C interface is not enabled as expected.")
 
-    @unittest.skipUnless(config.RUN_SPI_TEST, "Skipping SPI enabled test.")
+    @unittest.skipUnless(config.RUN_SPI_TEST_RASP, "Skipping SPI enabled test.")
     def test_spi_enabled(self):
         """Test if SPI is enabled."""
         result = subprocess.run("ls /dev/spi*", capture_output=True, text=True, shell=True, check=False)
