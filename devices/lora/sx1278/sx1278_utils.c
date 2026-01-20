@@ -15,7 +15,6 @@ extern HAL_GPIO hal_gpio;
 
 int init_sx1278()
 {
-    init_gpio();
     int spi_handle = init_spi();
     if (spi_handle < 0)
     {
