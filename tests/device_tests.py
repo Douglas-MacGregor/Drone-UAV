@@ -32,7 +32,7 @@ class MPU6050DeviceTests(unittest.TestCase):
         # Run Unity tests
         run = subprocess.run(
             ["./test_mpu6050"],
-            cwd="../build-rpi/tests/integration/",
+            cwd="../build-rpi/tests/intergration/",
             capture_output=True,
             text=True
         )
@@ -52,7 +52,7 @@ class SX1278DeviceTests(unittest.TestCase):
     @unittest.skipUnless(config.RUN_SX1278_COMPLIE_TEST, "Skipping device build test.")
     def test_sx1278_build(self):
         """Test building the SX1278 unittest code."""
-        result = subprocess.run("cmake --build build-rpi --target test_sx1278", capture_output=True, text=True, shell=True, check=False, cwd="devices")
+        result = subprocess.run("cmake --build build-rpi --target test_sx1278", capture_output=True, text=True, shell=True, check=False, cwd="../")
         self.assertEqual(result.returncode, 0, "SX1278 build output does not match expected output.")
     
     @unittest.skipUnless(config.RUN_SX1278_UNITTESTS, "Skipping SX1278 unit tests.")
@@ -62,7 +62,7 @@ class SX1278DeviceTests(unittest.TestCase):
         # Build
         build = subprocess.run(
             ["cmake", "--build", "build-rpi", "--target", "test_sx1278"],
-            cwd="devices",
+            cwd="../",
             capture_output=True,
             text=True
         )
@@ -76,7 +76,7 @@ class SX1278DeviceTests(unittest.TestCase):
         # Run Unity tests
         run = subprocess.run(
             ["./test_sx1278"],
-            cwd="../devices/tests/integration/",
+            cwd="../build-rpi/tests/intergration/",
             capture_output=True,
             text=True
         )
@@ -120,7 +120,7 @@ class DUALSHOCKDeviceTests(unittest.TestCase):
         # Run Unity tests
         run = subprocess.run(
             ["./test_dualshock"],
-            cwd="../build-rpi/tests/integration/",
+            cwd="../build-rpi/tests/intergration/",
             capture_output=True,
             text=True
         )
