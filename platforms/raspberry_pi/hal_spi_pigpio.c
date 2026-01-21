@@ -7,7 +7,7 @@
 
 int init_spi_pigpio(uint8_t spi_bus, uint8_t spi_mode, uint32_t spi_speed)
 {
-    int spi_handle = spiOpen(SPI_CHANNEL, SPI_CHANNEL, SPI_MODE);
+    int spi_handle = spiOpen(SPI_CHANNEL, SPI_SPEED, SPI_MODE);
     if (spi_handle < 0)
     {
         fprintf(stderr, "spi init fail\n");

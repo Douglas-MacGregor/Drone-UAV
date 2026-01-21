@@ -3,6 +3,8 @@
 #include "sx1278_utils.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 extern HAL_GPIO hal_gpio;
 extern HAL_SPI hal_spi;
