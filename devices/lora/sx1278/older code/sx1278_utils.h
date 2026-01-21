@@ -1,31 +1,21 @@
-#ifndef SX1278_DEVICE_H
-#define SX1278_DEVICE_H
+#ifndef SX1278_UTILS_H
+#define SX1278_UTILS_H
+#include <stdint.h>
 #include "lora_interface.h"
 
-typedef struct
+typedef struct SX1278Data
 {
-    LoRaInterface *vtable; // pointer to interface
-    int spi_handle;        // SPI handle for communication
-    int gpio_reset_pin;    // GPIO pin for reset
-} sx1278_Device;
+    uint8_t address;
+    uint8_t write;
+    uint8_t *data_transmit;
+    uint8_t transmit_length;
+    uint8_t *data_receive;
+    uint8_t receive_length;
+} SX1278Data;
 
-extern LoRaInterface sx1278_lora_interface;
-
-int sx1278_init(void *self);
-int sx1278_close(void *self);
-int sx1278_send(void *self, const uint8_t *data, int len);
-int sx1278_receive(void *self, uint8_t *buffer, int len);
-int sx1278_set_syncword(void *self, uint8_t syncword);
-int sx1278_set_frequency(void *self, uint32_t freq);
-int sx1278_set_power(void *self, int level);
-int sx1278_set_spreading_factor(void *self, int sf);
-int sx1278_sleep(void *self);
-int sx1278_standby(void *self);
-int sx1278_reset(void *self);
-
-sx1278_Device create_sx1278_device(int spi_handle, int gpio_reset_pin);
-int destroy_sx1278_device(sx1278_Device *device);
-
+// Micro controller Hardware pin definitions
+#define PIN_RESET 26
+// sx1278 related defines
 typedef enum
 {
     REG_FIFO = 0x00,
@@ -82,4 +72,27 @@ typedef enum
     IRQ_FLAG_RX_TIMEOUT = 0b10000000
 } sx127x_IRQ_FLAG_bits_t;
 
-#endif // SX1278_DEVICE_H
+int init_sx1278();
+void reset_sx1278(int spi_handle);
+void close_sx1278(int spi_handle);
+int read_sx1278(int spi_handle, SX1278Data *data);
+int write_sx1278(int spi_handle, SX1278Data *data);
+int poll_reg(int spi_handle, uint8_t reg_address, uint8_t mask, uint8_t expected_value, int max_attempts, int delay_us);
+
+// SX1278 mode setting functions
+int activate_lora(int spi_handle);
+int deactivate_lora(int spi_handle);
+int set_sleep_mode(int spi_handle);
+int set_tx_mode(int spi_handle);
+int set_rx_continuous_mode(int spi_handle);
+int set_rx_single_mode(int spi_handle);
+int set_stdby_mode(int spi_handle);
+
+// RX, TX and SPI FIFO functions
+int rx_set_base_address(int spi_handle, uint8_t address);
+int tx_set_base_address(int spi_handle, uint8_t address);
+int spi_set_fifo_addr_ptr(int spi_handle, uint8_t address);
+
+void print_reg_values(int spi_handle);
+
+#endif // SX1278_UTILS_H
