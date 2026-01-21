@@ -24,30 +24,12 @@ int close_spi_pigpio(int spi_handle)
 
 int write_spi_pigpio(int spi_handle, uint8_t *tx_buffer, int length)
 {
-    int bytes_written = spiWrite(spi_handle, (char *)tx_buffer, length);
-    if (bytes_written != length)
-    {
-        fprintf(stderr, "Failed to write %d bytes to SPI device\n", length);
-        return -1;
-    }
-    return bytes_written;
+    return spiXfer(spi_handle, (char *)tx_buffer, NULL, length);
 }
 
-int read_spi_pigpio(int spi_handle, uint8_t *rx_buffer, int length, uint8_t register_address)
+int read_spi_pigpio(int spi_handle, uint8_t *tx_buffer, uint8_t *rx_buffer, int length)
 {
-    uint8_t *tx_buffer = malloc(length + 1);
-    memset(tx_buffer, 0, length + 1);
-    tx_buffer[0] = register_address & ~(0b10000000);
-    int bytes_transferred = spiXfer(spi_handle, (char *)tx_buffer, (char *)rx_buffer, length + 1);
-    free(tx_buffer);
-    if (bytes_transferred != length + 1)
-    {
-        fprintf(stderr, "Failed to read %d bytes from SPI device\n", length);
-        return -1;
-    }
-    // Shift received data to remove the first byte (register address)
-    memccpy(rx_buffer, &rx_buffer[1], length, length);
-    return length;
+    return spiXfer(spi_handle, (char *)tx_buffer, (char *)rx_buffer, length);
 }
 
 HAL_SPI hal_spi_pigpio = {
