@@ -51,7 +51,7 @@ void test_read_write_sx1278(void)
     TEST_ASSERT_NOT_EQUAL(0xFF, value); // Assuming 0xFF is not a valid default value
     TEST_ASSERT_EQUAL(2, n);            // 1 byte data + 1 byte address
     value = 0x55;
-    int m = write_sx1278(spi_handle, 0x04, value, 1);
+    int m = write_sx1278(spi_handle, 0x04, &value, 1);
     TEST_ASSERT_EQUAL(2, m); // 1 byte data + 1 byte address
     n = read_sx1278(spi_handle, 0x04, &value, 1);
     TEST_ASSERT_EQUAL(0x55, value);
