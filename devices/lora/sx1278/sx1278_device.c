@@ -118,12 +118,12 @@ int sx1278_send(void *self, const uint8_t *data, int len)
         fprintf(stderr, "Failed to set TX mode\n");
         return -1;
     }
-    if (poll_register_sx1278(device->spi_handle, REG_IRQ_FLAGS, IRQ_MASK_TX_DONE, IRQ_MASK_TX_DONE, 100, 10000) < 0)
+    if (poll_register_sx1278(device->spi_handle, REG_IRQ_FLAGS, IRQ_FLAG_TX_DONE, IRQ_FLAG_TX_DONE, 100, 10000) < 0)
     {
         fprintf(stderr, "Timeout waiting for TX_DONE\n");
         return -2;
     }
-    if (write_sx1278(device->spi_handle, REG_IRQ_FLAGS, (const uint8_t[]){IRQ_MASK_TX_DONE}, 1) < 0)
+    if (write_sx1278(device->spi_handle, REG_IRQ_FLAGS, (const uint8_t[]){IRQ_FLAG_TX_DONE}, 1) < 0)
     {
         fprintf(stderr, "Failed to clear TX_DONE flag\n");
         return -1;
@@ -289,6 +289,7 @@ sx1278_Device create_sx1278_device(int spi_handle, int gpio_reset_pin)
     sx1278_Device device;
     device.vtable = &sx1278_lora_interface;
     device.spi_handle = spi_handle;
+    device.gpio_reset_pin = gpio_reset_pin;
     return device;
 }
 

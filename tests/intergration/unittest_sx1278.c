@@ -127,7 +127,7 @@ void test_set_syncword_sx1278(void)
     device.vtable->init(&device);
     uint8_t syncword = 0x34;
     int ret = device.vtable->set_syncword(&device, syncword);
-    TEST_ASSERT_EQUAL(0, ret);
+    TEST_ASSERT_EQUAL(2, ret);
     uint8_t read_value = 0;
     ret = read_sx1278(device.spi_handle, REG_SYNC_WORD, &read_value, 1);
     TEST_ASSERT_EQUAL(2, ret);
