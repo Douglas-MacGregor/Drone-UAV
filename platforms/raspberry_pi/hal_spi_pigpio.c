@@ -7,7 +7,8 @@
 
 int init_spi_pigpio(uint8_t spi_bus, uint8_t spi_mode, uint32_t spi_speed)
 {
-    int spi_handle = spiOpen(SPI_CHANNEL, SPI_SPEED, SPI_MODE);
+    // Use the function parameters instead of pigpio's default constants
+    int spi_handle = spiOpen(spi_bus, spi_speed, spi_mode);
     if (spi_handle < 0)
     {
         fprintf(stderr, "spi init fail\n");
