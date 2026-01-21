@@ -152,9 +152,10 @@ void test_reset_sx1278(void)
     device.vtable->reset(&device);
     uint8_t opmode_after;
     read_sx1278(device.spi_handle, REG_OPMODE, &opmode_after, 1);
+    TEST_ASSERT_EQUAL(OPMODE_LONG_RANGE, opmode_before & 0b10000000);
     TEST_ASSERT_EQUAL(OPMODE_STDBY, opmode_after & 0b00000111);
     destroy_sx1278_device(&device);
-    TEST_ASSERT_EQUAL(OPMODE_LONG_RANGE, opmode_after & 0b10000000);
+    TEST_ASSERT_EQUAL(0x0, opmode_after & 0b10000000);
 }
 
 void test_set_frequency_sx1278(void)
