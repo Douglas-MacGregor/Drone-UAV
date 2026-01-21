@@ -101,7 +101,7 @@ int sx1278_send(void *self, const uint8_t *data, int len)
         fprintf(stderr, "Failed to write REG_IRQ_FLAGS_MASKS register before transmit\n");
         return -1;
     }
-    if (write(device->spi_handle, REG_IRQ_FLAGS, (const uint8_t[]){0xFF}, 1) < 0)
+    if (write_sx1278(device->spi_handle, REG_IRQ_FLAGS, (const uint8_t[]){0xFF}, 1) < 0)
     {
         fprintf(stderr, "Failed to clear REG_IRQ_FLAGS\n");
         return -1;
