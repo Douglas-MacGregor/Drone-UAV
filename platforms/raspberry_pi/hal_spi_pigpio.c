@@ -32,7 +32,7 @@ int read_spi_pigpio(int spi_handle, uint8_t *tx_buffer, uint8_t *rx_buffer, int 
     return spiXfer(spi_handle, (char *)tx_buffer, (char *)rx_buffer, length);
 }
 
-HAL_SPI hal_spi_pigpio = {
+HAL_SPI hal_spi = {
     .init_spi = init_spi_pigpio,
     .close_spi = close_spi_pigpio,
     .write_spi = write_spi_pigpio,
