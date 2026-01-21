@@ -178,6 +178,7 @@ int sx1278_receive(void *self, uint8_t *buffer, int len)
     if (poll_register_sx1278(device->spi_handle, REG_IRQ_FLAGS, IRQ_MASK_RX_DONE, IRQ_MASK_RX_DONE, 1000, 10000) < 0)
     {
         fprintf(stderr, "Timeout waiting for RX_DONE\n");
+        device->vtable->standby(self);  // Return to standby even on timeout
         return -2;
     }
     if (write_sx1278(device->spi_handle, REG_IRQ_FLAGS, (const uint8_t[]){IRQ_MASK_RX_DONE | IRQ_MASK_PAYLOAD_CRC_ERROR}, 1) < 0)
