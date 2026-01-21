@@ -14,8 +14,28 @@ extern HAL_SPI hal_spi;
 
 void setUp(void)
 {
-    hal_gpio.init_gpio();
+    printf("Starting setUp...\n");
+
+    // Check if HAL structures are properly initialized
+    if (hal_gpio.init_gpio == NULL)
+    {
+        printf("ERROR: hal_gpio.init_gpio is NULL!\n");
+        return;
+    }
+    if (hal_spi.init_spi == NULL)
+    {
+        printf("ERROR: hal_spi.init_spi is NULL!\n");
+        return;
+    }
+
+    printf("Calling hal_gpio.init_gpio()...\n");
+    int gpio_result = hal_gpio.init_gpio();
+    printf("GPIO init result: %d\n", gpio_result);
+
+    printf("Calling hal_spi.init_spi(0, 0, 100000)...\n");
     spi_handle = hal_spi.init_spi(0, 0, 100000);
+    printf("SPI handle: %d\n", spi_handle);
+    printf("setUp complete.\n");
 }
 
 void tearDown(void)
