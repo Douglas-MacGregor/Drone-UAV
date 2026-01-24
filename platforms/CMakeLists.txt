@@ -17,5 +17,5 @@ elseif(PLATFORM STREQUAL "STM32" OR PLATFORM STREQUAL "stm32")
 elseif(PLATFORM STREQUAL "sim")
     add_library(platform_hal ALIAS sim_hal)
 else()
-    add_library(platform_hal ALIAS raspberry_pi_hal)  # Default fallback
+    add_library(platform_hal ALIAS raspberry_pi_zero_hal)  # Default fallback
 endif()
