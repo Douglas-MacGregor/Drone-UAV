@@ -1,32 +1,50 @@
 #include "lgpio.h"
 #include "hal_gpio.h"
 
+static int gpio_handle = -1;
+
 int lgpio_init_gpio()
 {
-    if (lgGpioInitialise() < 0)
+    gpio_handle = lgGpiochipOpen(0); // Open GPIO chip 0 (main GPIO chip on Pi)
+    if (gpio_handle < 0)
     {
         return -1;
     }
     return 0;
 }
+
 int lgpio_close_gpio()
 {
-    lgGpioTerminate();
+    if (gpio_handle >= 0)
+    {
+        lgGpiochipClose(gpio_handle);
+        gpio_handle = -1;
+    }
     return 0;
 }
 
 int lgpio_set_pin_mode(int pin, int mode)
 {
-    if (lgGpioSetMode(pin, mode) != 0)
-    {
+    if (gpio_handle < 0)
         return -1;
+
+    if (lgGpioClaimOutput(gpio_handle, 0, pin, 0) != 0)
+    {
+        // If claim as output fails, try as input
+        if (lgGpioClaimInput(gpio_handle, 0, pin) != 0)
+        {
+            return -1;
+        }
     }
     return 0;
 }
 
 int lgpio_write_pin(int pin, int value)
 {
-    if (lgGpioWrite(pin, value) != 0)
+    if (gpio_handle < 0)
+        return -1;
+
+    if (lgGpioWrite(gpio_handle, pin, value) != 0)
     {
         return -1;
     }
@@ -35,7 +53,10 @@ int lgpio_write_pin(int pin, int value)
 
 int lgpio_read_pin(int pin)
 {
-    int value = lgGpioRead(pin);
+    if (gpio_handle < 0)
+        return -1;
+
+    int value = lgGpioRead(gpio_handle, pin);
     if (value < 0)
     {
         return -1;
