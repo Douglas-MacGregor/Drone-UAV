@@ -1,0 +1,10 @@
+add_subdirectory(imu)
+add_subdirectory(imu/MPU-6050)
+
+add_subdirectory(controller)
+add_subdirectory(controller/DualShock)
+
+add_subdirectory(lora)
+add_subdirectory(lora/sx1278)
+
+# Add other device subdirectories here

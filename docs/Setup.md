@@ -88,6 +88,7 @@ sudo apt update
 sudo apt install pigpio
 sudo apt install i2c-tools
 sudo apt install git
+sudo apt install cmake
 
 ```
 
@@ -102,4 +103,9 @@ For a quicker setup, you can use the following commands:
     sudo reboot
     sudo apt update
     sudo apt install pigpio
+    sudo apt install i2c-tools
+    sudo apt install git
+    sudo apt install cmake
+    # for raspberry pi five
+    sudo apt install libpigpio-dev
 ```

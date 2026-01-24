@@ -1,5 +1,6 @@
 {
   "files.associations": {
     "drone_controller_interface.h": "c"
-  }
+  },
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/compile_commands.json"
 }
