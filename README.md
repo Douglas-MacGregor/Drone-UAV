@@ -31,7 +31,9 @@ cmake --build build-host --target <target_name>
 ```
 
 ```bash
-cmake -B build-rpi -DCMAKE_TOOLCHAIN_FILE=toolchains/raspberry_pi.cmake
+cmake -B build-rpi -DCMAKE_TOOLCHAIN_FILE=toolchains/raspberry_pi_zero.cmake
+cmake -B build-rpi -DCMAKE_TOOLCHAIN_FILE=toolchains/raspberry_pi_five.cmake
+
 cmake --build build-rpi
 #Or
 cmake --build build-rpi --target <target_name>
