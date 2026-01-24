@@ -3,7 +3,8 @@
 
 int lgpio_init_spi(uint8_t spi_bus, uint8_t spi_mode, uint32_t spi_speed)
 {
-    int spi_handle = lgSpiOpen(spi_bus, spi_speed, spi_mode);
+    // lgSpiOpen takes: spiDev (bus), spiChan (channel, usually 0), spiBaud (speed), spiFlags (mode)
+    int spi_handle = lgSpiOpen(spi_bus, 0, spi_speed, spi_mode);
     if (spi_handle < 0)
     {
         return -1;
