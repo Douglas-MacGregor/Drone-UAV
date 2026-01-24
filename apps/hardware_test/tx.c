@@ -11,8 +11,8 @@ extern HAL_SPI hal_spi;
 
 int main()
 {
-    int n = hal_gpio.init_gpio();
-    if (n < 0)
+    int g = hal_gpio.init_gpio();
+    if (g < 0)
     {
         fprintf(stderr, "Failed to initialize GPIO\n");
         return -1;
