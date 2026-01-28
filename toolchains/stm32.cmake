@@ -1,3 +1,5 @@
+
+# untested example toolchain file for STM32 microcontrollers
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR arm)
 
