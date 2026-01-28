@@ -1,13 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
 
-# Detect Pico platform from toolchain file or command line
-if(NOT DEFINED PLATFORM)
-    # Try to detect from CMAKE_TOOLCHAIN_FILE path
-    if(CMAKE_TOOLCHAIN_FILE MATCHES "raspberry_pi_pico")
-        set(PLATFORM "RaspberryPiPico")
-    endif()
-endif()
-
 # Only fetch and init Pico SDK if building for Pico
 if(DEFINED PLATFORM AND (PLATFORM STREQUAL "raspberry_pi_pico" OR PLATFORM STREQUAL "RaspberryPiPico"))
     # Ensure CMAKE_TOOLCHAIN_FILE is absolute path for Pico SDK (only if it's defined and not empty)
