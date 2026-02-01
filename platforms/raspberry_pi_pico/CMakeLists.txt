@@ -3,6 +3,7 @@ add_library(raspberry_pi_pico_hal
     hal_gpio_pico.c
     hal_i2c_pico.c
     hal_spi_pico.c
+    hal_time_pico.c
 )
 
 target_include_directories(raspberry_pi_pico_hal

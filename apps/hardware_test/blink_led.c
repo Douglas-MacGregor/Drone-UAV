@@ -1,7 +1,8 @@
 #include "hal_gpio.h"
-#include "pico/stdlib.h"
+#include "hal_time.h"
 
 extern HAL_GPIO hal_gpio;
+extern HAL_TIME hal_time;
 
 int main()
 {
@@ -12,9 +13,9 @@ int main()
     while (1)
     {
         hal_gpio.write_pin(led_pin, 1); // Turn LED on
-        sleep_ms(500);                  // Delay 500ms
+        hal_time.delay_ms(500);         // Delay 500ms
         hal_gpio.write_pin(led_pin, 0); // Turn LED off
-        sleep_ms(500);                  // Delay 500ms
+        hal_time.delay_ms(500);         // Delay 500ms
     }
 
     hal_gpio.close_gpio();
