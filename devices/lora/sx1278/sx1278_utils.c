@@ -1,5 +1,6 @@
 #include "hal_spi.h"
 #include "hal_gpio.h"
+#include "hal_time.h"
 #include "sx1278_utils.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,6 +9,7 @@
 
 extern HAL_GPIO hal_gpio;
 extern HAL_SPI hal_spi;
+extern HAL_TIME hal_time;
 
 int read_sx1278(int spi_handle, uint8_t reg_address, uint8_t *value, int len)
 {
@@ -99,7 +101,7 @@ int poll_register_sx1278(int spi_handle, uint8_t reg_address, uint8_t mask, uint
         {
             return 0; // Condition met
         }
-        usleep(delay_us);
+        hal_time.delay_us(delay_us);
         i++;
     }
     return -1; // Timeout
@@ -118,7 +120,7 @@ int reset_sx1278(int gpio_reset_pin)
         fprintf(stderr, "Failed to set reset pin low\n");
         return -1;
     }
-    usleep(10000); // Hold low for 10ms
+    hal_time.delay_us(10000); // Hold low for 10ms
     // Set reset pin high
     if (hal_gpio.write_pin(gpio_reset_pin, 1) < 0)
     {
@@ -130,6 +132,6 @@ int reset_sx1278(int gpio_reset_pin)
         fprintf(stderr, "Failed to set reset pin mode to input\n");
         return -1;
     }
-    usleep(10000); // Wait for 10ms after reset
+    hal_time.delay_us(10000); // Wait for 10ms after reset
     return 0;
 }

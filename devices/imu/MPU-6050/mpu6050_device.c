@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <unistd.h>
+#include "hal_time.h"
 
 IMUInterface mpu6050_imu_interface = {
     .init = mpu6050_init,
@@ -17,6 +18,8 @@ IMUInterface mpu6050_imu_interface = {
     .reset = mpu6050_reset,
     .sleep = mpu6050_sleep,
     .wake = mpu6050_wake};
+
+extern HAL_TIME hal_time;
 
 /*
  * Function: mpu6050_init
@@ -175,7 +178,7 @@ int mpu6050_self_test(void *self)
         fprintf(stderr, "MPU6050 self-test write error\n");
         return -1;
     }
-    usleep(200000); // wait for 200ms for self-test to complete
+    hal_time.delay_ms(200); // wait for 200ms for self-test to complete
     coordinate3D_t gyro_bias_self_test;
     coordinate3D_t accel_bias_self_test;
     get_gyro_mean_window_mpu6050(device->iic_handle, &gyro_bias_self_test, 200.0);
@@ -245,9 +248,9 @@ int mpu6050_self_test(void *self)
         return -1;
     }
     device->vtable->reset(self);
-    usleep(100000); // wait for 100ms after reset
+    hal_time.delay_ms(100); // wait for 100ms after reset
     device->vtable->wake(self);
-    usleep(100000); // wait for 100ms after wake
+    hal_time.delay_ms(100); // wait for 100ms after wake
     return 0;
 }
 
@@ -268,7 +271,7 @@ int mpu6050_reset(void *self)
     data.data = 0x80; // Set the reset bit
     data.length = 1;
     int n = write_mpu6050(device->iic_handle, &data);
-    usleep(100000); // wait for 100ms after reset
+    hal_time.delay_ms(100); // wait for 100ms after reset
     if (n < 0)
     {
         fprintf(stderr, "MPU6050 reset error\n");
@@ -294,7 +297,7 @@ int mpu6050_sleep(void *self)
     data.data = 0x40; // Set the sleep bit
     data.length = 1;
     int n = write_mpu6050(device->iic_handle, &data);
-    usleep(100000); // wait for 100ms after sleep command
+    hal_time.delay_ms(100); // wait for 100ms after sleep command
     if (n < 0)
     {
         fprintf(stderr, "MPU6050 sleep error\n");

@@ -19,6 +19,16 @@ LoRaInterface sx1278_lora_interface = {
     .standby = sx1278_standby,
     .reset = sx1278_reset};
 
+/*
+ * Function: sx1278_init
+ * Description: Initializes the SX1278 device by resetting it and configuring Long Range mode
+ * Parameters: self - Pointer to the SX1278 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Leaves device in standby mode
+ * Assumptions: Device is properly connected via SPI and reset pin is functional
+ * Notes: None
+ */
+
 int sx1278_init(void *self)
 {
     sx1278_Device *device = (sx1278_Device *)self;
@@ -53,11 +63,30 @@ int sx1278_init(void *self)
     return 0;
 }
 
+/*
+ * Function: sx1278_close
+ * Description: Clean up operations for the SX1278 device if necessary
+ * Parameters: self - Pointer to the SX1278 device instance
+ * Returns: 0 on success
+ * Side Effects: None currently implemented
+ * Assumptions: Device has been previously initialized
+ */
 int sx1278_close(void *self)
 {
     sx1278_Device *device = (sx1278_Device *)self;
     return 0;
 }
+
+/*
+ * Function: sx1278_send
+ * Description: Sends data using the SX1278 device
+ * Parameters: self - Pointer to the SX1278 device instance
+ *            data - Pointer to the data buffer to send
+ *            len - Length of the data to send
+ * Returns: Number of bytes sent on success, -1 on error, -2 on timeout
+ * Side Effects: Transmits data over LoRa
+ * Assumptions: Device is properly initialized and in standby mode
+ */
 
 int sx1278_send(void *self, const uint8_t *data, int len)
 {
@@ -132,6 +161,17 @@ int sx1278_send(void *self, const uint8_t *data, int len)
     return len;
 }
 
+/*
+ * Function: sx1278_receive
+ * Description: Receives data using the SX1278 device
+ * Parameters: self - Pointer to the SX1278 device instance
+ *            buffer - Pointer to the buffer to store received data
+ *            len - Length of the buffer
+ * Returns: Number of bytes received on success, -1 on error, -2 on timeout, -3 if buffer too small
+ * Side Effects: Receives data over LoRa
+ * Assumptions: Device is properly initialized and in standby mode
+ */
+
 int sx1278_receive(void *self, uint8_t *buffer, int len)
 {
     sx1278_Device *device = (sx1278_Device *)self;
@@ -178,7 +218,7 @@ int sx1278_receive(void *self, uint8_t *buffer, int len)
     if (poll_register_sx1278(device->spi_handle, REG_IRQ_FLAGS, IRQ_MASK_RX_DONE, IRQ_MASK_RX_DONE, 1000, 10000) < 0)
     {
         fprintf(stderr, "Timeout waiting for RX_DONE\n");
-        device->vtable->standby(self);  // Return to standby even on timeout
+        device->vtable->standby(self); // Return to standby even on timeout
         return -2;
     }
     if (write_sx1278(device->spi_handle, REG_IRQ_FLAGS, (const uint8_t[]){IRQ_MASK_RX_DONE | IRQ_MASK_PAYLOAD_CRC_ERROR}, 1) < 0)
@@ -211,6 +251,17 @@ int sx1278_receive(void *self, uint8_t *buffer, int len)
     return num_bytes;
 }
 
+/*
+ * Function: sx1278_set_syncword
+ * Description: Sets the sync word for the SX1278 device
+ * Parameters: self - Pointer to the SX1278 device instance
+ *            syncword - Sync word value to set
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Updates the sync word register
+ * Assumptions: Device is properly initialized
+ * Notes: None
+ */
+
 int sx1278_set_syncword(void *self, uint8_t syncword)
 {
     sx1278_Device *device = (sx1278_Device *)self;
@@ -231,6 +282,16 @@ int sx1278_set_spreading_factor(void *self, int sf)
 {
     return 0;
 }
+
+/*
+ * Function: sx1278_sleep
+ * Description: Puts the SX1278 device into sleep mode
+ * Parameters: self - Pointer to the SX1278 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Device enters sleep mode
+ * Assumptions: Device is properly initialized
+ * Notes: None
+ */
 
 int sx1278_sleep(void *self)
 {
@@ -256,6 +317,16 @@ int sx1278_sleep(void *self)
     return 0;
 }
 
+/*
+ * Function: sx1278_standby
+ * Description: Puts the SX1278 device into standby mode
+ * Parameters: self - Pointer to the SX1278 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Device enters standby mode
+ * Assumptions: Device is properly initialized
+ * Notes: None
+ */
+
 int sx1278_standby(void *self)
 {
     uint8_t current_opmode;
@@ -280,10 +351,31 @@ int sx1278_standby(void *self)
     return 0;
 }
 
+/*
+ * Function: sx1278_reset
+ * Description: Resets the SX1278 device
+ * Parameters: self - Pointer to the SX1278 device instance
+ * Returns: 0 on success, -1 on error
+ * Side Effects: Device is reset and requires reconfiguration
+ * Assumptions: Device is properly connected via SPI and reset pin is functional
+ * Notes: Leaves device in unspecified state
+ */
+
 int sx1278_reset(void *self)
 {
     return reset_sx1278(((sx1278_Device *)self)->gpio_reset_pin);
 }
+
+/*
+ * Function: create_sx1278_device
+ * Description: Creates and initializes an SX1278 device instance
+ * Parameters: spi_handle - SPI handle for communication
+ *            gpio_reset_pin - GPIO pin number for reset control
+ * Returns: Initialized sx1278_Device instance
+ * Side Effects: None
+ * Assumptions: SPI and GPIO subsystems are properly initialized
+ * Notes: None
+ */
 
 sx1278_Device create_sx1278_device(int spi_handle, int gpio_reset_pin)
 {
@@ -293,6 +385,16 @@ sx1278_Device create_sx1278_device(int spi_handle, int gpio_reset_pin)
     device.gpio_reset_pin = gpio_reset_pin;
     return device;
 }
+
+/*
+ * Function: destroy_sx1278_device
+ * Description: Cleans up the SX1278 device instance
+ * Parameters: device - Pointer to the sx1278_Device instance
+ * Returns: 0 on success
+ * Side Effects: None currently implemented
+ * Assumptions: Device has been previously created
+ * Notes: None
+ */
 
 int destroy_sx1278_device(sx1278_Device *device)
 {
