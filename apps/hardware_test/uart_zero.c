@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "hal_gpio.h"
 #include "hal_time.h"
+#include <string.h>
 
 extern HAL_UART hal_uart;
 extern HAL_GPIO hal_gpio;
