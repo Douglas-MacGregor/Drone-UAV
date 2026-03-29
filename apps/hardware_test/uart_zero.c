@@ -16,12 +16,31 @@ int main()
         return 1;
     }
 
-    int uart_handle = hal_uart.init_uart(115200); // Initialize UART with baud rate 115200
+    int uart_handle = hal_uart.init_uart(9600); // Initialize UART with baud rate 9600
     if (uart_handle < 0)
     {
         fprintf(stderr, "Failed to initialize UART\n");
         hal_gpio.close_gpio();
         return 1;
+    }
+
+    // Drain any stale RX bytes (console noise/boot chatter) before protocol read.
+
+    char discard;
+    int flush_loops = 0;
+    while (flush_loops < 200)
+    {
+        int available = hal_uart.uart_available(uart_handle);
+        if (available <= 0)
+        {
+            break;
+        }
+
+        if (hal_uart.uart_read_byte(uart_handle, &discard) < 0)
+        {
+            break;
+        }
+        flush_loops++;
     }
 
     char buffer[128];

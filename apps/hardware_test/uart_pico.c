@@ -10,14 +10,20 @@ extern HAL_UART hal_uart;
 
 int main()
 {
-    int led_pin = 15; // GPIO pin 15 for the LED
+    hal_time.init_time();
+    hal_time.delay_ms(1000); // Delay to allow time for setup
+    int led_pin = 15;        // GPIO pin 15 for the LED
     hal_gpio.set_pin_mode(led_pin, HAL_GPIO_OUTPUT);
     hal_gpio.write_pin(led_pin, 0); // Ensure LED is off at start
 
     hal_gpio.init_gpio();
-    hal_uart.init_uart(115200); // Initialize UART with baud rate 115200
+    hal_uart.init_uart(9600); // Initialize UART with baud rate 115200
 
     const char *message = "Hello, UART on Raspberry Pi Pico!\n";
+    hal_uart.uart_write(0, message, strlen(message)); // Write message to UART0
+
+    hal_uart.uart_write(0, message, strlen(message)); // Write message to UART0
+
     hal_uart.uart_write(0, message, strlen(message)); // Write message to UART0
 
     while (1)
