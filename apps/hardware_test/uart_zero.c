@@ -27,7 +27,7 @@ int main()
     char buffer[128];
     int index = 0;
     char byte = 0;
-    while (byte != '\n' && byte != '\r' && index < (int)(sizeof(buffer) - 1))
+    while (byte != '\n' && index < (int)(sizeof(buffer) - 1))
     {
         if (hal_uart.uart_read_byte(uart_handle, &byte))
         {
