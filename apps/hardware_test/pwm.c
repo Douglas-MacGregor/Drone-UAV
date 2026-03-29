@@ -1,13 +1,19 @@
 #include "hal_gpio.h"
 #include "hal_time.h"
+#include "hal_i2c.h"
 #include "pico/stdlib.h"
 #include "hardware/pwm.h"
+#include "mpu6050_device.h"
 
+extern HAL_I2C hal_i2c;
 extern HAL_GPIO hal_gpio;
 extern HAL_TIME hal_time;
 
 int main()
 {
+    hal_i2c.init_i2c(0, 0x68); // Initialize I2C bus 0 with MPU6050 address
+    IMUData imu_data;
+    mpu6050_Device mpu6050 = create_mpu6050_device(0, GYRO_FS_250, ACCEL_FS_2);
 
     hal_gpio.init_gpio();
     uint pwm_pin = 2; // GPIO pin 18 for PWM output

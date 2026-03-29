@@ -17,4 +17,8 @@ target_include_directories(raspberry_pi_pico_hal
 target_link_libraries(raspberry_pi_pico_hal
     PUBLIC
         pico_stdlib
+        hardware_gpio
+        hardware_i2c
+        hardware_spi
+        hardware_pwm
 )

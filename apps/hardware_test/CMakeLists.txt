@@ -6,7 +6,7 @@ add_executable(pwm pwm.c)
 target_link_libraries(tx PRIVATE sx1278 platform_hal)
 target_link_libraries(rx PRIVATE sx1278 platform_hal)
 target_link_libraries(blink_led PRIVATE platform_hal)
-target_link_libraries(pwm PRIVATE platform_hal)
+target_link_libraries(pwm PRIVATE platform_hal hardware_pwm imu)
 # Generate additional output formats for Pico (when building for Pico platform)
 if(PLATFORM STREQUAL "RaspberryPiPico")
     # Set output name with .elf extension
