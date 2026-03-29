@@ -59,7 +59,7 @@ int uart_write(int handle, const char *bytes, int length)
     {
         return -1;
     }
-    return serWrite(handle, bytes, length);
+    return serWrite(handle, (char *)bytes, (unsigned)length);
 }
 
 HAL_UART hal_uart = {
