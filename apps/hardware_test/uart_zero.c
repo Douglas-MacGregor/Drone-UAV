@@ -25,12 +25,12 @@ int main()
     printf("Received: %s\n", buffer); // Print the received message
     while (1)
     {
-        hal_uart.write_byte(uart_handle, 'O'); // Send 'O' over UART
-        hal_time.delay_ms(1000);               // Delay 1000ms
-        hal_uart.write_byte(uart_handle, 'F'); // Send 'F' over UART
-        hal_time.delay_ms(1000);               // Delay 1000ms
+        hal_uart.uart_write_byte(uart_handle, 'O'); // Send 'O' over UART
+        hal_time.delay_ms(1000);                    // Delay 1000ms
+        hal_uart.uart_write_byte(uart_handle, 'F'); // Send 'F' over UART
+        hal_time.delay_ms(1000);                    // Delay 1000ms
     }
     hal_uart.close_uart(uart_handle); // Close UART
-    hal.gpio.close_gpio();            // Clean up GPIO
+    hal_gpio.close_gpio();            // Clean up GPIO
     return 0;
 }

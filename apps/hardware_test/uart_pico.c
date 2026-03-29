@@ -2,6 +2,7 @@
 #include "hal_time.h"
 #include "hal_uart.h"
 #include "pico/stdlib.h"
+#include <string.h>
 
 extern HAL_GPIO hal_gpio;
 extern HAL_TIME hal_time;
@@ -11,6 +12,7 @@ int main()
 {
     int led_pin = 15; // GPIO pin 15 for the LED
     hal_gpio.set_pin_mode(led_pin, HAL_GPIO_OUTPUT);
+    hal_gpio.write_pin(led_pin, 0); // Ensure LED is off at start
 
     hal_gpio.init_gpio();
     hal_uart.init_uart(115200); // Initialize UART with baud rate 115200
@@ -25,11 +27,11 @@ int main()
         {
             if (byte == 'O')
             {
-                hal_gpio.set_pin(led_pin, 1); // Turn on the LED
+                hal_gpio.write_pin(led_pin, 1); // Turn on the LED
             }
             else if (byte == 'F')
             {
-                hal_gpio.set_pin(led_pin, 0); // Turn off the LED
+                hal_gpio.write_pin(led_pin, 0); // Turn off the LED
             }
         }
         hal_time.delay_ms(10); // Small delay to prevent busy-waiting

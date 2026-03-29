@@ -4,6 +4,7 @@ add_library(raspberry_pi_zero_hal
     hal_i2c_pigpio.c
     hal_spi_pigpio.c
     hal_time_zero.c
+    hal_uart_pigpio.c
 )
 
 target_include_directories(raspberry_pi_zero_hal

@@ -4,6 +4,7 @@ add_library(raspberry_pi_pico_hal
     hal_i2c_pico.c
     hal_spi_pico.c
     hal_time_pico.c
+    hal_uart_pico.c
 )
 
 target_include_directories(raspberry_pi_pico_hal
@@ -20,5 +21,6 @@ target_link_libraries(raspberry_pi_pico_hal
         hardware_gpio
         hardware_i2c
         hardware_spi
+    hardware_uart
         hardware_pwm
 )
