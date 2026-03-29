@@ -6,8 +6,10 @@
 #include <unistd.h>
 #include "imu_interface.h"
 #include "hal_i2c.h"
+#include "hal_time.h"
 
 extern HAL_I2C hal_i2c;
+extern HAL_TIME hal_time;
 
 int read_mpu6050(int i2c_handle, mpu6050_Data *data)
 {
@@ -195,7 +197,7 @@ int configure_mpu6050(int i2c_handle, mpu6050_gyro_fs_t gyro_fs, mpu6050_accel_f
         fprintf(stderr, "Failed to wake up MPU-6050\n");
         return -1;
     }
-    usleep(100000); // 100 ms
+    hal_time.delay_ms(100); // 100 ms
 
     // Configure gyro full-scale range
     data.address = REG_GYRO_CONFIG;
@@ -247,7 +249,7 @@ int get_gyro_mean_window_mpu6050(int i2c_handle, coordinate3D_t *gyro_bias, floa
         sumX += (float)raw_gyroX;
         sumY += (float)raw_gyroY;
         sumZ += (float)raw_gyroZ;
-        usleep(1000); // 1ms delay between samples
+        hal_time.delay_ms(1); // 1ms delay between samples
     }
     gyro_bias->x = sumX / samples;
     gyro_bias->y = sumY / samples;
@@ -267,7 +269,7 @@ int get_accel_mean_window_mpu6050(int i2c_handle, coordinate3D_t *accel_bias, fl
         sumX += (float)raw_accelX;
         sumY += (float)raw_accelY;
         sumZ += (float)raw_accelZ;
-        usleep(1000); // 1ms delay between samples
+        hal_time.delay_ms(1); // 1ms delay between samples
     }
     accel_bias->x = sumX / samples;
     accel_bias->y = sumY / samples;

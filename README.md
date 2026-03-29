@@ -45,3 +45,10 @@ cmake --build build-stm32
 #Or
 cmake --build build-stm32 --target <target_name>
 ```
+
+```bash
+cmake -B build-pico -DPLATFORM=RaspberryPiPico -DPICO_PLATFORM=rp2040 -DPICO_BOARD=pico_w
+cmake --build build-pico
+#Or
+cmake --build build-pico --target <target_name>
+```

@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <unistd.h>
+#include "hal_time.h"
 
 IMUInterface mpu6050_imu_interface = {
     .init = mpu6050_init,
@@ -17,6 +18,8 @@ IMUInterface mpu6050_imu_interface = {
     .reset = mpu6050_reset,
     .sleep = mpu6050_sleep,
     .wake = mpu6050_wake};
+
+extern HAL_TIME hal_time;
 
 /*
  * Function: mpu6050_init
@@ -63,35 +66,28 @@ int mpu6050_close(void *self)
 int mpu6050_read_data(void *self, void *data)
 {
     mpu6050_Device *device = (mpu6050_Device *)self;
-    mpu6050_Data sleep_check;
-    sleep_check.address = REG_PWR_MGMT_1;
-    uint8_t reg_value;
-    sleep_check.length = 1;
-    sleep_check.data_receive = &reg_value;
-    int n = read_mpu6050(device->iic_handle, &sleep_check);
-    if (n != 1)
-    {
-        fprintf(stderr, "MPU6050 read PWR_MGMT_1 error\n");
-        return -1;
-    }
-    if ((reg_value & 0x40) != 0)
-    {
-        fprintf(stderr, "Warning: MPU6050 is in sleep mode\n");
-        return -1;
-    }
     IMUData *imu_data = (IMUData *)data;
+
     int16_t raw_gyroX, raw_gyroY, raw_gyroZ;
     int16_t raw_accelX, raw_accelY, raw_accelZ;
-    if (get_gyroX_mpu6050(device->iic_handle, &raw_gyroX) < 0 ||
-        get_gyroY_mpu6050(device->iic_handle, &raw_gyroY) < 0 ||
-        get_gyroZ_mpu6050(device->iic_handle, &raw_gyroZ) < 0 ||
-        get_accelX_mpu6050(device->iic_handle, &raw_accelX) < 0 ||
-        get_accelY_mpu6050(device->iic_handle, &raw_accelY) < 0 ||
-        get_accelZ_mpu6050(device->iic_handle, &raw_accelZ) < 0)
+    int8_t raw_data[14];
+    mpu6050_Data mpu_data;
+    mpu_data.address = REG_ACCEL_XOUT_H; // Starting register for accel and gyro
+    mpu_data.length = 14;
+    mpu_data.data_receive = (uint8_t *)raw_data;
+    int n = read_mpu6050(device->iic_handle, &mpu_data);
+    if (n != 14)
     {
         fprintf(stderr, "MPU6050 read data error\n");
         return -1; // Error reading data
     }
+    raw_accelX = (int16_t)((raw_data[0] << 8) | raw_data[1]);
+    raw_accelY = (int16_t)((raw_data[2] << 8) | raw_data[3]);
+    raw_accelZ = (int16_t)((raw_data[4] << 8) | raw_data[5]);
+    // Skipping temperature bytes [6] and [7]
+    raw_gyroX = (int16_t)((raw_data[8] << 8) | raw_data[9]);
+    raw_gyroY = (int16_t)((raw_data[10] << 8) | raw_data[11]);
+    raw_gyroZ = (int16_t)((raw_data[12] << 8) | raw_data[13]);
     float gyroX_dps, gyroY_dps, gyroZ_dps;
     float accelX_g, accelY_g, accelZ_g;
     if (convert_gyro_to_dps(raw_gyroX, device->gyro_fs, &(imu_data->gyroX), device->gyro_bias.x) < 0 ||
@@ -175,7 +171,7 @@ int mpu6050_self_test(void *self)
         fprintf(stderr, "MPU6050 self-test write error\n");
         return -1;
     }
-    usleep(200000); // wait for 200ms for self-test to complete
+    hal_time.delay_ms(200); // wait for 200ms for self-test to complete
     coordinate3D_t gyro_bias_self_test;
     coordinate3D_t accel_bias_self_test;
     get_gyro_mean_window_mpu6050(device->iic_handle, &gyro_bias_self_test, 200.0);
@@ -245,9 +241,9 @@ int mpu6050_self_test(void *self)
         return -1;
     }
     device->vtable->reset(self);
-    usleep(100000); // wait for 100ms after reset
+    hal_time.delay_ms(100); // wait for 100ms after reset
     device->vtable->wake(self);
-    usleep(100000); // wait for 100ms after wake
+    hal_time.delay_ms(100); // wait for 100ms after wake
     return 0;
 }
 
@@ -268,7 +264,7 @@ int mpu6050_reset(void *self)
     data.data = 0x80; // Set the reset bit
     data.length = 1;
     int n = write_mpu6050(device->iic_handle, &data);
-    usleep(100000); // wait for 100ms after reset
+    hal_time.delay_ms(100); // wait for 100ms after reset
     if (n < 0)
     {
         fprintf(stderr, "MPU6050 reset error\n");
@@ -294,7 +290,7 @@ int mpu6050_sleep(void *self)
     data.data = 0x40; // Set the sleep bit
     data.length = 1;
     int n = write_mpu6050(device->iic_handle, &data);
-    usleep(100000); // wait for 100ms after sleep command
+    hal_time.delay_ms(100); // wait for 100ms after sleep command
     if (n < 0)
     {
         fprintf(stderr, "MPU6050 sleep error\n");

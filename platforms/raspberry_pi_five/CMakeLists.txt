@@ -3,6 +3,7 @@ add_library(raspberry_pi_five_hal
     hal_gpio_lgpio.c
     hal_i2c_lgpio.c
     hal_spi_lgpio.c
+    hal_time_five.c
 )
 
 target_include_directories(raspberry_pi_five_hal
