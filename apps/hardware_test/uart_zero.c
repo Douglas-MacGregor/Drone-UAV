@@ -10,19 +10,31 @@ extern HAL_TIME hal_time;
 
 int main()
 {
-    hal_gpio.init_gpio();
+    if (hal_gpio.init_gpio() < 0)
+    {
+        fprintf(stderr, "Failed to initialize GPIO\n");
+        return 1;
+    }
+
     int uart_handle = hal_uart.init_uart(115200); // Initialize UART with baud rate 115200
+    if (uart_handle < 0)
+    {
+        fprintf(stderr, "Failed to initialize UART\n");
+        hal_gpio.close_gpio();
+        return 1;
+    }
 
     char buffer[128];
+    int index = 0;
     char byte = 0;
-    while (byte != '\n' && byte != '\r' && (sizeof(buffer) - 1) > 0)
+    while (byte != '\n' && byte != '\r' && index < (int)(sizeof(buffer) - 1))
     {
         if (hal_uart.uart_read_byte(uart_handle, &byte))
         {
-            buffer[strlen(buffer)] = byte; // Append byte to buffer
+            buffer[index++] = byte;
         }
     }
-    buffer[strlen(buffer)] = '\0';    // Null-terminate the string
+    buffer[index] = '\0';             // Null-terminate the string
     printf("Received: %s\n", buffer); // Print the received message
     while (1)
     {
